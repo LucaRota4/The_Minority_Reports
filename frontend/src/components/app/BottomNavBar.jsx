@@ -11,7 +11,8 @@ import {
   Users, 
   Settings,
   Wallet,
-  Clock
+  Clock,
+  Gamepad2
 } from 'lucide-react';
 
 const bottomNavItems = [
@@ -20,7 +21,14 @@ const bottomNavItems = [
     icon: LayoutDashboard,
     label: 'Dashboard',
     exactMatch: true,
-    comingSoon: true,
+    comingSoon: false,
+  },
+  {
+    href: '/app/zama-game',
+    icon: Gamepad2,
+    label: 'Zama Game',
+    exactMatch: false,
+    comingSoon: false,
   },
   {
     href: '/app/funding-comparison',
@@ -40,13 +48,6 @@ const bottomNavItems = [
     href: '/app/profile',
     icon: Users,
     label: 'Profile',
-    exactMatch: false,
-    comingSoon: true,
-  },
-  {
-    href: '/app/settings',
-    icon: Settings,
-    label: 'Settings',
     exactMatch: false,
     comingSoon: true,
   },

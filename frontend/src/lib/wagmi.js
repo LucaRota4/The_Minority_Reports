@@ -1,43 +1,44 @@
-import { http, createConfig } from 'wagmi';
-import { mainnet, arbitrum, optimism, base, polygon, bsc } from 'wagmi/chains';
+import { getDefaultConfig } from '@rainbow-me/rainbowkit';
+import { mainnet, arbitrum, optimism, base, polygon, bsc, sepolia } from 'wagmi/chains';
 import {
+  metaMaskWallet,
+  rainbowWallet,
   coinbaseWallet,
-  metaMask,
-  walletConnect,
-  injected,
-} from 'wagmi/connectors';
+  walletConnectWallet,
+  trustWallet,
+  rabbyWallet,
+  ledgerWallet,
+  frameWallet,
+} from '@rainbow-me/rainbowkit/wallets';
 
 // Get project ID from environment (you'll need to create this)
 const projectId =
   process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'demo-project-id';
 
-export const config = createConfig({
-  chains: [mainnet, arbitrum, optimism, base, polygon, bsc],
-  connectors: [
-    metaMask(),
-    walletConnect({
-      projectId,
-      metadata: {
-        name: 'Aequilibra',
-        description: 'Find the best funding across perps. One dashboard.',
-        url: 'https://aequilibra.xyz',
-        icons: ['https://aequilibra.xyz/favicon.ico'],
-      },
-    }),
-    coinbaseWallet({
-      appName: 'Aequilibra',
-      appLogoUrl: 'https://aequilibra.xyz/favicon.ico',
-    }),
-    injected(),
+export const config = getDefaultConfig({
+  appName: 'Aequilibra',
+  projectId,
+  chains: [sepolia, mainnet, arbitrum, optimism, base, polygon, bsc],
+  wallets: [
+    {
+      groupName: 'Popular',
+      wallets: [
+        metaMaskWallet,
+        rainbowWallet,
+        coinbaseWallet,
+        walletConnectWallet,
+      ],
+    },
+    {
+      groupName: 'More',
+      wallets: [
+        trustWallet,
+        rabbyWallet,
+        ledgerWallet,
+        frameWallet,
+      ],
+    },
   ],
-  transports: {
-    [mainnet.id]: http(),
-    [arbitrum.id]: http(),
-    [optimism.id]: http(),
-    [base.id]: http(),
-    [polygon.id]: http(),
-    [bsc.id]: http(),
-  },
 });
 
 export const supportedChains = {

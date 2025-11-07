@@ -202,7 +202,7 @@ export function Hero() {
                 isLight ? 'text-slate-800' : 'text-cyan-300'
               }`}
             >
-              {['/', '/', ' ', 'U', 'N', 'I', 'F', 'I', 'E', 'D', ' ', 'M', 'U', 'L', 'T', 'I', '-', 'P', 'L', 'A', 'T', 'F', 'O', 'R', 'M', ' ', 'T', 'R', 'A', 'D', 'I', 'N', 'G'].map((char, i) => (
+              {['/', '/', ' ', 'S', 'H', 'O', 'W', 'C', 'A', 'S', 'E', ' ', 'Z', 'A', 'M', 'A', "'", 'S', ' ', 'F', 'H', 'E', ' ', 'I', 'N', 'N', 'O', 'V', 'A', 'T', 'I', 'O', 'N', 'S'].map((char, i) => (
                 <motion.span
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
@@ -217,7 +217,7 @@ export function Hero() {
 
             {/* Main title with word-by-word animation */}
             <motion.h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold leading-tight">
-              {["Aequilibra"].map((word, i) => (
+              {["ZamaHub"].map((word, i) => (
                 <motion.span
                   key={i}
                   initial={{ opacity: 0, y: 100, rotateX: -90 }}
@@ -258,7 +258,7 @@ export function Hero() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1, delay: 0.8 }}
               >
-                {"Trade, arbitrage, and strategize across multiple exchanges seamlessly.".split('').map((char, i) => (
+                {"Discover ZamaHub - the ultimate platform to explore and test Zama's Fully Homomorphic Encryption (FHE) innovations. Experience our first integration: the Zama Game, a privacy-preserving voting system powered by FHE and automated with Chainlink.".split('').map((char, i) => (
                   <motion.span
                     key={i}
                     initial={{ opacity: 0 }}
@@ -276,7 +276,7 @@ export function Hero() {
               variants={fadeInUp}
               className="flex flex-wrap justify-center gap-2 sm:gap-4"
             >
-              {["Cross-platform trading", "Funding rate arbitrage", "Automated strategies", "Unified experience"].map((note, i) => (
+              {["Fully Homomorphic Encryption", "Privacy-Preserving Voting", "Chainlink Automation", "Decentralized Gaming"].map((note, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, scale: 0 }}
@@ -320,14 +320,14 @@ export function Hero() {
                     : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white'
                 }`}
               >
-                <a href="/app/funding-comparison">
+                <a href="/app">
                   <motion.div
                     className="absolute inset-0 bg-white/20"
                     initial={{ x: "-100%", skewX: -15 }}
                     whileHover={{ x: "100%" }}
                     transition={{ duration: 0.8 }}
                   />
-                  <span className="relative z-10">Start Trading Unified</span>
+                  <span className="relative z-10">Explore ZamaHub</span>
                 </a>
               </Button>
             </motion.div>
@@ -351,21 +351,7 @@ export function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* Additional descriptive text */}
-          <motion.div 
-            className="max-w-4xl mx-auto px-4"
-            variants={fadeInUp}
-          >
-            <motion.p 
-              className={`text-base sm:text-lg leading-relaxed ${
-                isLight ? 'text-slate-700' : 'text-gray-300'
-              }`}
-            >
-              Connect to multiple DEXs through one interface. Execute cross-platform trades, access funding rate arbitrage, 
-              and build custom strategies across Hyperliquid, Aster, Lighter, Paradex, Extended, and more - all in one place.
-            </motion.p>
           </motion.div>
-        </motion.div>
 
         {/* Scroll indicator */}
         <motion.div

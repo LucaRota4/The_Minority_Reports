@@ -185,23 +185,23 @@ export function HowItWorks() {
   const steps = [
     {
       step: '1',
-      title: 'Connect & Unify',
-      description: 'Connect your wallet and access multiple DEXs through our unified dashboard interface',
+      title: 'Connect & Join',
+      description: 'Connect your wallet and join an active Zama Game voting session on the blockchain',
     },
     {
       step: '2',
-      title: 'Explore Markets',
-      description: 'Browse all available markets across Hyperliquid, Aster, Lighter, Paradex, Extended in one view',
+      title: 'Choose Your Strategy',
+      description: 'Select your voting option while keeping your choice encrypted using Fully Homomorphic Encryption',
     },
     {
       step: '3',
-      title: 'Build Strategies',
-      description: 'Create cross-platform trades, funding arbitrage, or custom strategies without complexity',
+      title: 'Cast Encrypted Vote',
+      description: 'Submit your vote through Zama\'s FHE smart contracts - your choice remains private throughout',
     },
     {
       step: '4',
-      title: 'Execute Seamlessly',
-      description: 'Trade across multiple exchanges as if they were one platform with unified position tracking',
+      title: 'Automated Results',
+      description: 'Chainlink oracles automatically reveal results and distribute rewards when voting ends',
     },
   ];
 
@@ -266,8 +266,8 @@ export function HowItWorks() {
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.6 }}
           >
-            Experience the power of unified multi-platform trading in four simple steps. From connection to execution, 
-            we make cross-exchange trading accessible to everyone, regardless of experience level.
+            Discover how Zama's Fully Homomorphic Encryption enables privacy-preserving blockchain applications. 
+            Follow our four-step process to participate in the Zama Game, where your votes remain encrypted until automated result revelation.
           </motion.p>
 
           {/* Progress bar */}

@@ -266,29 +266,28 @@ function Enhanced3DDexCard({ dex, index, isComingSoon = false }) {
 
 const staticDexes = [
   {
-    name: 'Hyperliquid',
-    logo: '/hyprliquid.png',
+    name: 'Zama FHE',
+    logo: '/chain-icons/zama.png', // Assuming we have or will add this
     status: 'active',
   },
   {
-    name: 'Aster',
-    logo: '/aster.png',
-    status: 'active',
-    apiName: 'Aster Perps'
-  },
-  {
-    name: 'Extended',
-    logo: '/extended.png',
+    name: 'Chainlink',
+    logo: '/chain-icons/chainlink.png',
     status: 'active',
   },
   {
-    name: 'Lighter',
-    logo: '/lighter.png',
+    name: 'Ethereum',
+    logo: '/chain-icons/ethereum.png',
     status: 'active',
   },
   {
-    name: 'Paradex',
-    logo: '/paradex.png',
+    name: 'Solidity',
+    logo: '/chain-icons/solidity.png',
+    status: 'active',
+  },
+  {
+    name: 'Web3',
+    logo: '/chain-icons/web3.png',
     status: 'active',
   }
 ];
@@ -440,7 +439,7 @@ export function SupportedDexes() {
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            Supported DEX Platforms
+            Supported Technology Partners
             <motion.span 
               className="block text-transparent bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600 bg-clip-text"
               animate={{ 
@@ -455,7 +454,7 @@ export function SupportedDexes() {
                 backgroundSize: "200% 200%" 
               }}
             >
-              (Unified in One Interface)
+              (Powering Privacy-First Blockchain)
             </motion.span>
           </motion.h2>
 
@@ -465,8 +464,8 @@ export function SupportedDexes() {
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            We integrate with several cutting-edge decentralized exchanges (DEXs), 
-            so you get the best each has to offer without hopping between sites. All accessible through our single platform.
+            ZamaHub leverages cutting-edge technologies to deliver privacy-preserving blockchain applications. 
+            Our integrations with FHE, decentralized oracles, and smart contract platforms enable secure, automated, and private DeFi experiences.
           </motion.p>
 
           {/* Network Stats */}

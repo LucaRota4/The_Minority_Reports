@@ -83,35 +83,35 @@ export function Features() {
 
   const features = [
     {
-      title: 'Unified Dashboard',
+      title: 'Fully Homomorphic Encryption',
       description:
-        'Manage all your crypto trades and strategies in one place across multiple exchanges',
+        'Experience computation on encrypted data without decryption - the future of privacy-preserving blockchain applications',
 
     },
     {
-      title: 'Cross-Platform Trading',
-      description: 'Execute trades on multiple DEXs from a single interface - no more juggling screens',
+      title: 'Privacy-Preserving Voting',
+      description: 'Cast votes anonymously while maintaining verifiability through Zama\'s FHE technology',
     },
     {
-      title: 'Funding Rate Arbitrage',
+      title: 'Decentralized Gaming',
       description:
-        'Access advanced arbitrage strategies with one-click delta-neutral positions',
+        'Play blockchain games with true privacy - your strategies and decisions remain encrypted',
       
     },
     {
-      title: 'Strategy Automation',
+      title: 'Chainlink Automation',
       description:
-        'Build and execute custom multi-exchange strategies without coding',
+        'Automated processes powered by Chainlink oracles for seamless, trustless execution',
       
     },
     {
-      title: 'Beginner-Friendly',
-      description: 'Intuitive interface designed for retail traders and newcomers',
+      title: 'Zama Game Integration',
+      description: 'Our flagship implementation: a competitive voting game showcasing FHE capabilities',
       
     },
     {
-      title: 'Multi-DEX Integration',
-      description: 'Connect to Hyperliquid, Aster, Lighter, Paradex, Extended, and more',
+      title: 'Developer Showcase',
+      description: 'Explore how Zama\'s FHE can transform DeFi, gaming, and privacy applications',
     },
   ];
 
@@ -167,7 +167,7 @@ export function Features() {
           <motion.h2 
             className="section-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-gray-900 via-cyan-700 to-blue-700 dark:from-white dark:via-cyan-300 dark:to-blue-300 bg-clip-text text-transparent"
           >
-            {"Why Choose Our Platform".split('').map((char, i) => (
+            {"Why Use Zama".split('').map((char, i) => (
               <motion.span
                 key={i}
                 className="inline-block"
@@ -186,8 +186,8 @@ export function Features() {
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.8 }}
           >
-            Experience the future of multi-platform trading. One unified interface to trade, arbitrage, 
-            and strategize across multiple DEXs without the complexity of managing multiple accounts.
+            Discover the power of privacy-preserving computation. Experience FHE technology that enables secure, 
+            decentralized applications without compromising user privacy or data security.
           </motion.p>
         </motion.div>
         
@@ -216,7 +216,7 @@ export function Features() {
             whileTap={{ scale: 0.95 }}
           >
             <span className="text-xs sm:text-sm font-medium text-cyan-700 dark:text-cyan-300">
-              Ready to trade smarter? Experience unified multi-platform trading now
+              Ready to experience privacy-preserving innovation? Discover FHE-powered applications now
             </span>
             <motion.div
               className="w-2 h-2 bg-cyan-500 rounded-full"

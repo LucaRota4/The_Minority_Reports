@@ -8,45 +8,45 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const testimonials = [
   {
-    name: "Alex Chen",
-    role: "DeFi Trader",
+    name: "Dr. Alice Chen",
+    role: "Cryptography Researcher",
     avatar: "AC",
-    content: "Aequilibra helped me find funding arbitrage opportunities I never knew existed. My portfolio performance has improved by 20% since I started using it.",
+    content: "Zama's FHE implementation is groundbreaking. The ability to perform computations on encrypted data without decryption opens up incredible possibilities for privacy-preserving DeFi.",
     rating: 5
   },
   {
     name: "Sarah Williams",
-    role: "Crypto Fund Manager",
+    role: "Blockchain Developer",
     avatar: "SW",
-    content: "The multi-DEX comparison feature is invaluable. It saves me hours of manual research and ensures I never miss profitable opportunities.",
+    content: "The Zama Game demonstrates how FHE can create truly private voting systems. As a developer, I'm excited to see what other applications this technology enables.",
     rating: 5
   },
   {
     name: "Marcus Rodriguez",
-    role: "Arbitrage Bot Developer",
+    role: "Privacy Advocate",
     avatar: "MR",
-    content: "The API integration is seamless and the data accuracy is top-notch. Essential tool for anyone serious about funding rate arbitrage.",
+    content: "Finally, a blockchain platform that takes privacy seriously. ZamaHub's integration of FHE with Chainlink automation shows the future of secure, decentralized applications.",
     rating: 5
   },
   {
     name: "Emma Thompson",
-    role: "Retail Trader",
+    role: "DeFi User",
     avatar: "ET",
-    content: "Simple, clean interface that makes complex funding strategies accessible to everyone. Game-changer for retail traders like me.",
+    content: "The Zama Game is intuitive and fun, but more importantly, it shows how privacy can be maintained in blockchain applications. This is the kind of innovation we need.",
     rating: 5
   },
   {
     name: "David Kim",
-    role: "Quantitative Analyst",
+    role: "Smart Contract Auditor",
     avatar: "DK",
-    content: "The historical data and analytics help me backtest strategies effectively. Robust platform with excellent execution speed.",
+    content: "Zama's approach to FHE in smart contracts is both elegant and secure. The Chainlink integration for automation adds another layer of trust and reliability.",
     rating: 5
   },
   {
     name: "Lisa Park",
-    role: "Portfolio Manager",
+    role: "Crypto Entrepreneur",
     avatar: "LP",
-    content: "Cross-chain funding analysis has opened up new revenue streams for our fund. Couldn't imagine trading without it now.",
+    content: "ZamaHub is pioneering the next generation of blockchain applications. The combination of FHE privacy with automated execution via Chainlink is truly innovative.",
     rating: 5
   }
 ];
@@ -98,10 +98,10 @@ export function Testimonials() {
           variants={cardVariants}
         >
           <h2 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent">
-            Trusted by Traders Worldwide
+            Community Voices
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Join thousands of successful traders who rely on Aequilibra for their funding rate strategies
+            Hear from developers, researchers, and privacy advocates exploring the future of FHE-powered applications
           </p>
         </motion.div>
 

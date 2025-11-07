@@ -28,24 +28,24 @@ export function Footer() {
                 transition: { duration: 0.2 }
               }}
             >
-              Aequilibra
+              ZamaHub
             </motion.span>
           </div>
           <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
             Built by{' '}
             <motion.a
-              href="https://github.com/Aequilibra-Labs"
+              href="https://github.com/ElioMargiotta"
               target="_blank"
               rel="noreferrer"
               className="font-medium underline underline-offset-4 hover:text-primary transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Aequilibra Labs
+              Elio Margiotta
             </motion.a>
             . The source code is available on{' '}
             <motion.a
-              href="https://github.com/Aequilibra-Labs/aequilibra-frontend"
+              href="https://github.com/ElioMargiotta/ZamaHub"
               target="_blank"
               rel="noreferrer"
               className="font-medium underline underline-offset-4 hover:text-primary transition-colors"

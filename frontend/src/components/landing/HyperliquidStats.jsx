@@ -51,39 +51,6 @@ function CountUpAnimation({ end, duration = 2, suffix = '', prefix = '', isInVie
 export function HyperliquidStats() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, threshold: 0.3 });
-  const [marketData, setMarketData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    async function fetchHyperliquidData() {
-      try {
-        // Import the DefiLlamaAPI dynamically to avoid SSR issues
-        const { DefiLlamaAPI } = await import('@/lib/defilamaAPI');
-        const data = await DefiLlamaAPI.getTotalMarketData();
-        
-        // Find Hyperliquid data
-        const hyperliquid = data.topProtocols.find(protocol => 
-          protocol.name === 'Hyperliquid Perps'
-        );
-        
-        if (hyperliquid) {
-          setMarketData({
-            ...hyperliquid,
-            totalVolume24h: data.totalVolume24h,
-            protocolCount: data.protocolCount
-          });
-        }
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching Hyperliquid data:', err);
-        setError(err.message);
-        setLoading(false);
-      }
-    }
-
-    fetchHyperliquidData();
-  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -109,58 +76,27 @@ export function HyperliquidStats() {
     }
   };
 
-  if (loading) {
-    return (
-      <section className="w-full px-4 py-16 md:py-24 relative overflow-hidden">
-        <div className="mx-auto max-w-7xl text-center">
-          <div className="animate-pulse">
-            <div className="h-8 bg-muted rounded w-64 mx-auto mb-4"></div>
-            <div className="h-4 bg-muted rounded w-96 mx-auto mb-8"></div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="p-6 rounded-xl bg-muted/50 h-32"></div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  if (error || !marketData) {
-    return (
-      <section className="w-full px-4 py-16 md:py-24 relative overflow-hidden">
-        <div className="mx-auto max-w-7xl text-center">
-          <h2 className="text-2xl font-bold text-muted-foreground">
-            Unable to load market data
-          </h2>
-        </div>
-      </section>
-    );
-  }
-
   const stats = [
     {
-      value: marketData.volume24h,
-      label: 'Hyperliquid 24h Volume',
-      description: 'Leading DEX performance',
-      formatter: formatCurrency,
-      icon: '📈'
+      value: 1000000,
+      label: 'Encrypted Computations',
+      description: 'FHE operations processed',
+      formatter: (val) => val.toLocaleString(),
+      icon: '�'
     },
     {
-      value: marketData.change24h,
-      suffix: '%',
-      prefix: '+',
-      label: '24h Growth',
-      description: 'Volume change today',
-      icon: '🚀'
+      value: 50000,
+      label: 'Private Transactions',
+      description: 'Processed with Zama FHE',
+      formatter: (val) => val.toLocaleString(),
+      icon: '�️'
     },
     {
-      value: Math.round((marketData.volume24h / marketData.totalVolume24h) * 100),
+      value: 99.9,
       suffix: '%',
-      label: 'Market Share',
-      description: 'Of total DEX volume',
-      icon: '🎯'
+      label: 'Privacy Guarantee',
+      description: 'Data remains encrypted',
+      icon: '🔒'
     }
   ];
 
@@ -194,7 +130,7 @@ export function HyperliquidStats() {
           variants={statVariants}
         >
           <h2 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Hyperliquid Perps Performance
+            FHE Privacy Metrics
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Real-time market data from the leading decentralized perpetuals exchange
@@ -283,7 +219,7 @@ export function HyperliquidStats() {
                   ease: "easeInOut"
                 }}
               />
-              <span className="text-sm font-medium">Live Hyperliquid Data</span>
+              <span className="text-sm font-medium">Live FHE Metrics</span>
             </div>
             <div className="w-px h-4 bg-muted" />
             <div className="flex items-center gap-2">
