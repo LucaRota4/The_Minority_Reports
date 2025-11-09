@@ -88,6 +88,21 @@ export default function ZamaMindGamesPage() {
     return votings;
   };
   
+  // Helper function to format time duration
+  const formatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    } else if (minutes > 0) {
+      return `${minutes}m`;
+    } else {
+      return `${secs}s`;
+    }
+  };
+  
   // Selected voting state
   const [selectedVoting, setSelectedVoting] = useState(null);
   const [votingData, setVotingData] = useState(null);
@@ -498,6 +513,7 @@ export default function ZamaMindGamesPage() {
 
       const [
         name,
+        votingStartTime,
         votingEndTime,
         totalVotingUSDC,
         hasVoted,
@@ -509,6 +525,7 @@ export default function ZamaMindGamesPage() {
         voteDecrypted
       ] = await Promise.all([
         votingContract.name(),
+        votingContract.votingStartTime(),
         votingContract.votingEndTime(),
         votingContract.totalVotingUSDC(),
         votingContract.hasVoted(userAddress),
@@ -522,6 +539,7 @@ export default function ZamaMindGamesPage() {
 
       const data = {
         name,
+        votingStartTime: Number(votingStartTime),
         votingEndTime: Number(votingEndTime),
         totalVotingUSDC: ethers.formatUnits(totalVotingUSDC, 6),
         hasVoted,
@@ -634,6 +652,12 @@ export default function ZamaMindGamesPage() {
     try {
       if (!instance) throw new Error("SDK not ready");
       if (selectedOption === null) throw new Error("Select an option");
+
+      // Check if voting has started
+      const now = Math.floor(Date.now() / 1000);
+      if (votingData && votingData.votingStartTime > now) {
+        throw new Error("Voting has not started yet");
+      }
 
       setVotingLoading(true);
       
@@ -1229,12 +1253,30 @@ export default function ZamaMindGamesPage() {
                             <p className="text-2xl font-bold text-green-600">{votingData.totalVotingUSDC} USDC</p>
                           </div>
                           <div className="text-center p-4 bg-muted/50 rounded-lg">
-                            <p className="text-sm text-muted-foreground mb-1">Time Remaining</p>
-                            <p className="text-xl font-semibold">
-                              {votingData.timeRemaining > 0 
-                                ? `${Math.floor(votingData.timeRemaining / 3600)}h ${Math.floor((votingData.timeRemaining % 3600) / 60)}m`
-                                : "Ended"}
+                            <p className="text-sm text-muted-foreground mb-1">
+                              {votingData.votingStartTime <= Math.floor(Date.now() / 1000) ? "Time Remaining" : "Duration"}
                             </p>
+                            <p className="text-xl font-semibold">
+                              {(() => {
+                                const now = Math.floor(Date.now() / 1000);
+                                if (votingData.votingStartTime > now) {
+                                  // Voting hasn't started
+                                  const duration = votingData.votingEndTime - votingData.votingStartTime;
+                                  return formatTime(duration);
+                                } else if (votingData.timeRemaining > 0) {
+                                  // Voting in progress
+                                  return formatTime(votingData.timeRemaining);
+                                } else {
+                                  // Voting ended
+                                  return "Ended";
+                                }
+                              })()}
+                            </p>
+                            {votingData.votingStartTime > Math.floor(Date.now() / 1000) && (
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Starting in: {formatTime(votingData.votingStartTime - Math.floor(Date.now() / 1000))}
+                              </p>
+                            )}
                           </div>
                           <div className="text-center p-4 bg-muted/50 rounded-lg">
                             <p className="text-sm text-muted-foreground mb-1">Your Status</p>
@@ -1273,11 +1315,11 @@ export default function ZamaMindGamesPage() {
                             return (
                               <motion.div
                                 key={option}
-                                whileHover={{ scale: !votingData.hasVoted && votingData.timeRemaining > 0 ? 1.02 : 1 }}
+                                whileHover={{ scale: !votingData.hasVoted && votingData.timeRemaining > 0 && votingData.votingStartTime <= Math.floor(Date.now() / 1000) ? 1.02 : 1 }}
                                 className={`p-6 border-2 rounded-lg cursor-pointer transition-all ${
                                   selectedOption === option ? "border-purple-500 bg-purple-500/10" : "border-border"
                                 }`}
-                                onClick={() => !votingData.hasVoted && votingData.timeRemaining > 0 && setSelectedOption(option)}
+                                onClick={() => !votingData.hasVoted && votingData.timeRemaining > 0 && votingData.votingStartTime <= Math.floor(Date.now() / 1000) && setSelectedOption(option)}
                               >
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center gap-4">
@@ -1434,8 +1476,23 @@ export default function ZamaMindGamesPage() {
                       </Card>
                     )}
 
+                    {/* Voting Not Started Yet */}
+                    {votingData.votingStartTime > Math.floor(Date.now() / 1000) && (
+                      <Card className="border-2 border-orange-500">
+                        <CardContent className="pt-6 text-center">
+                          <div className="space-y-3">
+                            <Clock className="h-12 w-12 text-orange-500 mx-auto" />
+                            <p className="font-semibold">⏰ Voting Has Not Started Yet</p>
+                            <p className="text-sm text-muted-foreground">
+                              This voting will start on {new Date(votingData.votingStartTime * 1000).toLocaleString()}
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+
                     {/* Action Buttons */}
-                    {!votingData.hasVoted && votingData.timeRemaining > 0 && (
+                    {!votingData.hasVoted && votingData.timeRemaining > 0 && votingData.votingStartTime <= Math.floor(Date.now() / 1000) && (
                       <Card className="border-2 border-purple-500">
                         <CardContent className="pt-6">
                           <Button 
