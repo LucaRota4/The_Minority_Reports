@@ -6,13 +6,13 @@ import { Separator } from '@/components/ui/separator';
 export function Footer() {
   return (
     <motion.footer 
-      className="w-full py-8 px-4 md:px-8 md:py-12 bg-muted/30 border-t border-muted/20"
+      className="relative w-full py-8 px-4 md:px-8 md:py-12 border-t border-muted/20 overflow-hidden"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
       viewport={{ once: true }}
     >
-      <div className="mx-auto flex max-w-screen-2xl flex-col items-center justify-between gap-6 md:flex-row">
+      <div className="mx-auto flex max-w-screen-2xl flex-col items-center justify-between gap-6 md:flex-row relative z-10">
         <motion.div 
           className="flex flex-col items-center gap-4 md:flex-row md:gap-2"
           initial={{ opacity: 0, x: -20 }}
@@ -21,15 +21,15 @@ export function Footer() {
           viewport={{ once: true }}
         >
           <div className="flex items-center space-x-2">
-            <motion.span 
-              className="font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+            <motion.img 
+              src="/agora.svg" 
+              alt="Agora Logo" 
+              className="w-16 h-16"
               whileHover={{
                 scale: 1.05,
                 transition: { duration: 0.2 }
               }}
-            >
-              ZamaHub
-            </motion.span>
+            />
           </div>
           <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
             Built by{' '}
@@ -66,7 +66,6 @@ export function Footer() {
           viewport={{ once: true }}
         >
           <motion.a
-            href="/legal/terms"
             className="text-muted-foreground hover:text-primary transition-colors relative py-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -80,7 +79,6 @@ export function Footer() {
             />
           </motion.a>
           <motion.a
-            href="/legal/privacy"
             className="text-muted-foreground hover:text-primary transition-colors relative py-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -94,7 +92,6 @@ export function Footer() {
             />
           </motion.a>
           <motion.a
-            href="/legal/risk"
             className="text-muted-foreground hover:text-primary transition-colors relative py-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -111,7 +108,7 @@ export function Footer() {
       </div>
       
       <motion.div 
-        className="mt-8 text-center"
+        className="mt-8 text-center relative z-10"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
@@ -119,7 +116,7 @@ export function Footer() {
       >
         <Separator className="mb-4" />
         <p className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Aequilibra Labs. All rights reserved. 
+          © {new Date().getFullYear()} AGORA Labs. All rights reserved. 
           <span className="block mt-1">
             Crypto derivatives are risky. Nothing here is financial advice. DYOR.
           </span>

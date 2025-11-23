@@ -38,19 +38,19 @@ function FeatureItem({ feature, index }) {
       className="group"
     >
       <motion.div 
-        className="relative py-6 px-4 sm:py-8 sm:px-6 border-l-2 border-cyan-200 dark:border-cyan-800 hover:border-cyan-400 dark:hover:border-cyan-600 transition-all duration-300"
+        className="relative py-6 px-4 sm:py-8 sm:px-6 border-l-2 border-cyan-200 dark:border-cyan-800 hover:border-[#4D89B0] dark:hover:border-[#4D89B0] transition-all duration-300"
         whileHover={{ x: 10 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
       >
         {/* Animated background on hover */}
         <motion.div 
-          className="absolute inset-0 bg-gradient-to-r from-cyan-50/50 to-transparent dark:from-cyan-900/20 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          className="absolute inset-0 bg-gradient-to-r from-[#4D89B0]/10 to-transparent dark:from-[#4D89B0]/20 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         />
         
         {/* Content */}
         <div className="relative z-10">
           <motion.h3 
-            className="text-lg sm:text-xl font-bold text-foreground group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors duration-300 mb-2 sm:mb-3"
+            className="text-lg sm:text-xl font-bold text-foreground group-hover:text-[#4D89B0] dark:group-hover:text-[#4D89B0] transition-colors duration-300 mb-2 sm:mb-3"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ delay: 0.2 + (index * 0.1) }}
@@ -70,7 +70,7 @@ function FeatureItem({ feature, index }) {
         
         {/* Hover indicator */}
         <motion.div
-          className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-cyan-400 to-blue-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"
+          className="absolute left-0 top-0 w-1 h-full bg-[#4D89B0] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"
         />
       </motion.div>
     </motion.div>
@@ -83,42 +83,31 @@ export function Features() {
 
   const features = [
     {
-      title: 'Fully Homomorphic Encryption',
+      title: 'FHE-Powered Governance',
       description:
-        'Experience computation on encrypted data without decryption - the future of privacy-preserving blockchain applications',
-
+        'Use Fully Homomorphic Encryption to run DAO logic on encrypted ballots and data—decisions stay public, votes stay private.',
     },
     {
-      title: 'Privacy-Preserving Voting',
-      description: 'Cast votes anonymously while maintaining verifiability through Zama\'s FHE technology',
-    },
-    {
-      title: 'Decentralized Gaming',
+      title: 'Kryptē Psêphos',
       description:
-        'Play blockchain games with true privacy - your strategies and decisions remain encrypted',
-      
+        'Cast anonymous votes with verifiable outcomes. Your identity and choice remain encrypted end-to-end.',
     },
     {
-      title: 'Chainlink Automation',
+      title: 'Steemless Customization',
       description:
-        'Automated processes powered by Chainlink oracles for seamless, trustless execution',
-      
+        'Choose voting parameters, privacy levels, and governance models that fit your community’s unique needs without sacrificing security.',
     },
     {
-      title: 'Zama Game Integration',
-      description: 'Our flagship implementation: a competitive voting game showcasing FHE capabilities',
-      
-    },
-    {
-      title: 'Developer Showcase',
-      description: 'Explore how Zama\'s FHE can transform DeFi, gaming, and privacy applications',
+      title: 'Chainlink Proposal Automation',
+      description:
+        'Time-based proposal flows and upkeep powered by Chainlink for seamless, trustless execution of governance cycles.',
     },
   ];
 
   return (
     <section className="relative w-full px-4 py-16 sm:py-20 md:py-32 overflow-hidden" ref={ref}>
       {/* Background elements */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-muted/20 to-transparent" />
+      
       
       {/* Floating background shapes - Smaller on mobile */}
       <motion.div
@@ -147,7 +136,7 @@ export function Features() {
         }}
       />
 
-      <div className="relative max-w-7xl mx-auto">
+      <div className="relative max-w-7xl mx-auto z-10">
         {/* Enhanced header with animated title */}
         <motion.div 
           className="text-center space-y-4 sm:space-y-6 mb-16 sm:mb-20"
@@ -155,19 +144,11 @@ export function Features() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8 }}
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 rounded-full bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800"
-          >
-            <span className="text-xs sm:text-sm font-medium text-cyan-700 dark:text-cyan-300">✨ Platform Capabilities</span>
-          </motion.div>
           
           <motion.h2 
-            className="section-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-gray-900 via-cyan-700 to-blue-700 dark:from-white dark:via-cyan-300 dark:to-blue-300 bg-clip-text text-transparent"
+            className="section-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#4D89B0]"
           >
-            {"Why Use Zama".split('').map((char, i) => (
+            {"Why Us ?".split('').map((char, i) => (
               <motion.span
                 key={i}
                 className="inline-block"
@@ -186,8 +167,7 @@ export function Features() {
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.8 }}
           >
-            Discover the power of privacy-preserving computation. Experience FHE technology that enables secure, 
-            decentralized applications without compromising user privacy or data security.
+          Step into Agora’s privacy-first DAO. With FHE, your vote stays hidden, your voice stays free, and collective decisions remain verifiable without sacrificing anonymity.
           </motion.p>
         </motion.div>
         
@@ -210,20 +190,7 @@ export function Features() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.6, delay: 1.2 }}
         >
-          <motion.div
-            className="inline-flex items-center gap-3 sm:gap-4 px-4 py-3 sm:px-6 sm:py-3 rounded-full bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 border border-cyan-200 dark:border-cyan-800"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span className="text-xs sm:text-sm font-medium text-cyan-700 dark:text-cyan-300">
-              Ready to experience privacy-preserving innovation? Discover FHE-powered applications now
-            </span>
-            <motion.div
-              className="w-2 h-2 bg-cyan-500 rounded-full"
-              animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-          </motion.div>
+
         </motion.div>
       </div>
     </section>

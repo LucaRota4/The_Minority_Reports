@@ -4,21 +4,20 @@ import { useQuery } from '@tanstack/react-query';
 import { gql, request } from 'graphql-request';
 
 // Subgraph endpoint
-const SUBGRAPH_URL = process.env.NEXT_PUBLIC_SUBGRAPH_URL || 'https://api.studio.thegraph.com/query/1715807/agora-sub/0.0.4';
+const SUBGRAPH_URL = process.env.NEXT_PUBLIC_SUBGRAPH_URL || 'https://api.studio.thegraph.com/query/1715807/agora-sub/0.0.5';
 
 // GraphQL queries
 const GET_SPACES_BY_OWNER = gql`
   query GetSpacesByOwner($owner: Bytes!) {
-    spaces(where: { owner: $owner }) {
+    spaceCreateds(where: { owner: $owner }) {
       id
       spaceId
       ensName
       displayName
       owner
-      createdAt
-      isActive
-      memberCount
-      adminCount
+      blockNumber
+      blockTimestamp
+      transactionHash
     }
   }
 `;
@@ -33,16 +32,25 @@ const GET_MEMBER_SPACES = gql`
 
 const GET_MEMBER_SPACES_DETAILS = gql`
   query GetMemberSpacesDetails($spaceIds: [Bytes!]!) {
-    spaces(where: { spaceId_in: $spaceIds }) {
+    spaceCreateds(where: { spaceId_in: $spaceIds }) {
       id
       spaceId
       ensName
       displayName
       owner
-      createdAt
-      isActive
-      memberCount
-      adminCount
+      blockNumber
+      blockTimestamp
+      transactionHash
+    }
+  }
+`;
+
+const GET_MEMBER_COUNTS = gql`
+  query GetMemberCounts($spaceIds: [Bytes!]!) {
+    memberJoineds(where: { spaceId_in: $spaceIds }) {
+      spaceId
+      member
+      blockTimestamp
     }
   }
 `;
@@ -57,32 +65,45 @@ const GET_ADMIN_SPACES = gql`
 
 const GET_ADMIN_SPACES_DETAILS = gql`
   query GetAdminSpacesDetails($spaceIds: [Bytes!]!) {
-    spaces(where: { spaceId_in: $spaceIds }) {
+    spaceCreateds(where: { spaceId_in: $spaceIds }) {
       id
       spaceId
       ensName
       displayName
       owner
-      createdAt
-      isActive
-      memberCount
-      adminCount
+      blockNumber
+      blockTimestamp
+      transactionHash
     }
   }
 `;
 
 const GET_SPACE_BY_ENS = gql`
   query GetSpaceByEns($ensName: String!) {
-    spaces(where: { ensName: $ensName }) {
+    spaceCreateds(where: { ensName: $ensName }) {
       id
       spaceId
       ensName
       displayName
       owner
-      createdAt
-      isActive
-      memberCount
-      adminCount
+      blockNumber
+      blockTimestamp
+      transactionHash
+    }
+  }
+`;
+
+const GET_ALL_SPACES = gql`
+  query GetAllSpaces($first: Int = 100, $skip: Int = 0, $orderBy: SpaceCreated_orderBy = blockTimestamp, $orderDirection: OrderDirection = desc) {
+    spaceCreateds(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection) {
+      id
+      spaceId
+      ensName
+      displayName
+      owner
+      blockNumber
+      blockTimestamp
+      transactionHash
     }
   }
 `;
@@ -105,20 +126,13 @@ const GET_PROPOSALS_BY_SPACE = gql`
       proposal
       p_title
       p_bodyURI
-      p_discussionURI
-      p_app
       p_pType
       p_choices
       p_start
       p_end
-      p_execTargets
-      p_execValues
-      p_execCalldatas
-      p_execStrategy
       p_eligibilityType
       p_eligibilityToken
       p_eligibilityThreshold
-      p_creator
       blockNumber
       blockTimestamp
       transactionHash
@@ -134,20 +148,75 @@ const GET_PROPOSAL_BY_ID = gql`
       proposal
       p_title
       p_bodyURI
-      p_discussionURI
-      p_app
       p_pType
       p_choices
       p_start
       p_end
-      p_execTargets
-      p_execValues
-      p_execCalldatas
-      p_execStrategy
       p_eligibilityType
       p_eligibilityToken
       p_eligibilityThreshold
-      p_creator
+      blockNumber
+      blockTimestamp
+      transactionHash
+    }
+  }
+`;
+
+const GET_VOTES_BY_PROPOSAL = gql`
+  query GetVotesByProposal($proposalId: Bytes!) {
+    votes(where: { proposalId: $proposalId }) {
+      id
+      proposalId
+      voter
+      choice
+      blockNumber
+      blockTimestamp
+      transactionHash
+    }
+  }
+`;
+
+const GET_USER_VOTES = gql`
+  query GetUserVotes($voter: Bytes!) {
+    votes(
+      where: { voter: $voter }
+      orderBy: blockTimestamp
+      orderDirection: desc
+      first: 20
+    ) {
+      id
+      proposalId
+      voter
+      choice
+      weight
+      blockNumber
+      blockTimestamp
+      transactionHash
+    }
+  }
+`;
+
+const GET_PROPOSALS_BY_SPACES = gql`
+  query GetProposalsBySpaces($spaceIds: [Bytes!]!) {
+    proposalCreateds(
+      where: { spaceId_in: $spaceIds }
+      orderBy: blockTimestamp
+      orderDirection: desc
+      first: 50
+    ) {
+      id
+      proposalId
+      spaceId
+      proposal
+      p_title
+      p_bodyURI
+      p_pType
+      p_choices
+      p_start
+      p_end
+      p_eligibilityType
+      p_eligibilityToken
+      p_eligibilityThreshold
       blockNumber
       blockTimestamp
       transactionHash
@@ -161,7 +230,17 @@ export function useSpacesByOwner(ownerAddress, enabled = true) {
     queryKey: ['spacesByOwner', ownerAddress],
     queryFn: async () => {
       if (!ownerAddress) return null;
-      return await request(SUBGRAPH_URL, GET_SPACES_BY_OWNER, { owner: ownerAddress });
+      const result = await request(SUBGRAPH_URL, GET_SPACES_BY_OWNER, { owner: ownerAddress });
+      // Transform spaceCreateds to spaces format
+      return {
+        spaces: result.spaceCreateds.map(space => ({
+          ...space,
+          createdAt: space.blockTimestamp,
+          isActive: true, // Assume active since not deactivated
+          memberCount: 0, // Not available in this schema
+          adminCount: 0, // Not available in this schema
+        }))
+      };
     },
     enabled: enabled && !!ownerAddress,
   });
@@ -185,7 +264,17 @@ export function useMemberSpaces(spaceIds, enabled = true) {
     queryKey: ['memberSpacesDetails', spaceIds],
     queryFn: async () => {
       if (!spaceIds?.length) return null;
-      return await request(SUBGRAPH_URL, GET_MEMBER_SPACES_DETAILS, { spaceIds });
+      const result = await request(SUBGRAPH_URL, GET_MEMBER_SPACES_DETAILS, { spaceIds });
+      // Transform spaceCreateds to spaces format
+      return {
+        spaces: result.spaceCreateds.map(space => ({
+          ...space,
+          createdAt: space.blockTimestamp,
+          isActive: true,
+          memberCount: 0,
+          adminCount: 0,
+        }))
+      };
     },
     enabled: enabled && !!spaceIds?.length,
   });
@@ -209,7 +298,17 @@ export function useAdminSpaces(spaceIds, enabled = true) {
     queryKey: ['adminSpacesDetails', spaceIds],
     queryFn: async () => {
       if (!spaceIds?.length) return null;
-      return await request(SUBGRAPH_URL, GET_ADMIN_SPACES_DETAILS, { spaceIds });
+      const result = await request(SUBGRAPH_URL, GET_ADMIN_SPACES_DETAILS, { spaceIds });
+      // Transform spaceCreateds to spaces format
+      return {
+        spaces: result.spaceCreateds.map(space => ({
+          ...space,
+          createdAt: space.blockTimestamp,
+          isActive: true,
+          memberCount: 0,
+          adminCount: 0,
+        }))
+      };
     },
     enabled: enabled && !!spaceIds?.length,
   });
@@ -222,9 +321,39 @@ export function useSpaceByEns(ensName, enabled = true) {
     queryFn: async () => {
       if (!ensName) return null;
       const normalizedEns = ensName.endsWith('.eth') ? ensName : `${ensName}.eth`;
-      return await request(SUBGRAPH_URL, GET_SPACE_BY_ENS, { ensName: normalizedEns });
+      const result = await request(SUBGRAPH_URL, GET_SPACE_BY_ENS, { ensName: normalizedEns });
+      // Transform spaceCreateds to spaces format
+      return {
+        spaces: result.spaceCreateds.map(space => ({
+          ...space,
+          createdAt: space.blockTimestamp,
+          isActive: true,
+          memberCount: 0,
+          adminCount: 0,
+        }))
+      };
     },
     enabled: enabled && !!ensName,
+  });
+}
+
+export function useAllSpaces(first = 100, enabled = true) {
+  return useQuery({
+    queryKey: ['allSpaces', first],
+    queryFn: async () => {
+      const result = await request(SUBGRAPH_URL, GET_ALL_SPACES, { first });
+      // Transform spaceCreateds to spaces format
+      return {
+        spaces: result.spaceCreateds.map(space => ({
+          ...space,
+          createdAt: space.blockTimestamp,
+          isActive: true,
+          memberCount: 0,
+          adminCount: 0,
+        }))
+      };
+    },
+    enabled,
   });
 }
 
@@ -240,16 +369,25 @@ export function useLatestDisplayNameUpdates(spaceIds, enabled = true) {
   });
 }
 
-// Hook for proposals in a space
-export function useProposalsBySpace(spaceId, enabled = true) {
+// Hook for proposals from multiple spaces
+export function useProposalsBySpaces(spaceIds, enabled = true) {
   return useQuery({
-    queryKey: ['proposalsBySpace', spaceId],
+    queryKey: ['proposalsBySpaces', spaceIds],
     queryFn: async () => {
-      if (!spaceId) return null;
-      return await request(SUBGRAPH_URL, GET_PROPOSALS_BY_SPACE, { spaceId });
+      if (!spaceIds || spaceIds.length === 0) return { proposalCreateds: [] };
+      return await request(SUBGRAPH_URL, GET_PROPOSALS_BY_SPACES, { spaceIds });
     },
-    enabled: enabled && !!spaceId,
+    enabled: enabled && !!spaceIds && spaceIds.length > 0
   });
+}
+
+// Hook for proposals by space (single space)
+export function useProposalsBySpace(spaceId, enabled = true) {
+  const { data, ...rest } = useProposalsBySpaces(spaceId ? [spaceId] : [], enabled && !!spaceId);
+  return {
+    ...rest,
+    data: data ? { proposalCreateds: data.proposalCreateds.filter(p => p.spaceId === spaceId) } : null
+  };
 }
 
 // Hook for single proposal by ID
@@ -264,7 +402,59 @@ export function useProposalById(proposalId, enabled = true) {
   });
 }
 
+// Hook for votes by proposal ID
+export function useVotesByProposal(proposalId, enabled = true) {
+  return useQuery({
+    queryKey: ['votesByProposal', proposalId],
+    queryFn: async () => {
+      if (!proposalId) return null;
+      return await request(SUBGRAPH_URL, GET_VOTES_BY_PROPOSAL, { proposalId });
+    },
+    enabled: enabled && !!proposalId,
+  });
+}
+
+
+// Hook for user's votes
+export function useUserVotes(voterAddress, enabled = true) {
+  return useQuery({
+    queryKey: ['userVotes', voterAddress],
+    queryFn: async () => {
+      return await request(SUBGRAPH_URL, GET_USER_VOTES, { voter: voterAddress });
+    },
+    enabled: enabled && !!voterAddress
+  });
+}
+
 // Combined hook for all user spaces categorized by role
+export function useMemberCounts(spaceIds, enabled = true) {
+  return useQuery({
+    queryKey: ['memberCounts', spaceIds],
+    queryFn: async () => {
+      if (!spaceIds || spaceIds.length === 0) return null;
+      const result = await request(SUBGRAPH_URL, GET_MEMBER_COUNTS, { spaceIds });
+      
+      // Count members per space
+      const memberCounts = {};
+      result.memberJoineds.forEach(member => {
+        if (!memberCounts[member.spaceId]) {
+          memberCounts[member.spaceId] = new Set();
+        }
+        memberCounts[member.spaceId].add(member.member.toLowerCase());
+      });
+      
+      // Convert sets to counts
+      const counts = {};
+      Object.keys(memberCounts).forEach(spaceId => {
+        counts[spaceId] = memberCounts[spaceId].size;
+      });
+      
+      return counts;
+    },
+    enabled: enabled && spaceIds && spaceIds.length > 0,
+  });
+}
+
 export function useCategorizedSpaces(userAddress, enabled = true) {
   const { data: ownerData, isLoading: ownerLoading, error: ownerError } = useSpacesByOwner(userAddress, enabled);
   const { data: memberSpaceIdsData, isLoading: memberIdsLoading, error: memberIdsError } = useMemberSpaceIds(userAddress, enabled);
@@ -295,6 +485,9 @@ export function useCategorizedSpaces(userAddress, enabled = true) {
   // Query latest display name updates for all spaces
   const { data: displayNameUpdatesData } = useLatestDisplayNameUpdates(allSpaceIds, enabled && allSpaceIds.length > 0);
 
+  // Query member counts for all spaces
+  const { data: memberCountsData, isLoading: memberCountsLoading, error: memberCountsError } = useMemberCounts(allSpaceIds, enabled && allSpaceIds.length > 0);
+
   // Create a map of spaceId -> latest display name
   const displayNameMap = React.useMemo(() => {
     const map = new Map();
@@ -315,6 +508,11 @@ export function useCategorizedSpaces(userAddress, enabled = true) {
     return map;
   }, [displayNameUpdatesData]);
 
+  // Create a map of spaceId -> member count
+  const memberCountMap = React.useMemo(() => {
+    return memberCountsData || {};
+  }, [memberCountsData]);
+
   const categorizedSpaces = React.useMemo(() => {
     const spaces = {
       owned: [],
@@ -327,6 +525,7 @@ export function useCategorizedSpaces(userAddress, enabled = true) {
       spaces.owned = ownerData.spaces.map(space => ({
         ...space,
         displayName: displayNameMap.get(space.spaceId) || space.displayName,
+        memberCount: memberCountMap[space.spaceId] || 0,
         role: 'owner'
       }));
     }
@@ -339,6 +538,7 @@ export function useCategorizedSpaces(userAddress, enabled = true) {
         .map(space => ({
           ...space,
           displayName: displayNameMap.get(space.spaceId) || space.displayName,
+          memberCount: memberCountMap[space.spaceId] || 0,
           role: 'admin'
         }));
     }
@@ -352,15 +552,16 @@ export function useCategorizedSpaces(userAddress, enabled = true) {
         .map(space => ({
           ...space,
           displayName: displayNameMap.get(space.spaceId) || space.displayName,
+          memberCount: memberCountMap[space.spaceId] || 0,
           role: 'member'
         }));
     }
 
     return spaces;
-  }, [ownerData, memberSpacesData, adminSpacesData, displayNameMap]);
+  }, [ownerData, memberSpacesData, adminSpacesData, displayNameMap, memberCountMap]);
 
-  const loading = ownerLoading || memberIdsLoading || memberSpacesLoading || adminIdsLoading || adminSpacesLoading;
-  const error = ownerError || memberIdsError || memberSpacesError || adminIdsError || adminSpacesError;
+  const loading = ownerLoading || memberIdsLoading || memberSpacesLoading || adminIdsLoading || adminSpacesLoading || memberCountsLoading;
+  const error = ownerError || memberIdsError || memberSpacesError || adminIdsError || adminSpacesError || memberCountsError;
 
   return {
     categorizedSpaces,

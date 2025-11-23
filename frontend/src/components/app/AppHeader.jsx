@@ -4,6 +4,7 @@ import { LayoutDashboard, Users, Plus, Search, Home } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 export function AppHeader() {
   const pathname = usePathname();
@@ -36,7 +37,7 @@ export function AppHeader() {
       submenu: [
         { name: 'My Spaces', href: '/app/spaces/my', icon: Users },
         { name: 'Create Space', href: '/app/spaces/create', icon: Plus },
-        { name: 'Discover Spaces', href: '/app/spaces/discover', icon: Search },
+        { name: 'Explore Spaces', href: '/app/spaces', icon: Search },
       ]
     }
   ];
@@ -70,10 +71,10 @@ export function AppHeader() {
       <div className="mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-4 md:px-8">
         {/* Logo Section */}
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
             <div className="w-10 h-10 relative rounded-lg p-1" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
               <Image
-                src="/agora.png"
+                src="/agora.svg"
                 alt="Agora Logo"
                 fill
                 className="object-contain"
@@ -82,13 +83,13 @@ export function AppHeader() {
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-xl tracking-tight" style={{ color: colors.white }}>
-                ZamaHub
+                A G O R A
               </span>
               <span className="text-xs -mt-1" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                Privacy-Preserving Apps
+                Privacy back in old time
               </span>
             </div>
-          </div>
+          </Link>
         </div>
 
         {/* Desktop Navigation */}

@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { Loader2, CheckCircle, AlertCircle, Globe, Coins, Image as ImageIcon, Shield, ChevronDown } from 'lucide-react';
 
 // Import the SpaceRegistry ABI
 import spaceRegistryAbi from '@/abis/SpaceRegistry.json';
@@ -20,8 +20,46 @@ export function SpaceCreation() {
   const [mounted, setMounted] = useState(false);
   const [ensName, setEnsName] = useState('');
   const [displayName, setDisplayName] = useState('');
+  const [membershipType, setMembershipType] = useState('0'); // Default to public (0)
+  const [criteriaContract, setCriteriaContract] = useState('');
+  const [criteriaAmount, setCriteriaAmount] = useState('');
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(null);
+  const [hideTimeout, setHideTimeout] = useState(null);
+
+  const membershipOptions = [
+    {
+      value: '0',
+      name: 'Public',
+      description: 'Anyone can join',
+      icon: Globe
+    },
+    {
+      value: '1',
+      name: 'Token Holder',
+      description: 'Requires holding specific tokens',
+      icon: Coins
+    },
+    {
+      value: '2',
+      name: 'NFT Holder',
+      description: 'Requires holding specific NFTs',
+      icon: ImageIcon
+    },
+    {
+      value: '3',
+      name: 'Whitelist',
+      description: 'Only whitelisted addresses',
+      icon: Shield
+    }
+  ];
+
+  const selectedOption = membershipOptions.find(option => option.value === membershipType);
+
+  const handleDropdownToggle = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
 
   const { writeContract, data: hash, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
@@ -46,6 +84,21 @@ export function SpaceCreation() {
       newErrors.displayName = 'Display name is required';
     } else if (displayName.length > 30) {
       newErrors.displayName = 'Display name must be 30 characters or less';
+    }
+
+    // Validate criteria contract and amount for token/NFT membership
+    if (membershipType === '1' || membershipType === '2') { // token or nft
+      if (!criteriaContract.trim()) {
+        newErrors.criteriaContract = 'Contract address is required for token/NFT membership';
+      } else if (!/^0x[a-fA-F0-9]{40}$/.test(criteriaContract)) {
+        newErrors.criteriaContract = 'Please enter a valid Ethereum address';
+      }
+
+      if (!criteriaAmount.trim()) {
+        newErrors.criteriaAmount = 'Amount is required for token/NFT membership';
+      } else if (isNaN(criteriaAmount) || parseInt(criteriaAmount) <= 0) {
+        newErrors.criteriaAmount = 'Please enter a valid positive number';
+      }
     }
 
     setErrors(newErrors);
@@ -76,7 +129,13 @@ export function SpaceCreation() {
       address: SPACE_REGISTRY_ADDRESS,
       abi: spaceRegistryAbi.abi,
       functionName: 'createSpace',
-      args: [ensName, displayName, 0, ZERO_ADDRESS, 0],
+      args: [
+        ensName,
+        displayName,
+        parseInt(membershipType),
+        membershipType === '0' ? ZERO_ADDRESS : criteriaContract,
+        membershipType === '0' ? 0 : parseInt(criteriaAmount)
+      ],
     });
   };
 
@@ -97,10 +156,10 @@ export function SpaceCreation() {
 
   if (!mounted || !isConnected) {
     return (
-      <Card className="w-full max-w-2xl">
+      <Card className="w-full max-w-2xl bg-white/80 border-[#E8DCC4]/30">
         <CardHeader>
-          <CardTitle>Create New Governance Space</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-black">Create New Governance Space</CardTitle>
+          <CardDescription className="text-black">
             Create a decentralized governance space backed by ENS domain ownership.
           </CardDescription>
         </CardHeader>
@@ -117,10 +176,10 @@ export function SpaceCreation() {
   }
 
   return (
-    <Card className="w-full max-w-2xl">
+    <Card className="w-full max-w-2xl bg-white/80 border-[#E8DCC4]/30">
       <CardHeader>
-        <CardTitle>Create New Governance Space</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-black">Create New Governance Space</CardTitle>
+        <CardDescription className="text-black">
           Create a decentralized governance space backed by ENS domain ownership.
           You must own the ENS domain to create a space.
         </CardDescription>
@@ -160,16 +219,16 @@ export function SpaceCreation() {
               placeholder="e.g., myspace.eth"
               value={ensName}
               onChange={(e) => setEnsName(e.target.value)}
-              className={errors.ensName ? 'border-red-500' : ''}
+              className={`bg-white/50 border-[#E8DCC4]/30 ${errors.ensName ? 'border-red-500' : ''}`}
             />
             {errors.ensName && (
               <p className="text-sm text-red-600">{errors.ensName}</p>
             )}
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-black">
               You must own this ENS domain to create a space.{' '}
               <a
                 href="/app/spaces/ens"
-                className="text-blue-600 hover:text-blue-800 underline"
+                className="text-[#4D89B0] hover:text-[#4D89B0]/80 underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -186,21 +245,119 @@ export function SpaceCreation() {
               placeholder="e.g., My Governance Space"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className={errors.displayName ? 'border-red-500' : ''}
+              className={`bg-white/50 border-[#E8DCC4]/30 ${errors.displayName ? 'border-red-500' : ''}`}
             />
             {errors.displayName && (
               <p className="text-sm text-red-600">{errors.displayName}</p>
             )}
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-black">
               Maximum 30 characters. This will be displayed in the UI.
             </p>
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="membershipType">Membership Type</Label>
+            <div className="relative">
+              <button
+                type="button"
+                className="flex items-center gap-2 w-full px-3 py-2 rounded-md transition-colors duration-200 font-medium text-sm border border-[#E8DCC4]/30 bg-white/50"
+                onClick={handleDropdownToggle}
+              >
+                {selectedOption && (
+                  <>
+                    <selectedOption.icon className="h-4 w-4 text-[#4D89B0]" />
+                    <div className="flex-1">
+                      <div className="text-sm font-medium text-black">{selectedOption.name}</div>
+                      <div className="text-xs text-[#4D89B0]/70">{selectedOption.description}</div>
+                    </div>
+                  </>
+                )}
+                <ChevronDown className="h-4 w-4 text-[#4D89B0]/60" />
+              </button>
+
+              {/* Dropdown */}
+              {dropdownOpen && (
+                <div
+                  className="absolute top-full left-0 mt-1 w-full rounded-md shadow-lg z-50 animate-in fade-in-0 zoom-in-95"
+                  style={{ backgroundColor: '#ffffff', border: `1px solid #4D89B020` }}
+                >
+                  <div className="py-1">
+                    {membershipOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        className="flex items-center gap-3 px-4 py-3 text-sm hover:bg-gray-50 transition-colors duration-150 w-full text-left"
+                        onClick={() => {
+                          setMembershipType(option.value);
+                          setDropdownOpen(false);
+                        }}
+                      >
+                        <option.icon className="h-4 w-4 text-[#4D89B0]" />
+                        <div>
+                          <div className="font-medium text-black">{option.name}</div>
+                          <div className="text-xs text-[#4D89B0]/70">{option.description}</div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            <p className="text-sm text-black">
+              Choose how members can join your space.
+            </p>
+          </div>
+
+          {(membershipType === '1' || membershipType === '2') && (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="criteriaContract">
+                  {membershipType === '1' ? 'Token Contract Address' : 'NFT Contract Address'} *
+                </Label>
+                <Input
+                  id="criteriaContract"
+                  type="text"
+                  placeholder="0x..."
+                  value={criteriaContract}
+                  onChange={(e) => setCriteriaContract(e.target.value)}
+                  className={`bg-white/50 border-[#E8DCC4]/30 ${errors.criteriaContract ? 'border-red-500' : ''}`}
+                />
+                {errors.criteriaContract && (
+                  <p className="text-sm text-red-600">{errors.criteriaContract}</p>
+                )}
+                <p className="text-sm text-black">
+                  The contract address for the {membershipType === '1' ? 'ERC-20 token' : 'ERC-721/ERC-1155 NFT'} required for membership.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="criteriaAmount">
+                  Minimum {membershipType === '1' ? 'Token Amount' : 'NFT Count'} *
+                </Label>
+                <Input
+                  id="criteriaAmount"
+                  type="number"
+                  placeholder="1"
+                  min="1"
+                  value={criteriaAmount}
+                  onChange={(e) => setCriteriaAmount(e.target.value)}
+                  className={`bg-white/50 border-[#E8DCC4]/30 ${errors.criteriaAmount ? 'border-red-500' : ''}`}
+                />
+                {errors.criteriaAmount && (
+                  <p className="text-sm text-red-600">{errors.criteriaAmount}</p>
+                )}
+                <p className="text-sm text-black">
+                  Minimum amount of {membershipType === '1' ? 'tokens' : 'NFTs'} required to join the space.
+                </p>
+              </div>
+            </>
+          )}
 
           <div className="flex gap-4">
             <Button
               type="submit"
               disabled={isPending || isConfirming}
-              className="flex-1"
+              className="flex-1 bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white"
             >
               {isPending || isConfirming ? (
                 <>

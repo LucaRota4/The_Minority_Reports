@@ -8,7 +8,6 @@ import {
   ProposalCreated,
   UpkeepPerformed,
 } from "../generated/schema"
-import { Bytes } from "@graphprotocol/graph-ts"
 
 export function handleProposalCancelled(event: ProposalCancelledEvent): void {
   let entity = new ProposalCancelled(
@@ -35,20 +34,13 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
   entity.p_spaceId = event.params.p.spaceId
   entity.p_title = event.params.p.title
   entity.p_bodyURI = event.params.p.bodyURI
-  entity.p_discussionURI = event.params.p.discussionURI
-  entity.p_app = event.params.p.app
   entity.p_pType = event.params.p.pType
   entity.p_choices = event.params.p.choices
   entity.p_start = event.params.p.start
   entity.p_end = event.params.p.end
-  entity.p_execTargets = changetype<Bytes[]>(event.params.p.execTargets)
-  entity.p_execValues = event.params.p.execValues
-  entity.p_execCalldatas = event.params.p.execCalldatas
-  entity.p_execStrategy = event.params.p.execStrategy
   entity.p_eligibilityType = event.params.p.eligibilityType
   entity.p_eligibilityToken = event.params.p.eligibilityToken
   entity.p_eligibilityThreshold = event.params.p.eligibilityThreshold
-  entity.p_creator = event.params.p.creator
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp

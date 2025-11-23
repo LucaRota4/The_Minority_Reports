@@ -81,29 +81,7 @@ export function Hero() {
         style={{ y: backgroundY }}
         className="absolute inset-0 w-full h-[120%]"
       >
-        {/* Gradient background with theme support */}
-        <div className={`absolute inset-0 ${
-          isLight 
-            ? 'bg-gradient-to-br from-blue-50/80 via-white to-purple-50/80' 
-            : 'bg-gradient-to-br from-blue-950/40 via-gray-900 to-purple-950/40'
-        }`} />
         
-        {/* Animated mesh gradient */}
-        <motion.div
-          className="absolute inset-0 opacity-30"
-          animate={{
-            background: isLight ? [
-              "radial-gradient(circle at 20% 80%, #e0f2fe 0%, transparent 50%), radial-gradient(circle at 80% 20%, #f3e8ff 0%, transparent 50%)",
-              "radial-gradient(circle at 40% 40%, #f3e8ff 0%, transparent 50%), radial-gradient(circle at 80% 80%, #e0f2fe 0%, transparent 50%)",
-              "radial-gradient(circle at 20% 80%, #e0f2fe 0%, transparent 50%), radial-gradient(circle at 80% 20%, #f3e8ff 0%, transparent 50%)"
-            ] : [
-              "radial-gradient(circle at 20% 80%, #3b82f6 0%, transparent 50%), radial-gradient(circle at 80% 20%, #8b5cf6 0%, transparent 50%)",
-              "radial-gradient(circle at 40% 40%, #8b5cf6 0%, transparent 50%), radial-gradient(circle at 80% 80%, #3b82f6 0%, transparent 50%)",
-              "radial-gradient(circle at 20% 80%, #3b82f6 0%, transparent 50%), radial-gradient(circle at 80% 20%, #8b5cf6 0%, transparent 50%)"
-            ]
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-        />
       </motion.div>
 
       {/* Floating geometric shapes with mouse interaction */}
@@ -120,8 +98,8 @@ export function Hero() {
           className="absolute top-1/4 left-1/4 w-32 h-32 md:w-72 md:h-72 rounded-full"
           style={{
             background: isLight 
-              ? "linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1))"
-              : "linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2))",
+              ? "linear-gradient(135deg, rgba(77, 137, 176, 0.1), rgba(77, 137, 176, 0.1))"
+              : "linear-gradient(135deg, rgba(77, 137, 176, 0.2), rgba(77, 137, 176, 0.2))",
             filter: "blur(60px)",
           }}
           animate={{
@@ -140,8 +118,8 @@ export function Hero() {
           className="absolute bottom-1/4 right-1/4 w-48 h-48 md:w-96 md:h-96 rounded-full"
           style={{
             background: isLight 
-              ? "linear-gradient(225deg, rgba(139, 92, 246, 0.08), rgba(59, 130, 246, 0.08))"
-              : "linear-gradient(225deg, rgba(139, 92, 246, 0.15), rgba(59, 130, 246, 0.15))",
+              ? "linear-gradient(225deg, rgba(77, 137, 176, 0.08), rgba(77, 137, 176, 0.08))"
+              : "linear-gradient(225deg, rgba(77, 137, 176, 0.15), rgba(77, 137, 176, 0.15))",
             filter: "blur(80px)",
           }}
           animate={{
@@ -156,16 +134,16 @@ export function Hero() {
         />
 
         {/* Smaller decorative elements */}
-        {Array.from({ length: 8 }).map((_, i) => (
+        {Array.from({ length: 18 }).map((_, i) => (
           <motion.div
             key={i}
             className={`absolute w-2 h-2 rounded-full opacity-40 ${
               isLight 
-                ? 'bg-gradient-to-r from-blue-300 to-purple-300' 
-                : 'bg-gradient-to-r from-blue-400 to-purple-400'
+                ? 'bg-gradient-to-r from-[#4D89B0] to-[#7ba8c4]' 
+                : 'bg-gradient-to-r from-[#4D89B0] to-[#7ba8c4]'
             }`}
             style={{
-              left: `${20 + (i * 10)}%`,
+              left: `${30 + (i * 10)}%`,
               top: `${15 + (i * 8)}%`,
             }}
             animate={{
@@ -199,10 +177,10 @@ export function Hero() {
             {/* Animated tagline */}
             <motion.p 
               className={`text-xs sm:text-sm md:text-base font-mono tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium ${
-                isLight ? 'text-slate-800' : 'text-cyan-300'
+                isLight ? 'text-slate-800' : 'text-[#4D89B0]'
               }`}
             >
-              {['/', '/', ' ', 'S', 'H', 'O', 'W', 'C', 'A', 'S', 'E', ' ', 'Z', 'A', 'M', 'A', "'", 'S', ' ', 'F', 'H', 'E', ' ', 'I', 'N', 'N', 'O', 'V', 'A', 'T', 'I', 'O', 'N', 'S'].map((char, i) => (
+              {['K', 'r', 'y', 'p', 't', 'ē', ' ', 'p', 's', 'ê', 'p', 'h', 'o', 's', ' ', '—', ' ', 'p', 'a', 'r', 'r', 'h', 'e', 's', 'í', 'a', ' ', 'd', 'i', 'a', 't', 'ē', 'r', 'o', 'u', 'm', 'é', 'n', 'ē'].map((char, i) => (
                 <motion.span
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
@@ -216,8 +194,20 @@ export function Hero() {
             </motion.p>
 
             {/* Main title with word-by-word animation */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="mb-6"
+            >
+              <img 
+                src="/agora.svg" 
+                alt="Agora Logo" 
+                className="w-48 h-48 md:w-64 md:h-64 mx-auto"
+              />
+            </motion.div>
             <motion.h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold leading-tight">
-              {["ZamaHub"].map((word, i) => (
+              {["A G O R A"].map((word, i) => (
                 <motion.span
                   key={i}
                   initial={{ opacity: 0, y: 100, rotateX: -90 }}
@@ -238,7 +228,7 @@ export function Hero() {
                   className={`inline-block ${
                     isLight 
                       ? "text-slate-900" 
-                      : "text-cyan-400"
+                      : "text-[#4D89B0]"
                   }`}
                 >
                   {word}
@@ -246,64 +236,12 @@ export function Hero() {
               ))}
             </motion.h1>
 
-            <motion.div
-              variants={fadeInUp}
-              className="max-w-3xl mx-auto"
-            >
-              <motion.p 
-                className={`text-lg sm:text-xl md:text-2xl leading-relaxed ${
-                  isLight ? 'text-slate-700' : 'text-gray-300'
-                }`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1, delay: 0.8 }}
-              >
-                {"Discover ZamaHub - the ultimate platform to explore and test Zama's Fully Homomorphic Encryption (FHE) innovations. Experience our first integration: the Zama Game, a privacy-preserving voting system powered by FHE and automated with Chainlink.".split('').map((char, i) => (
-                  <motion.span
-                    key={i}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.8 + (i * 0.01) }}
-                  >
-                    {char}
-                  </motion.span>
-                ))}
-              </motion.p>
-            </motion.div>
-
-            {/* Interactive badges */}
-            <motion.div 
-              variants={fadeInUp}
-              className="flex flex-wrap justify-center gap-2 sm:gap-4"
-            >
-              {["Fully Homomorphic Encryption", "Privacy-Preserving Voting", "Chainlink Automation", "Decentralized Gaming"].map((note, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 1.2 + (i * 0.1), type: "spring", stiffness: 200 }}
-                  whileHover={{ 
-                    scale: 1.1, 
-                    rotate: [0, -5, 5, 0],
-                    transition: { duration: 0.3 }
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <div className={`px-3 py-2 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium border backdrop-blur-sm ${
-                    isLight 
-                      ? 'bg-white/90 border-slate-300 text-slate-800 hover:bg-slate-50 hover:border-slate-400' 
-                      : 'bg-gray-800/80 border-gray-600 text-gray-200 hover:bg-cyan-900/30 hover:border-cyan-500'
-                  } transition-all duration-300`}>
-                    {note}
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
+    
           </motion.div>
 
           {/* CTA Buttons */}
           <motion.div 
-            className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center px-4"
+            className="flex items-center justify-center px-4"
             variants={scaleIn}
           >
             <motion.div
@@ -312,12 +250,12 @@ export function Hero() {
               transition={{ type: "spring", stiffness: 300 }}
             >
               <Button 
-                size="lg" 
+                size="sm" 
                 asChild 
-                className={`relative overflow-hidden font-semibold text-base sm:text-lg px-8 py-4 sm:px-12 sm:py-6 h-auto uppercase tracking-wider shadow-xl w-full sm:w-auto ${
+                className={`relative overflow-hidden font-semibold text-sm px-6 py-3 h-auto uppercase tracking-wider shadow-lg w-auto border-2 transition-all duration-300 ${
                   isLight 
-                    ? 'bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 text-white' 
-                    : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white'
+                    ? 'bg-transparent border-slate-900/50 text-slate-900 hover:bg-slate-900/10' 
+                    : 'bg-transparent border-white/50 text-white hover:bg-white/10'
                 }`}
               >
                 <a href="/app">
@@ -327,55 +265,37 @@ export function Hero() {
                     whileHover={{ x: "100%" }}
                     transition={{ duration: 0.8 }}
                   />
-                  <span className="relative z-10">Explore ZamaHub</span>
+                  <span className="relative z-10">Enter The Agora</span>
                 </a>
               </Button>
             </motion.div>
-            
+          </motion.div>
+
+          {/* Scroll indicator */}
+          <motion.div
+            className="flex justify-center mt-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 2, duration: 0.8 }}
+          >
             <motion.div
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 300 }}
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              className={`w-6 h-10 border-2 rounded-full flex justify-center ${
+                isLight ? 'border-slate-500/60' : 'border-[#4D89B0]/60'
+              }`}
             >
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className={`backdrop-blur-sm border-2 font-medium px-8 py-4 sm:px-12 sm:py-6 h-auto text-base sm:text-lg w-full sm:w-auto ${
-                  isLight 
-                    ? 'bg-white/90 border-slate-400 text-slate-800 hover:bg-slate-50 hover:border-slate-600 hover:text-slate-900' 
-                    : 'bg-gray-800/50 border-gray-600 text-gray-200 hover:bg-cyan-900/30 hover:border-cyan-500 hover:text-cyan-300'
-                } transition-all duration-300`}
-              >
-                How it works
-              </Button>
+              <motion.div
+                animate={{ y: [0, 12, 0], opacity: [0, 1, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className={`w-1 h-3 rounded-full mt-2 ${
+                  isLight ? 'bg-slate-600' : 'bg-[#4D89B0]'
+                }`}
+              />
             </motion.div>
           </motion.div>
 
           </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2, duration: 0.8 }}
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className={`w-6 h-10 border-2 rounded-full flex justify-center ${
-              isLight ? 'border-slate-500/60' : 'border-cyan-400/60'
-            }`}
-          >
-            <motion.div
-              animate={{ y: [0, 12, 0], opacity: [0, 1, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className={`w-1 h-3 rounded-full mt-2 ${
-                isLight ? 'bg-slate-600' : 'bg-cyan-400'
-              }`}
-            />
-          </motion.div>
-        </motion.div>
       </motion.div>
     </section>
   );
