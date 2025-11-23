@@ -1,5 +1,6 @@
-import { Inter, JetBrains_Mono, DM_Sans } from 'next/font/google';
+import { Inter, JetBrains_Mono, DM_Sans, Cardo } from 'next/font/google';
 import { Providers } from '@/components/providers';
+import Script from 'next/script';
 import './globals.css';
 
 const inter = Inter({
@@ -17,6 +18,13 @@ const jetbrainsMono = JetBrains_Mono({
 const dmSans = DM_Sans({
   variable: '--font-dm-sans',
   subsets: ['latin'],
+  display: 'swap',
+});
+
+const cardo = Cardo({
+  variable: '--font-cardo',
+  subsets: ['latin', 'greek'],
+  weight: ['400', '700'],
   display: 'swap',
 });
 
@@ -65,9 +73,13 @@ export default function RootLayout({ children }) {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="color-scheme" content="light dark" />
+        <Script
+          src="https://cdn.zama.org/relayer-sdk-js/0.3.0-5/relayer-sdk-js.umd.cjs"
+          strategy="beforeInteractive"
+        />
       </head>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} ${dmSans.variable} antialiased h-full`}
+        className={`${inter.variable} ${jetbrainsMono.variable} ${dmSans.variable} ${cardo.variable} antialiased h-full`}
       >
         <Providers>
           <div id="root" role="application" aria-label="Aequilibra App">

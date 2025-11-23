@@ -18,12 +18,12 @@ export default function NotFound() {
             The page you&apos;re looking for doesn&apos;t exist or has been moved.
           </p>
           <Button
-            onClick={() => router.push("/app/zama-game")}
+            onClick={() => router.push("/app")}
             size="lg"
             className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Go to Zama Voting Game
+            Enter the Agora
           </Button>
         </CardContent>
       </Card>
