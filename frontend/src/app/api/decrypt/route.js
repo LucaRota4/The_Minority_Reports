@@ -8,7 +8,7 @@ export async function POST(request) {
     if (!fheInitialized) {
       console.log('API: Initializing FHE instance...');
       await initializeFheInstance({
-        rpcUrl: 'https://sepolia.infura.io/v3/73c573e5a8854465ad19e8e4e7e2e20c'
+        rpcUrl: process.env.NEXT_PUBLIC_RPC_URL
       });
       fheInitialized = true;
       console.log('API: FHE instance initialized successfully.');

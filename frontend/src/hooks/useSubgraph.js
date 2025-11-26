@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { gql, request } from 'graphql-request';
 
 // Subgraph endpoint
-const SUBGRAPH_URL = process.env.NEXT_PUBLIC_SUBGRAPH_URL || 'https://api.studio.thegraph.com/query/1715807/agora-sub/0.0.6';
+const SUBGRAPH_URL = process.env.NEXT_PUBLIC_SUBGRAPH_URL;
 
 // GraphQL queries
 const GET_SPACES_BY_OWNER = gql`

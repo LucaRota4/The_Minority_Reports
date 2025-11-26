@@ -171,7 +171,7 @@ export default function ProposalVotePage() {
 
   // Create a public provider for read-only operations (using your Infura RPC)
   const publicProvider = useMemo(
-    () => new ethers.JsonRpcProvider('https://sepolia.infura.io/v3/73c573e5a8854465ad19e8e4e7e2e20c'),
+    () => new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL),
     []
   );
 

@@ -29,37 +29,37 @@ const cardo = Cardo({
 });
 
 export const metadata = {
-  title: 'Aequilibra - Find the best funding across perps',
+  title: 'AGORA - Privacy-Preserving Governance Platform',
   description:
-    'Aggregate perpetual DEX funding rates. Compare pairs, track history, and build neutral strategies. Access GMX, dYdX, Perpetual Protocol and more.',
+    'A privacy-preserving governance platform using Zama\'s Fully Homomorphic Encryption (FHE) for anonymous voting in decentralized spaces.',
   keywords: [
-    'perpetual',
-    'funding',
-    'DEX',
-    'derivatives',
-    'crypto',
-    'arbitrage',
-    'neutral',
-    'GMX',
-    'dYdX',
+    'privacy',
+    'governance',
+    'FHE',
+    'anonymous voting',
+    'decentralized spaces',
+    'DAOs',
+    'proposals',
+    'Zama',
+    'Fully Homomorphic Encryption',
   ],
-  authors: [{ name: 'Aequilibra Labs' }],
-  creator: 'Aequilibra Labs',
+  authors: [{ name: 'Agora Labs' }],
+  creator: 'Agora Labs',
   openGraph: {
     type: 'website',
-    locale: 'en_US',
-    url: 'https://aequilibra.xyz',
-    title: 'Aequilibra - Find the best funding across perps',
+    locale: 'en_UK',
+    url: 'https://agora.xyz',
+    title: 'AGORA - Privacy-Preserving Governance Platform',
     description:
-      'Aggregate perpetual DEX funding rates. Compare pairs, track history, and build neutral strategies.',
-    siteName: 'Aequilibra',
+      'A privacy-preserving governance platform using Zama\'s Fully Homomorphic Encryption (FHE) for anonymous voting in decentralized spaces.',
+    siteName: 'AGORA',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Aequilibra - Find the best funding across perps',
+    title: 'AGORA - Privacy-Preserving Governance Platform',
     description:
-      'Aggregate perpetual DEX funding rates. Compare pairs, track history, and build neutral strategies.',
-    creator: '@AequilibraLabs',
+      'A privacy-preserving governance platform using Zama\'s Fully Homomorphic Encryption (FHE) for anonymous voting in decentralized spaces.',
+    creator: '@AgoraLabs',
   },
   robots: {
     index: true,
@@ -74,7 +74,7 @@ export default function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="color-scheme" content="light dark" />
         <Script
-          src="https://cdn.zama.org/relayer-sdk-js/0.3.0-5/relayer-sdk-js.umd.cjs"
+          src={process.env.NEXT_PUBLIC_RELAYER_SDK_URL}
           strategy="beforeInteractive"
         />
       </head>
@@ -82,7 +82,7 @@ export default function RootLayout({ children }) {
         className={`${inter.variable} ${jetbrainsMono.variable} ${dmSans.variable} ${cardo.variable} antialiased h-full`}
       >
         <Providers>
-          <div id="root" role="application" aria-label="Aequilibra App">
+          <div id="root" role="application" aria-label="Agora App">
             {children}
           </div>
         </Providers>

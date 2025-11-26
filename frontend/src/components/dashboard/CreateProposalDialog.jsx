@@ -9,8 +9,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Plus, Loader2, ChevronDown, Calendar, CheckCircle, Minus } from 'lucide-react';
 
 // Import IPFS libraries
-import { createHelia } from 'helia';
-import { unixfs } from '@helia/unixfs';
+// import { createHelia } from 'helia';
+// import { unixfs } from '@helia/unixfs';
 import { createClient } from '@storacha/client';
 
 // Import the PrivateProposalFactory ABI
@@ -58,72 +58,25 @@ export function CreateProposalDialog({ spaceId, spaceName }) {
 
   const [uploading, setUploading] = useState(false);
 
-  // Function to upload description to IPFS
+  // Function to upload description to IPFS via API route
   const uploadToIPFS = async (description) => {
     try {
       setUploading(true);
-      
-      // Use Pinata for pinning if JWT is available
-      const pinataJwt = process.env.NEXT_PUBLIC_PINATA_JWT;
-      if (pinataJwt) {
-        const formData = new FormData();
-        formData.append('file', new Blob([description], { type: 'text/plain' }), 'description.txt');
-        
-        const response = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${pinataJwt}`,
-          },
-          body: formData,
-        });
-        
-        console.log('Pinata response status:', response.status);
-        const responseText = await response.text();
-        console.log('Pinata response:', responseText);
-        
-        if (response.ok) {
-          const result = JSON.parse(responseText);
-          return `ipfs://${result.IpfsHash}`;
-        } else {
-          throw new Error(`Pinata upload failed: ${response.status} ${responseText}`);
-        }
+
+      const response = await fetch('/api/upload-ipfs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ description }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        return result.ipfsUrl;
+      } else {
+        throw new Error(`IPFS upload failed: ${response.status}`);
       }
-      
-      // Use Infura IPFS if credentials are available
-      const infuraProjectId = process.env.NEXT_PUBLIC_INFURA_PROJECT_ID;
-      const infuraProjectSecret = process.env.NEXT_PUBLIC_INFURA_PROJECT_SECRET;
-      if (infuraProjectId && infuraProjectSecret) {
-        const formData = new FormData();
-        formData.append('file', new Blob([description], { type: 'text/plain' }), 'description.txt');
-        
-        const response = await fetch(`https://ipfs.infura.io:5001/api/v0/add`, {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Basic ' + btoa(infuraProjectId + ':' + infuraProjectSecret),
-          },
-          body: formData,
-        });
-        
-        console.log('Infura response status:', response.status);
-        const responseText = await response.text();
-        console.log('Infura response:', responseText);
-        
-        if (response.ok) {
-          const result = JSON.parse(responseText);
-          return `ipfs://${result.Hash}`;
-        } else {
-          throw new Error(`Infura upload failed: ${response.status} ${responseText}`);
-        }
-      }
-      
-      // Fallback to local Helia (content won't be pinned globally)
-      console.warn('No Infura credentials found, using local Helia (content may not be accessible to others)');
-      const helia = await createHelia();
-      const fs = unixfs(helia);
-      const textEncoder = new TextEncoder();
-      const data = textEncoder.encode(description);
-      const cid = await fs.addBytes(data);
-      return `ipfs://${cid.toString()}`;
     } catch (error) {
       console.error('Failed to upload to IPFS:', error);
       throw error;
@@ -245,7 +198,7 @@ export function CreateProposalDialog({ spaceId, spaceName }) {
       end: Math.floor(endTimestamp / 1000),
       eligibilityToken: formData.eligibilityToken,
       eligibilityThreshold: BigInt(formData.eligibilityThreshold),
-      passingThreshold: BigInt(formData.passingThreshold),
+      passingThreshold: BigInt(parseFloat(formData.passingThreshold) * 100), // Convert percentage to basis points
       pType: formData.pType,
       eligibilityType: formData.eligibilityType,
       includeAbstain: formData.includeAbstain,

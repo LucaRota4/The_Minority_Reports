@@ -23,7 +23,7 @@ export const config = getDefaultConfig({
   projectId,
   chains: [sepolia, mainnet, arbitrum, optimism, base, polygon, bsc],
   transports: {
-    [sepolia.id]: http('https://sepolia.infura.io/v3/73c573e5a8854465ad19e8e4e7e2e20c'),  // Your Infura endpoint for Sepolia
+    [sepolia.id]: http(process.env.NEXT_PUBLIC_RPC_URL),  // Your Infura endpoint for Sepolia
     // Add transports for other chains if needed, e.g.:
     // [mainnet.id]: http('https://mainnet.infura.io/v3/YOUR_INFURA_ID'),
     // [arbitrum.id]: http('https://arbitrum-one.publicnode.com'),  // Example for Arbitrum
