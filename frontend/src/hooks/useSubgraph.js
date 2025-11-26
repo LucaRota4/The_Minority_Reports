@@ -93,6 +93,21 @@ const GET_SPACE_BY_ENS = gql`
   }
 `;
 
+const GET_SPACE_BY_ID = gql`
+  query GetSpaceById($spaceId: Bytes!) {
+    spaceCreateds(where: { spaceId: $spaceId }) {
+      id
+      spaceId
+      ensName
+      displayName
+      owner
+      blockNumber
+      blockTimestamp
+      transactionHash
+    }
+  }
+`;
+
 const GET_ALL_SPACES = gql`
   query GetAllSpaces($first: Int = 100, $skip: Int = 0, $orderBy: SpaceCreated_orderBy = blockTimestamp, $orderDirection: OrderDirection = desc) {
     spaceCreateds(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection) {

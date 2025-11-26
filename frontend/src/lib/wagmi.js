@@ -1,5 +1,6 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { mainnet, arbitrum, optimism, base, polygon, bsc, sepolia } from 'wagmi/chains';
+import { http } from 'wagmi';
 import {
   metaMaskWallet,
   rainbowWallet,
@@ -11,6 +12,8 @@ import {
   frameWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 
+// Removed the duplicate createConfig block
+
 // Get project ID from environment (you'll need to create this)
 const projectId =
   process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'demo-project-id';
@@ -19,13 +22,19 @@ export const config = getDefaultConfig({
   appName: 'Aequilibra',
   projectId,
   chains: [sepolia, mainnet, arbitrum, optimism, base, polygon, bsc],
+  transports: {
+    [sepolia.id]: http('https://sepolia.infura.io/v3/73c573e5a8854465ad19e8e4e7e2e20c'),  // Your Infura endpoint for Sepolia
+    // Add transports for other chains if needed, e.g.:
+    // [mainnet.id]: http('https://mainnet.infura.io/v3/YOUR_INFURA_ID'),
+    // [arbitrum.id]: http('https://arbitrum-one.publicnode.com'),  // Example for Arbitrum
+  },
   wallets: [
     {
       groupName: 'Popular',
       wallets: [
         metaMaskWallet,
         rainbowWallet,
-        coinbaseWallet,
+        //coinbaseWallet,
         // walletConnectWallet, // Temporarily disabled - requires valid project ID
       ],
     },
@@ -41,41 +50,4 @@ export const config = getDefaultConfig({
   ],
 });
 
-export const supportedChains = {
-  [mainnet.id]: {
-    name: 'Ethereum',
-    shortName: 'ETH',
-    color: '#627EEA',
-    icon: '/chain-icons/eth.svg',
-  },
-  [arbitrum.id]: {
-    name: 'Arbitrum',
-    shortName: 'ARB',
-    color: '#2D374B',
-    icon: '/chain-icons/arb.svg',
-  },
-  [optimism.id]: {
-    name: 'Optimism',
-    shortName: 'OP',
-    color: '#FF0420',
-    icon: '/chain-icons/op.svg',
-  },
-  [base.id]: {
-    name: 'Base',
-    shortName: 'BASE',
-    color: '#0052FF',
-    icon: '/chain-icons/base.svg',
-  },
-  [polygon.id]: {
-    name: 'Polygon',
-    shortName: 'MATIC',
-    color: '#8247E5',
-    icon: '/chain-icons/matic.svg',
-  },
-  [bsc.id]: {
-    name: 'BSC',
-    shortName: 'BNB',
-    color: '#F3BA2F',
-    icon: '/chain-icons/bnb.svg',
-  },
-};
+// ...existing code for supportedChains...

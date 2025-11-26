@@ -1,12 +1,17 @@
 "use client";
 import React, { useState } from 'react';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useAccount, useWriteContract } from 'wagmi';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Loader2, ChevronDown } from 'lucide-react';
+import { Plus, Loader2, ChevronDown, Calendar, CheckCircle } from 'lucide-react';
+
+// Import IPFS libraries
+import { createHelia } from 'helia';
+import { unixfs } from '@helia/unixfs';
+import { createClient } from '@storacha/client';
 
 // Import the PrivateProposalFactory ABI
 import privateProposalFactoryAbi from '@/abis/PrivateProposalFactory.json';
@@ -14,9 +19,10 @@ import privateProposalFactoryAbi from '@/abis/PrivateProposalFactory.json';
 export function CreateProposalDialog({ spaceId, spaceName }) {
   const [open, setOpen] = useState(false);
   const [hoveredFilter, setHoveredFilter] = useState(null);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
-    bodyURI: '',
+    description: '',
     pType: 0, // Default to NonWeightedSingleChoice
     choices: ['For', 'Against', 'Abstain'],
     start: '',
@@ -25,6 +31,9 @@ export function CreateProposalDialog({ spaceId, spaceName }) {
     eligibilityToken: process.env.NEXT_PUBLIC_MOCK_GOVERNANCE_TOKEN_ADDRESS || '0x0000000000000000000000000000000000000000',
     eligibilityThreshold: '1'
   });
+
+  const { address } = useAccount();
+  const { writeContract, data: txHash, isPending: isTxPending, isSuccess: txSuccess, error: writeError } = useWriteContract();
 
   // Define colors for consistency
   const colors = {
@@ -45,11 +54,81 @@ export function CreateProposalDialog({ spaceId, spaceName }) {
     { value: 2, label: 'Weighted Fractional' },
   ];
 
-  const { address } = useAccount();
-  const { writeContract, data: txHash, isPending: isTxPending, error: writeError } = useWriteContract();
-  const { isLoading: isConfirming, isSuccess: txSuccess } = useWaitForTransactionReceipt({
-    hash: txHash,
-  });
+  const [uploading, setUploading] = useState(false);
+
+  // Function to upload description to IPFS
+  const uploadToIPFS = async (description) => {
+    try {
+      setUploading(true);
+      
+      // Use Pinata for pinning if JWT is available
+      const pinataJwt = process.env.NEXT_PUBLIC_PINATA_JWT;
+      if (pinataJwt) {
+        const formData = new FormData();
+        formData.append('file', new Blob([description], { type: 'text/plain' }), 'description.txt');
+        
+        const response = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${pinataJwt}`,
+          },
+          body: formData,
+        });
+        
+        console.log('Pinata response status:', response.status);
+        const responseText = await response.text();
+        console.log('Pinata response:', responseText);
+        
+        if (response.ok) {
+          const result = JSON.parse(responseText);
+          return `ipfs://${result.IpfsHash}`;
+        } else {
+          throw new Error(`Pinata upload failed: ${response.status} ${responseText}`);
+        }
+      }
+      
+      // Use Infura IPFS if credentials are available
+      const infuraProjectId = process.env.NEXT_PUBLIC_INFURA_PROJECT_ID;
+      const infuraProjectSecret = process.env.NEXT_PUBLIC_INFURA_PROJECT_SECRET;
+      if (infuraProjectId && infuraProjectSecret) {
+        const formData = new FormData();
+        formData.append('file', new Blob([description], { type: 'text/plain' }), 'description.txt');
+        
+        const response = await fetch(`https://ipfs.infura.io:5001/api/v0/add`, {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Basic ' + btoa(infuraProjectId + ':' + infuraProjectSecret),
+          },
+          body: formData,
+        });
+        
+        console.log('Infura response status:', response.status);
+        const responseText = await response.text();
+        console.log('Infura response:', responseText);
+        
+        if (response.ok) {
+          const result = JSON.parse(responseText);
+          return `ipfs://${result.Hash}`;
+        } else {
+          throw new Error(`Infura upload failed: ${response.status} ${responseText}`);
+        }
+      }
+      
+      // Fallback to local Helia (content won't be pinned globally)
+      console.warn('No Infura credentials found, using local Helia (content may not be accessible to others)');
+      const helia = await createHelia();
+      const fs = unixfs(helia);
+      const textEncoder = new TextEncoder();
+      const data = textEncoder.encode(description);
+      const cid = await fs.addBytes(data);
+      return `ipfs://${cid.toString()}`;
+    } catch (error) {
+      console.error('Failed to upload to IPFS:', error);
+      throw error;
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleInputChange = (field, value) => {
     setFormData(prev => {
@@ -72,7 +151,7 @@ export function CreateProposalDialog({ spaceId, spaceName }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.title.trim() || !formData.bodyURI.trim() || !address) {
+    if (!formData.title.trim() || !formData.description.trim() || !address) {
       alert('Please fill in all required fields');
       return;
     }
@@ -97,10 +176,19 @@ export function CreateProposalDialog({ spaceId, spaceName }) {
       return;
     }
 
+    // Upload description to IPFS
+    let bodyURI;
+    try {
+      bodyURI = await uploadToIPFS(formData.description);
+    } catch (error) {
+      alert('Failed to upload description to IPFS: ' + error.message);
+      return;
+    }
+
     const params = {
       spaceId: spaceId,
       title: formData.title,
-      bodyURI: formData.bodyURI,
+      bodyURI: bodyURI,
       pType: formData.pType,
       choices: formData.choices,
       start: Math.floor(startTimestamp / 1000),
@@ -123,7 +211,7 @@ export function CreateProposalDialog({ spaceId, spaceName }) {
     if (txSuccess) {
       setFormData({
         title: '',
-        bodyURI: '',
+        description: '',
         pType: 0,
         choices: ['For', 'Against', 'Abstain'],
         start: '',
@@ -132,8 +220,12 @@ export function CreateProposalDialog({ spaceId, spaceName }) {
         eligibilityToken: process.env.NEXT_PUBLIC_MOCK_GOVERNANCE_TOKEN_ADDRESS || '0x0000000000000000000000000000000000000000',
         eligibilityThreshold: '1'
       });
-      setOpen(false);
-      alert('Proposal created successfully!');
+      setShowSuccess(true);
+      // Auto-hide success message after 3 seconds
+      setTimeout(() => {
+        setShowSuccess(false);
+        setOpen(false);
+      }, 3000);
     }
   }, [txSuccess]);
 
@@ -166,12 +258,12 @@ export function CreateProposalDialog({ spaceId, spaceName }) {
           </div>
 
           <div>
-            <Label htmlFor="bodyURI" className="text-black">Description/Content URI *</Label>
+            <Label htmlFor="description" className="text-black">Description *</Label>
             <Textarea
-              id="bodyURI"
-              value={formData.bodyURI}
-              onChange={(e) => handleInputChange('bodyURI', e.target.value)}
-              placeholder="IPFS URI or detailed description..."
+              id="description"
+              value={formData.description}
+              onChange={(e) => handleInputChange('description', e.target.value)}
+              placeholder="Enter proposal description..."
               rows={3}
               required
               className="bg-white/50 border-[#E8DCC4]/30"
@@ -181,24 +273,48 @@ export function CreateProposalDialog({ spaceId, spaceName }) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="start" className="text-black">Start Date</Label>
-              <Input
-                id="start"
-                type="datetime-local"
-                value={formData.start}
-                onChange={(e) => handleInputChange('start', e.target.value)}
-                className="bg-white/50 border-[#E8DCC4]/30"
-              />
+              <div className="relative">
+                <Input
+                  id="start"
+                  type="datetime-local"
+                  value={formData.start}
+                  onChange={(e) => handleInputChange('start', e.target.value)}
+                  className="bg-white/50 border-[#E8DCC4]/30 pr-10"
+                  ref={(el) => {
+                    if (el) window.startInputRef = el;
+                  }}
+                />
+                <Calendar 
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700" 
+                  onClick={() => {
+                    const input = document.getElementById('start');
+                    if (input) input.showPicker ? input.showPicker() : input.click();
+                  }}
+                />
+              </div>
             </div>
             <div>
               <Label htmlFor="end" className="text-black">End Date *</Label>
-              <Input
-                id="end"
-                type="datetime-local"
-                value={formData.end}
-                onChange={(e) => handleInputChange('end', e.target.value)}
-                required
-                className="bg-white/50 border-[#E8DCC4]/30"
-              />
+              <div className="relative">
+                <Input
+                  id="end"
+                  type="datetime-local"
+                  value={formData.end}
+                  onChange={(e) => handleInputChange('end', e.target.value)}
+                  required
+                  className="bg-white/50 border-[#E8DCC4]/30 pr-10"
+                  ref={(el) => {
+                    if (el) window.endInputRef = el;
+                  }}
+                />
+                <Calendar 
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700" 
+                  onClick={() => {
+                    const input = document.getElementById('end');
+                    if (input) input.showPicker ? input.showPicker() : input.click();
+                  }}
+                />
+              </div>
             </div>
           </div>
 
@@ -207,7 +323,7 @@ export function CreateProposalDialog({ spaceId, spaceName }) {
             <div className="relative">
               <button
                 type="button"
-                className="flex items-center gap-2 w-full px-3 py-2 rounded-md transition-colors duration-200 font-medium text-sm border border-[#E8DCC4]/30 bg-white/50"
+                className="flex items-center gap-2 w-full px-3 py-2 rounded-md transition-colors duration-200 font-medium text-sm border border-[#E8DCC4]/30 bg-white/50 cursor-pointer"
                 style={{
                   color: colors.black,
                   backgroundColor: hoveredFilter === 'eligibility' ? colors.hoverBg : 'rgba(255, 255, 255, 0.5)'
@@ -239,7 +355,7 @@ export function CreateProposalDialog({ spaceId, spaceName }) {
                           handleInputChange('eligibilityType', option.value);
                           setHoveredFilter(null);
                         }}
-                        className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50 transition-colors duration-150 w-full text-left"
+                        className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50 transition-colors duration-150 w-full text-left cursor-pointer"
                         style={{ color: colors.black }}
                       >
                         {option.label}
@@ -259,7 +375,7 @@ export function CreateProposalDialog({ spaceId, spaceName }) {
             <div className="relative">
               <button
                 type="button"
-                className={`flex items-center gap-2 w-full px-3 py-2 rounded-md transition-colors duration-200 font-medium text-sm border border-[#E8DCC4]/30 ${formData.eligibilityType === 0 ? 'bg-gray-100 cursor-not-allowed opacity-50' : 'bg-white/50'}`}
+                className={`flex items-center gap-2 w-full px-3 py-2 rounded-md transition-colors duration-200 font-medium text-sm border border-[#E8DCC4]/30 ${formData.eligibilityType === 0 ? 'bg-gray-100 cursor-not-allowed opacity-50' : 'bg-white/50 cursor-pointer'}`}
                 style={{
                   color: formData.eligibilityType === 0 ? '#9CA3AF' : colors.black,
                   backgroundColor: formData.eligibilityType === 0 ? '#F3F4F6' : (hoveredFilter === 'proposalType' ? colors.hoverBg : 'rgba(255, 255, 255, 0.5)')
@@ -294,7 +410,7 @@ export function CreateProposalDialog({ spaceId, spaceName }) {
                           handleInputChange('pType', option.value);
                           setHoveredFilter(null);
                         }}
-                        className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50 transition-colors duration-150 w-full text-left"
+                        className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50 transition-colors duration-150 w-full text-left cursor-pointer"
                         style={{ color: colors.black }}
                       >
                         {option.label}
@@ -342,16 +458,28 @@ export function CreateProposalDialog({ spaceId, spaceName }) {
             </div>
           )}
 
+          {showSuccess && (
+            <div className="text-sm text-green-600 p-2 bg-green-50 rounded border border-green-200 flex items-center gap-2">
+              <CheckCircle className="h-4 w-4" />
+              Proposal created successfully! The dialog will close automatically.
+            </div>
+          )}
+
           <div className="flex gap-2">
             <Button
               type="submit"
-              disabled={isTxPending || isConfirming || !formData.title.trim() || !formData.bodyURI.trim() || !formData.end}
+              disabled={isTxPending || uploading || !formData.title.trim() || !formData.description.trim() || !formData.end}
               className="flex-1 bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white"
             >
-              {isTxPending || isConfirming ? (
+              {isTxPending ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   Creating...
+                </>
+              ) : uploading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Uploading to IPFS...
                 </>
               ) : (
                 'Create Proposal'

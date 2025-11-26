@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import { useAccount, useWalletClient, useReadContract } from 'wagmi';
 import { ethers } from 'ethers';
@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { ConnectWallet } from '@/components/wallet/ConnectWallet';
 import PrivateProposalABI from '@/abis/PrivateProposal.json';
+import ProposalResolve from '@/components/app/ProposalResolve';
 
 // Helper function to format time
 const formatTime = (seconds) => {
@@ -31,10 +32,33 @@ export default function ProposalVotePage() {
   const [voting, setVoting] = useState(false);
   const [selectedChoice, setSelectedChoice] = useState(null);
   const [percentages, setPercentages] = useState({});
-  const [results, setResults] = useState(null);
-  const [resultsRevealed, setResultsRevealed] = useState(false);
-  const [resolving, setResolving] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
+  const [descriptionText, setDescriptionText] = useState('');
+  const [descriptionLoading, setDescriptionLoading] = useState(false);
+
+  // Function to fetch description from IPFS
+  const fetchDescriptionFromIPFS = useCallback(async (ipfsUri) => {
+    if (!ipfsUri) return;
+    
+    setDescriptionLoading(true);
+    try {
+      // Use Pinata gateway for fetching
+      const hash = ipfsUri.replace('ipfs://', '');
+      const gatewayUrl = `https://sapphire-impressive-salamander-839.mypinata.cloud/ipfs/${hash}`;
+      const response = await fetch(gatewayUrl);
+      if (response.ok) {
+        const text = await response.text();
+        setDescriptionText(text);
+      } else {
+        throw new Error(`Gateway response not ok: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error fetching IPFS description:', error);
+      setDescriptionText('Failed to load description from IPFS. Content may not be pinned globally.');
+    } finally {
+      setDescriptionLoading(false);
+    }
+  }, []);
 
   // Use proposal_id directly as bytes32 for subgraph
   const proposalIdBytes32 = proposal_id;
@@ -45,10 +69,22 @@ export default function ProposalVotePage() {
   const pType = proposal?.p_pType || 0;
   const eligibilityToken = proposal?.p_eligibilityToken;
 
+  // Memoize proposal for stability
+  const proposalStable = useMemo(() => proposal, [proposal]);
+
+  // Get end time from contract
+  const { data: contractEndData } = useReadContract({
+    address: proposal?.proposal,
+    abi: PrivateProposalABI.abi,
+    functionName: 'end',
+    enabled: !!proposal?.proposal
+  });
+
   // Time calculations
   const currentTime = Math.floor(Date.now() / 1000);
   const pStart = proposal?.p_start ? Number(proposal.p_start) : 0;
-  const pEnd = proposal?.p_end ? Number(proposal.p_end) : 0;
+  const contractEnd = contractEndData ? Number(contractEndData) : 0;
+  const pEnd = contractEnd > 0 ? contractEnd : (proposal?.p_end ? Number(proposal.p_end) : 0);
   const isBeforeStart = currentTime < pStart;
   const isDuring = currentTime >= pStart && currentTime < pEnd;
   const isAfter = currentTime >= pEnd;
@@ -95,17 +131,24 @@ export default function ProposalVotePage() {
 
   // Create signer from wallet client
   useEffect(() => {
-    const createSigner = async () => {
-      if (walletClient) {
-        const provider = new ethers.BrowserProvider(walletClient.transport);
-        const ethersSigner = await provider.getSigner();
+    if (walletClient && address) {
+      // Manually create an ethers provider and signer from the injected wallet (e.g., MetaMask)
+      // Updated for ethers v6: use BrowserProvider instead of Web3Provider
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      provider.getSigner(address).then((ethersSigner) => {
         setSigner(ethersSigner);
-      } else {
-        setSigner(null);
-      }
-    };
-    createSigner();
-  }, [walletClient]);
+      });
+    } else {
+      setSigner(null);
+    }
+  }, [walletClient, address]);
+
+  // Create a public provider for read-only operations (using your Infura RPC)
+  const publicProvider = useMemo(
+    () => new ethers.JsonRpcProvider('https://sepolia.infura.io/v3/73c573e5a8854465ad19e8e4e7e2e20c'),
+    []
+  );
+
 
   // Initialize FHE instance
   useEffect(() => {
@@ -126,196 +169,66 @@ export default function ProposalVotePage() {
     return proposal.proposal;
   };
 
-  // Fetch results from contract
-  const fetchResults = useCallback(async () => {
-    if (!signer || !proposal) return;
-
-    try {
-      const proposalAddress = proposal.proposal;
-      if (!proposalAddress) return;
-
-      const proposalContract = new ethers.Contract(proposalAddress, PrivateProposalABI.abi, signer);
-
-      const revealed = await proposalContract.resultsRevealed();
-      setResultsRevealed(revealed);
-
-      if (revealed) {
-        const voteCounts = await proposalContract.getVotePercentages(); // Fetch vote counts
-        const voteCountsBig = voteCounts.map(c => BigInt(c.toString()));
-        const totalVotes = voteCountsBig.reduce((sum, count) => sum + count, 0n);
-        const percentages = voteCountsBig.map(count => totalVotes > 0n ? Number((count * 100n) / totalVotes) : 0);
-        const winningChoice = await proposalContract.winningChoice();
-        const passed = await proposalContract.proposalPassed();
-        const resolved = await proposalContract.proposalResolved();
-
-        setResults({
-          percentages: percentages.map(p => p.toString()),
-          winningChoice: winningChoice.toString(),
-          passed,
-          resolved
-        });
-      } else {
-        // Check if voting period has ended and decrypt results
-        const currentTime = Math.floor(Date.now() / 1000);
-        if (currentTime > proposal.p_end && fheInitialized) {
-          // Get encrypted handles for each choice
-          const handles = [];
-          for (let i = 0; i < proposal.p_choices.length; i++) {
-            const handle = await proposalContract.getEncryptedChoiceVotes(i);
-            handles.push(handle);
-          }
-
-          // Decrypt the handles
-          const { cleartexts, decryptionProof } = await decryptMultipleHandles(proposalAddress, signer, handles);
-
-          // Compute results from decrypted vote counts
-          const voteCounts = cleartexts.map(c => BigInt(c));
-          const totalVotes = voteCounts.reduce((sum, count) => sum + count, 0n);
-          const percentages = voteCounts.map(count => totalVotes > 0n ? Number((count * 100n) / totalVotes) : 0);
-          const maxVotes = Math.max(...voteCounts.map(c => Number(c)));
-          const winningChoice = voteCounts.findIndex(c => Number(c) === maxVotes);
-
-          // Submit to contract for on-chain verification
-          const tx = await proposalContract.resolveProposalCallback(proposalAddress, cleartexts, decryptionProof);
-          await tx.wait();
-
-          // Fetch passed and resolved from contract
-          const passed = await proposalContract.proposalPassed();
-          const resolved = await proposalContract.proposalResolved();
-
-          setResults({
-            percentages: percentages.map(p => p.toString()),
-            winningChoice: winningChoice.toString(),
-            passed,
-            resolved
-          });
-          setResultsRevealed(true);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to fetch results:', error);
-    }
-  }, [signer, proposal, fheInitialized]);
-
-  // Handle TallyRevealRequested event
-  const handleTallyRevealRequested = useCallback(async (encryptedHandles) => {
-    if (!signer || !proposal || !fheInitialized) return;
-
-    try {
-      const proposalAddress = proposal.proposal;
-      const { cleartexts, decryptionProof } = await decryptMultipleHandles(proposalAddress, signer, encryptedHandles);
-
-      // Submit to contract for on-chain verification
-      const proposalContract = new ethers.Contract(proposalAddress, PrivateProposalABI.abi, signer);
-      const tx = await proposalContract.resolveProposalCallback(proposalAddress, cleartexts, decryptionProof);
-      await tx.wait();
-
-      // Fetch the verified results from the contract
-      await fetchResults();
-    } catch (error) {
-      console.error('Failed to decrypt and verify results:', error);
-    }
-  }, [signer, proposal, fheInitialized, fetchResults]);
-
-  // Manual resolve proposal
-  const handleResolveProposal = async () => {
-    if (!signer || !proposal || !fheInitialized) return;
-
-    setResolving(true);
-    try {
-      const proposalAddress = proposal.proposal;
-      const proposalContract = new ethers.Contract(proposalAddress, PrivateProposalABI.abi, signer);
-
-      // Get encrypted handles for each choice
-      const handles = [];
-      for (let i = 0; i < proposal.p_choices.length; i++) {
-        const handle = await proposalContract.getEncryptedChoiceVotes(i);
-        handles.push(handle);
-      }
-
-      // Decrypt the handles
-      const { cleartexts, decryptionProof } = await decryptMultipleHandles(proposalAddress, signer, handles);
-
-      // Submit to contract for on-chain verification
-      const tx = await proposalContract.resolveProposalCallback(proposalAddress, cleartexts, decryptionProof);
-      await tx.wait();
-
-      // Fetch the verified results from the contract
-      await fetchResults();
-    } catch (error) {
-      console.error('Failed to resolve proposal:', error);
-      alert('Failed to resolve proposal: ' + error.message);
-    } finally {
-      setResolving(false);
-    }
-  };
-
-  // Fetch results when proposal is loaded
+  // Fetch description when proposal loads
   useEffect(() => {
-    if (proposal && signer) {
-      fetchResults();
+    console.log('Proposal data:', proposal);
+    console.log('p_bodyURI value:', proposal?.p_bodyURI);
+    if (proposal?.p_bodyURI) {
+      console.log('Fetching description from:', proposal.p_bodyURI);
+      fetchDescriptionFromIPFS(proposal.p_bodyURI);
+    } else {
+      console.log('No p_bodyURI found for proposal');
     }
-  }, [proposal, signer, fetchResults]);
-
-  // Listen for TallyRevealRequested event
-  useEffect(() => {
-    if (!signer || !proposal) return;
-
-    const proposalAddress = proposal.proposal;
-    const proposalContract = new ethers.Contract(proposalAddress, PrivateProposalABI.abi, signer);
-
-    // Set up event listener
-    proposalContract.on('TallyRevealRequested', handleTallyRevealRequested);
-
-    // Also check for past events
-    const checkPastEvents = async () => {
-      try {
-        const filter = proposalContract.filters.TallyRevealRequested();
-        const events = await proposalContract.queryFilter(filter);
-        if (events.length > 0) {
-          const lastEvent = events[events.length - 1];
-          await handleTallyRevealRequested(...lastEvent.args);
-        }
-      } catch (error) {
-        console.error('Failed to query past events:', error);
-      }
-    };
-
-    checkPastEvents();
-
-    return () => {
-      proposalContract.off('TallyRevealRequested', handleTallyRevealRequested);
-    };
-  }, [signer, proposal, handleTallyRevealRequested]);
+  }, [proposal?.p_bodyURI, fetchDescriptionFromIPFS, proposal]);
 
   // Vote function
   const handleVote = async (choiceIndex) => {
-    if (!fheInitialized || !signer || !proposal) return;
+    console.log('handleVote called with:', { choiceIndex, pType, fheInitialized, signer: !!signer, proposal: !!proposal });
+
+    if (!fheInitialized || !signer || !proposal) {
+      console.log('Early return - missing requirements:', { fheInitialized, signer: !!signer, proposal: !!proposal });
+      return;
+    }
 
     setVoting(true);
     try {
       const proposalAddress = getProposalAddress();
+      console.log('Proposal address:', proposalAddress);
+
       if (!proposalAddress) {
         throw new Error('Could not get proposal address');
       }
 
       let tx;
       if (pType === 0) {
+        console.log('Non-weighted vote for choice:', choiceIndex);
         // Non-weighted vote
         const encryptedInput = await createEncryptedInput(proposalAddress, address, choiceIndex);
+        console.log('Encrypted input created:', encryptedInput);
         const proposalContract = new ethers.Contract(proposalAddress, PrivateProposalABI.abi, signer);
+        console.log('Calling vote_nonweighted...');
         tx = await proposalContract.vote_nonweighted(encryptedInput.encryptedData, encryptedInput.proof);
+        console.log('Transaction sent:', tx.hash);
       } else if (pType === 1) {
+        console.log('Single weighted vote for choice:', choiceIndex);
         // Single weighted vote
         const encryptedInput = await createEncryptedInput(proposalAddress, address, choiceIndex);
+        console.log('Encrypted input created:', encryptedInput);
         const proposalContract = new ethers.Contract(proposalAddress, PrivateProposalABI.abi, signer);
+        console.log('Calling vote_weighted_Single...');
         tx = await proposalContract.vote_weighted_Single(encryptedInput.encryptedData, encryptedInput.proof);
+        console.log('Transaction sent:', tx.hash);
       } else if (pType === 2) {
+        console.log('Fractional voting with percentages:', percentages);
         // Fractional voting
         const percentageArray = proposal.p_choices.map((_, index) => percentages[index] || 0);
+        console.log('Percentage array:', percentageArray);
         const encryptedPercentages = await createEncryptedPercentages(proposalAddress, address, percentageArray);
+        console.log('Encrypted percentages created:', encryptedPercentages);
         const proposalContract = new ethers.Contract(proposalAddress, PrivateProposalABI.abi, signer);
+        console.log('Calling vote_weighted_fractional...');
         tx = await proposalContract.vote_weighted_fractional(encryptedPercentages.encryptedInputs, encryptedPercentages.proof);
+        console.log('Transaction sent:', tx.hash);
       } else {
         throw new Error('Unsupported proposal type');
       }
@@ -323,9 +236,6 @@ export default function ProposalVotePage() {
 
       console.log('Vote submitted successfully');
       alert('Vote submitted successfully!');
-
-      // Fetch results after voting
-      await fetchResults();
     } catch (error) {
       console.error('Voting failed:', error);
       alert('Voting failed: ' + error.message);
@@ -392,11 +302,27 @@ export default function ProposalVotePage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {proposal.p_description && (
-                <div>
-                  <strong className="text-black">Description:</strong> <a href={proposal.p_description} target="_blank" rel="noopener noreferrer" className="text-[#4D89B0] underline">{proposal.p_description}</a>
-                </div>
-              )}
+              {/* Description Section - Always visible at the top */}
+              <div className="p-4 bg-[#E8DCC4]/20 rounded-lg border-l-4 border-[#4D89B0]">
+                <h3 className="text-lg font-semibold mb-2 text-black">Proposal Description</h3>
+                {descriptionLoading ? (
+                  <p className="text-black">Loading description...</p>
+                ) : descriptionText ? (
+                  <div>
+                    <p className="text-black whitespace-pre-wrap">{descriptionText}</p>
+                    <a href={`https://sapphire-impressive-salamander-839.mypinata.cloud/ipfs/${proposal.p_bodyURI.replace('ipfs://', '')}`} target="_blank" rel="noopener noreferrer" className="text-[#4D89B0] underline text-sm mt-2 inline-block">
+                      View on IPFS
+                    </a>
+                  </div>
+                ) : proposal.p_bodyURI ? (
+                  <div>
+                    <p className="text-black">Description stored on IPFS:</p>
+                    <a href={`https://sapphire-impressive-salamander-839.mypinata.cloud/ipfs/${proposal.p_bodyURI.replace('ipfs://', '')}`} target="_blank" rel="noopener noreferrer" className="text-[#4D89B0] underline text-sm">{proposal.p_bodyURI}</a>
+                  </div>
+                ) : (
+                  <p className="text-black italic">No description provided for this proposal.</p>
+                )}
+              </div>
 
               <div className="p-4 bg-[#4D89B0]/10 rounded-lg">
                 <p className="text-sm text-black">
@@ -411,26 +337,43 @@ export default function ProposalVotePage() {
                       pType === 2 ? (
                         <div className="space-y-2">
                           <div className="flex items-center justify-between">
-                            <label className="font-medium">{choice}</label>
-                            <input
-                              type="number"
-                              placeholder="0"
-                              value={percentages[index] || ''}
-                              onChange={(e) => {
-                                const val = Math.max(0, Math.min(100, parseInt(e.target.value) || 0));
+                            <label className="font-medium text-black">{choice}</label>
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="number"
+                                placeholder="0"
+                                value={percentages[index] || ''}
+                                onChange={(e) => {
+                                  const val = Math.max(0, Math.min(100, parseInt(e.target.value) || 0));
+                                  setPercentages({...percentages, [index]: val});
+                                }}
+                                className="w-16 px-2 py-1 border rounded text-center text-sm"
+                                min="0"
+                                max="100"
+                              />
+                              <span className="text-sm text-black">%</span>
+                            </div>
+                          </div>
+                          <div className="relative">
+                            <div 
+                              className="w-full bg-[#E8DCC4]/30 rounded-full h-6 cursor-pointer relative overflow-hidden"
+                              onClick={(e) => {
+                                const rect = e.currentTarget.getBoundingClientRect();
+                                const clickX = e.clientX - rect.left;
+                                const percentage = Math.round((clickX / rect.width) * 100);
+                                const val = Math.max(0, Math.min(100, percentage));
                                 setPercentages({...percentages, [index]: val});
                               }}
-                              className="w-20 px-2 py-1 border rounded text-center"
-                              min="0"
-                              max="100"
-                            />
-                            <span className="text-sm text-black">%</span>
-                          </div>
-                          <div className="w-full bg-[#E8DCC4]/30 rounded-full h-2">
-                            <div 
-                              className="bg-[#4D89B0] h-2 rounded-full transition-all duration-300"
-                              style={{ width: `${percentages[index] || 0}%` }}
-                            ></div>
+                            >
+                              <div 
+                                className="bg-[#4D89B0] h-6 rounded-full transition-all duration-300 flex items-center justify-end pr-2"
+                                style={{ width: `${percentages[index] || 0}%` }}
+                              >
+                                <span className="text-white text-xs font-medium">
+                                  {percentages[index] || 0}%
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       ) : (
@@ -505,40 +448,15 @@ export default function ProposalVotePage() {
                 </div>
               )
             ) : (
-              <div>
-                {resultsRevealed && results && (
-                  <div className="mt-6 p-4 bg-[#E8DCC4]/10 rounded-lg">
-                    <h3 className="text-lg font-semibold mb-4 text-black">Results</h3>
-                    <div className="space-y-2">
-                      <p className="text-black"><strong>Winning Choice:</strong> {proposal.p_choices?.[parseInt(results.winningChoice)]} (Index: {results.winningChoice})</p>
-                      <p className="text-black"><strong>Proposal Passed:</strong> {results.passed ? 'Yes' : 'No'}</p>
-                      <p className="text-black"><strong>Proposal Resolved:</strong> {results.resolved ? 'Yes' : 'No'}</p>
-                      <div>
-                        <strong className="text-black">Vote Percentages:</strong>
-                        <ul className="list-disc list-inside mt-2">
-                          {results.percentages.map((percentage, index) => (
-                            <li key={index} className="text-black">
-                              {proposal.p_choices?.[index]}: {percentage}%
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {!resultsRevealed && (
-                  <div className="mt-6 p-4 bg-[#E8DCC4]/20 rounded-lg">
-                    <p className="text-sm text-black">Results not yet revealed. They will be available after the voting period ends and decryption is completed, or you can click Resolve Proposal to manually decrypt and reveal results.</p>
-                    <Button
-                      onClick={handleResolveProposal}
-                      disabled={resolving || !fheInitialized}
-                      variant="outline"
-                      className="w-full mt-4 border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white"
-                    >
-                      {resolving ? 'Resolving Proposal...' : 'Resolve Proposal'}
-                    </Button>
-                  </div>
-                )}
+              <div className="mt-6">
+                <ProposalResolve
+                  proposal={proposalStable}
+                  signer={signer}
+                  fheInitialized={fheInitialized}
+                  currentTime={currentTime}
+                  pEnd={pEnd}
+                  publicProvider={publicProvider}
+                />
               </div>
             )}
 
