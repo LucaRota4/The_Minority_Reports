@@ -183,10 +183,10 @@ export default function ProposalVotePage() {
 
   // Vote function
   const handleVote = async (choiceIndex) => {
-    console.log('handleVote called with:', { choiceIndex, pType, fheInitialized, signer: !!signer, proposal: !!proposal });
+    console.log('handleVote called with:', { choiceIndex, pType, signer: !!signer, proposal: !!proposal });
 
-    if (!fheInitialized || !signer || !proposal) {
-      console.log('Early return - missing requirements:', { fheInitialized, signer: !!signer, proposal: !!proposal });
+    if (!signer || !proposal) {
+      console.log('Early return - missing requirements:', { signer: !!signer, proposal: !!proposal });
       return;
     }
 
@@ -202,29 +202,78 @@ export default function ProposalVotePage() {
       let tx;
       if (pType === 0) {
         console.log('Non-weighted vote for choice:', choiceIndex);
-        // Non-weighted vote
-        const encryptedInput = await createEncryptedInput(proposalAddress, address, choiceIndex);
-        console.log('Encrypted input created:', encryptedInput);
+        // Non-weighted vote - encrypt via API
+        const response = await fetch('/api/encrypt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            proposalAddress,
+            userAddress: address,
+            voteType: pType,
+            choiceIndex
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Encryption failed');
+        }
+
+        const encryptedInput = await response.json();
+        console.log('Encrypted input from API:', encryptedInput);
         const proposalContract = new ethers.Contract(proposalAddress, PrivateProposalABI.abi, signer);
         console.log('Calling vote_nonweighted...');
         tx = await proposalContract.vote_nonweighted(encryptedInput.encryptedData, encryptedInput.proof);
         console.log('Transaction sent:', tx.hash);
       } else if (pType === 1) {
         console.log('Single weighted vote for choice:', choiceIndex);
-        // Single weighted vote
-        const encryptedInput = await createEncryptedInput(proposalAddress, address, choiceIndex);
-        console.log('Encrypted input created:', encryptedInput);
+        // Single weighted vote - encrypt via API
+        const response = await fetch('/api/encrypt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            proposalAddress,
+            userAddress: address,
+            voteType: pType,
+            choiceIndex
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Encryption failed');
+        }
+
+        const encryptedInput = await response.json();
+        console.log('Encrypted input from API:', encryptedInput);
         const proposalContract = new ethers.Contract(proposalAddress, PrivateProposalABI.abi, signer);
         console.log('Calling vote_weighted_Single...');
         tx = await proposalContract.vote_weighted_Single(encryptedInput.encryptedData, encryptedInput.proof);
         console.log('Transaction sent:', tx.hash);
       } else if (pType === 2) {
         console.log('Fractional voting with percentages:', percentages);
-        // Fractional voting
+        // Fractional voting - encrypt via API
         const percentageArray = proposal.p_choices.map((_, index) => percentages[index] || 0);
         console.log('Percentage array:', percentageArray);
-        const encryptedPercentages = await createEncryptedPercentages(proposalAddress, address, percentageArray);
-        console.log('Encrypted percentages created:', encryptedPercentages);
+
+        const response = await fetch('/api/encrypt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            proposalAddress,
+            userAddress: address,
+            voteType: pType,
+            percentages: percentageArray
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Encryption failed');
+        }
+
+        const encryptedPercentages = await response.json();
+        console.log('Encrypted percentages from API:', encryptedPercentages);
         const proposalContract = new ethers.Contract(proposalAddress, PrivateProposalABI.abi, signer);
         console.log('Calling vote_weighted_fractional...');
         tx = await proposalContract.vote_weighted_fractional(encryptedPercentages.encryptedInputs, encryptedPercentages.proof);
@@ -437,7 +486,7 @@ export default function ProposalVotePage() {
               ) : isEligible ? (
                 <Button
                   onClick={() => handleVote(pType === 2 ? null : selectedChoice)}
-                  disabled={(pType !== 2 && selectedChoice === null) || (pType === 2 && totalPercentage !== 100) || voting || !fheInitialized}
+                  disabled={(pType !== 2 && selectedChoice === null) || (pType === 2 && totalPercentage !== 100) || voting}
                   className="w-full bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white"
                 >
                   {voting ? 'Submitting Vote...' : 'Vote'}
@@ -462,7 +511,7 @@ export default function ProposalVotePage() {
 
             {!fheInitialized && (
               <div className="text-sm text-black">
-                Initializing FHE encryption...
+                Preparing encryption system...
               </div>
             )}
           </div>
