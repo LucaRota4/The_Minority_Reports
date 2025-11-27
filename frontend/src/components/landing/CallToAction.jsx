@@ -89,7 +89,7 @@ export function CallToAction() {
         >
           <motion.a
             href="/app"
-            className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#4D89B0] text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#4D89B0] text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
             whileHover={{ 
               scale: 1.05,
               boxShadow: "0 20px 40px rgba(77, 137, 176, 0.3)"

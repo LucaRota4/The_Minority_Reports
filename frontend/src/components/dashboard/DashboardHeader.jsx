@@ -28,16 +28,16 @@ export function DashboardHeader() {
 
       {/* Navigation */}
       <nav className="hidden md:flex items-center space-x-6">
-        <a href="/app" className="text-sm font-medium text-gray-700 hover:text-black transition-colors">
+        <a href="/app" className="text-sm font-medium text-gray-700 hover:text-black transition-colors cursor-pointer">
           Dashboard
         </a>
-        <a href="/spaces" className="text-sm font-medium text-gray-700 hover:text-black transition-colors">
+        <a href="/spaces" className="text-sm font-medium text-gray-700 hover:text-black transition-colors cursor-pointer">
           Spaces
         </a>
-        <a href="/proposals" className="text-sm font-medium text-gray-700 hover:text-black transition-colors">
+        <a href="/proposals" className="text-sm font-medium text-gray-700 hover:text-black transition-colors cursor-pointer">
           Proposals
         </a>
-        <a href="/activity" className="text-sm font-medium text-gray-700 hover:text-black transition-colors">
+        <a href="/activity" className="text-sm font-medium text-gray-700 hover:text-black transition-colors cursor-pointer">
           Activity
         </a>
       </nav>

@@ -7,14 +7,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Users, Calendar, Settings, AlertCircle, Loader2 } from 'lucide-react';
+import { Users, Calendar, Settings, AlertCircle, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
 import { ProposalTable } from '@/components/dashboard/ProposalTable';
 import { CreateProposalDialog } from '@/components/dashboard/CreateProposalDialog';
 import Link from 'next/link';
 
 // Import the SpaceRegistry ABI
 import spaceRegistryAbi from '@/abis/SpaceRegistry.json';
-import { useSpaceByEns, useAdminSpaceIds, useLatestDisplayNameUpdates, useProposalsBySpace, useMemberCounts } from '@/hooks/useSubgraph';
+import { useSpaceByEns, useAdminSpaceIds, useLatestDisplayNameUpdates, useProposalsBySpace, useMemberCounts, useMemberSpaceIds } from '@/hooks/useSubgraph';
 
 // Contract addresses from environment
 const SPACE_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_SPACE_REGISTRY_ADDRESS;  export default function SpacePage() {
@@ -27,6 +27,10 @@ const SPACE_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_SPACE_REGISTRY_ADDRESS;  
     const [manageMembersOpen, setManageMembersOpen] = useState(false);
     const [adminAddressInput, setAdminAddressInput] = useState('');
     const [newDisplayNameInput, setNewDisplayNameInput] = useState('');
+    const [newOwnerAddressInput, setNewOwnerAddressInput] = useState('');
+    const [showOverview, setShowOverview] = useState(true);
+    const [showProposals, setShowProposals] = useState(true);
+    const [showHeaderOverview, setShowHeaderOverview] = useState(false);
     // Local optimistic override to show the updated display name immediately
     const [displayNameOverride, setDisplayNameOverride] = useState('');
 
@@ -39,6 +43,7 @@ const SPACE_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_SPACE_REGISTRY_ADDRESS;  
   // Use centralized hooks for subgraph queries
   const { data, isLoading: loading, error } = useSpaceByEns(spaceName);
   const { data: adminSpaceIdsData, isLoading: adminSpaceIdsLoading, error: adminSpaceIdsError } = useAdminSpaceIds(address, isConnected);
+  const { data: memberSpaceIdsData, isLoading: memberSpaceIdsLoading, error: memberSpaceIdsError } = useMemberSpaceIds(address, isConnected);
 
   const spaceData = data?.spaces?.[0];
 
@@ -72,6 +77,14 @@ const SPACE_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_SPACE_REGISTRY_ADDRESS;  
     const isAdminNow = adminSpaceIdsData.adminAddeds.some(a => a.spaceId === spaceId);
     setIsAdmin(isAdminNow);
   }, [data, adminSpaceIdsData]);
+
+  // Set isMember when we have space data and member space IDs
+  useEffect(() => {
+    if (!data?.spaces?.[0] || !memberSpaceIdsData?.memberJoineds) return;
+    const spaceId = data.spaces[0].spaceId;
+    const isMemberNow = memberSpaceIdsData.memberJoineds.some(m => m.spaceId === spaceId);
+    setIsMember(isMemberNow);
+  }, [data, memberSpaceIdsData]);
 
   // Set initial display name input when space data loads
   useEffect(() => {
@@ -122,6 +135,28 @@ const SPACE_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_SPACE_REGISTRY_ADDRESS;  
       abi: spaceRegistryAbi.abi,
       functionName: 'updateSpaceDisplayName',
       args: [spaceData.spaceId, newDisplayNameInput],
+    });
+  };
+
+  // Deactivate space (owner only)
+  const handleDeactivateSpace = async () => {
+    if (!spaceData?.spaceId) return;
+    writeContract({
+      address: SPACE_REGISTRY_ADDRESS,
+      abi: spaceRegistryAbi.abi,
+      functionName: 'deactivateSpace',
+      args: [spaceData.spaceId],
+    });
+  };
+
+  // Transfer ownership (owner only)
+  const handleTransferOwnership = async () => {
+    if (!newOwnerAddressInput || !spaceData?.spaceId) return;
+    writeContract({
+      address: SPACE_REGISTRY_ADDRESS,
+      abi: spaceRegistryAbi.abi,
+      functionName: 'transferOwnership',
+      args: [spaceData.spaceId, newOwnerAddressInput],
     });
   };
 
@@ -188,16 +223,11 @@ const SPACE_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_SPACE_REGISTRY_ADDRESS;  
                   </Badge>
                   {(isOwner || isAdmin) ? (
                     <>
-                      {isOwner && (
-                        <Button variant="outline" size="sm" onClick={() => setManageMembersOpen(true)} className="border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white">
-                          <Users className="h-4 w-4 mr-2" />
-                          Manage Members
-                        </Button>
+                      {isOwner ? (
+                        <Badge variant="outline" className="border-[#4D89B0] text-[#4D89B0]">Owner</Badge>
+                      ) : (
+                        <Badge variant="outline" className="border-[#4D89B0] text-[#4D89B0]">Admin</Badge>
                       )}
-                      <Button variant="outline" size="sm" className="border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white">
-                        <Settings className="h-4 w-4 mr-2" />
-                        Space Settings
-                      </Button>
                     </>
                   ) : isMember ? (
                     <Badge variant="outline" className="border-[#4D89B0] text-[#4D89B0]">Member</Badge>
@@ -206,15 +236,35 @@ const SPACE_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_SPACE_REGISTRY_ADDRESS;  
                       size="sm"
                       onClick={handleJoinSpace}
                       disabled={isTxPending || isConfirming}
-                      className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white"
+                      className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white cursor-pointer"
                     >
                       {isTxPending || isConfirming ? 'Joining...' : 'Join Space'}
                     </Button>
                   ) : null}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowHeaderOverview(!showHeaderOverview)}
+                    className="text-[#4D89B0] hover:bg-transparent p-1 h-6 w-6 cursor-pointer"
+                  >
+                    {showHeaderOverview ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  </Button>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
+              {showHeaderOverview && (
+                <div className="mb-4">
+                  <p className="text-black">
+                    Learn about this governance space and its activities. Space functionality coming soon. This space was created through the SpaceRegistry contract with ENS verification.
+                  </p>
+                  {!isConnected && (
+                    <p className="text-sm text-black mt-2">
+                      Connect your wallet to interact with this space.
+                    </p>
+                  )}
+                </div>
+              )}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex items-center gap-2">
                   <Users className="h-5 w-5 text-[#4D89B0]/60" />
@@ -233,13 +283,28 @@ const SPACE_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_SPACE_REGISTRY_ADDRESS;  
           {/* Space Content */}
           <div className="space-y-6">
             {/* Proposals Section - Visible to everyone */}
-            <ProposalTable
-              proposals={proposalsData?.proposalCreateds || []}
-              loading={proposalsLoading}
-              error={proposalsError}
-              spaceName={spaceName}
-              title="All Proposals"
-            />
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-black">All Proposals</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowProposals(!showProposals)}
+                  className="text-[#4D89B0] hover:bg-[#4D89B0]/10 cursor-pointer"
+                >
+                  {showProposals ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                </Button>
+              </div>
+              {showProposals && (
+                <ProposalTable
+                  proposals={proposalsData?.proposalCreateds || []}
+                  loading={proposalsLoading}
+                  error={proposalsError}
+                  spaceName={spaceName}
+                  title=""
+                />
+              )}
+            </div>
 
             {(isOwner || isAdmin) ? (
               /* Owner/Admin View */
@@ -259,26 +324,15 @@ const SPACE_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_SPACE_REGISTRY_ADDRESS;  
                       />
                       <div className="flex items-center gap-2">
                         {isOwner && (
-                          <Button variant="outline" className="flex items-center gap-2 border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white" onClick={() => setManageMembersOpen(true)}>
+                          <Button variant="outline" className="flex items-center gap-2 border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white cursor-pointer" onClick={() => setManageMembersOpen(!manageMembersOpen)}>
                             <Users className="h-4 w-4" />
-                            Manage Members
+                            Manage Space
                           </Button>
                         )}
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-
-                {manageMembersOpen && (
-                  <Card className="bg-white/80 border-[#E8DCC4]/30">
-                    <CardHeader>
-                      <CardTitle className="text-black">Manage Members & Admins</CardTitle>
-                      <CardDescription className="text-black">
-                        Nominate or revoke admins for this space. Only the space owner can add/remove admins.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
+                    {manageMembersOpen && (
+                      <div className="mt-6 space-y-4 border-t border-[#E8DCC4]/30 pt-4">
                         <div className="flex flex-col md:flex-row gap-2">
                           <input
                             type="text"
@@ -288,8 +342,8 @@ const SPACE_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_SPACE_REGISTRY_ADDRESS;  
                             className="w-full md:w-2/3 border border-[#E8DCC4]/30 rounded px-3 py-2 bg-white/50"
                           />
                           <div className="flex gap-2">
-                            <Button onClick={handleNominateAdmin} disabled={isTxPending || isConfirming} className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white">Nominate Admin</Button>
-                            <Button variant="ghost" onClick={handleRevokeAdmin} disabled={isTxPending || isConfirming} className="border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white">Revoke Admin</Button>
+                            <Button onClick={handleNominateAdmin} disabled={isTxPending || isConfirming} className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white cursor-pointer">Nominate Admin</Button>
+                            <Button variant="ghost" onClick={handleRevokeAdmin} disabled={isTxPending || isConfirming} className="border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white cursor-pointer">Revoke Admin</Button>
                           </div>
                         </div>
 
@@ -303,9 +357,32 @@ const SPACE_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_SPACE_REGISTRY_ADDRESS;  
                               onChange={(e) => setNewDisplayNameInput(e.target.value)}
                               className="flex-1 border border-[#E8DCC4]/30 rounded px-3 py-2 bg-white/50"
                             />
-                            <Button onClick={handleUpdateDisplayName} disabled={isTxPending || isConfirming || !spaceData || newDisplayNameInput === spaceData.displayName} className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white">Update</Button>
+                            <Button onClick={handleUpdateDisplayName} disabled={isTxPending || isConfirming || !spaceData || newDisplayNameInput === spaceData.displayName} className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white cursor-pointer">Update</Button>
                           </div>
                         </div>
+
+                        {isOwner && (
+                          <>
+                            <div className="pt-4 border-t border-[#E8DCC4]/30">
+                              <p className="text-sm text-black mb-2">Transfer ownership</p>
+                              <div className="flex gap-2">
+                                <input
+                                  type="text"
+                                  placeholder="0xNewOwnerAddress"
+                                  value={newOwnerAddressInput}
+                                  onChange={(e) => setNewOwnerAddressInput(e.target.value)}
+                                  className="flex-1 border border-[#E8DCC4]/30 rounded px-3 py-2 bg-white/50"
+                                />
+                                <Button onClick={handleTransferOwnership} disabled={isTxPending || isConfirming} className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white cursor-pointer">Transfer</Button>
+                              </div>
+                            </div>
+
+                            <div className="pt-4 border-t border-[#9e0e40]">
+                              <p className="text-sm text-black mb-2">Deactivate space</p>
+                              <Button onClick={handleDeactivateSpace} disabled={isTxPending || isConfirming} variant="destructive" className="bg-[#9e0e40] hover:bg-[#9e0e40]/90 text-white cursor-pointer">Deactivate Space</Button>
+                            </div>
+                          </>
+                        )}
 
                         {writeError && (
                           <div className="text-sm text-red-600">{writeError.message}</div>
@@ -314,32 +391,13 @@ const SPACE_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_SPACE_REGISTRY_ADDRESS;  
                           <div className="text-sm text-black">Transaction pending...</div>
                         )}
                       </div>
-                    </CardContent>
-                  </Card>
-                )}
+                    )}
+                  </CardContent>
+                </Card>
               </>
             ) : (
-              /* Public View */
-              <Card className="bg-white/80 border-[#E8DCC4]/30">
-                <CardHeader>
-                  <CardTitle className="text-black">Space Overview</CardTitle>
-                  <CardDescription className="text-black">
-                    Learn about this governance space and its activities.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-12">
-                    <p className="text-black">
-                      Space functionality coming soon. This space was created through the SpaceRegistry contract with ENS verification.
-                    </p>
-                    {!isConnected && (
-                      <p className="text-sm text-black mt-2">
-                        Connect your wallet to interact with this space.
-                      </p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+              /* Public View - No additional content */
+              null
             )}
           </div>
         </div>

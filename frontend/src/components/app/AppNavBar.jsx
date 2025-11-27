@@ -40,7 +40,7 @@ export function AppNavBar() {
               style={pathname === '/app' ? { backgroundColor: '#4D89B0', color: 'white' } : {}}
               disabled
             >
-              <a href="/app" className="flex items-center gap-2">
+              <a href="/app" className="flex items-center gap-2 cursor-pointer">
                 <LayoutDashboard className="h-4 w-4" />
                 Dashboard
               </a>
@@ -55,7 +55,7 @@ export function AppNavBar() {
               style={pathname.startsWith('/app/zama-game') ? { backgroundColor: '#4D89B0', color: 'white' } : {}}
               asChild
             >
-              <a href="/app/zama-game" className="flex items-center gap-2">
+              <a href="/app/zama-game" className="flex items-center gap-2 cursor-pointer">
                 <Gamepad2 className="h-4 w-4" />
                 Zama Game
               </a>
@@ -70,7 +70,7 @@ export function AppNavBar() {
               style={pathname.startsWith('/app/spaces/ens') ? { backgroundColor: '#4D89B0', color: 'white' } : {}}
               asChild
             >
-              <a href="/app/spaces/ens" className="flex items-center gap-2">
+              <a href="/app/spaces/ens" className="flex items-center gap-2 cursor-pointer">
                 <Globe className="h-4 w-4" />
                 Register ENS
               </a>

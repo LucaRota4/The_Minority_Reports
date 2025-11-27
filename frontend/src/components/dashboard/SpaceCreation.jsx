@@ -260,7 +260,7 @@ export function SpaceCreation() {
             <div className="relative">
               <button
                 type="button"
-                className="flex items-center gap-2 w-full px-3 py-2 rounded-md transition-colors duration-200 font-medium text-sm border border-[#E8DCC4]/30 bg-white/50"
+                className="flex items-center gap-2 w-full px-3 py-2 rounded-md transition-colors duration-200 font-medium text-sm border border-[#E8DCC4]/30 bg-white/50 cursor-pointer"
                 onClick={handleDropdownToggle}
               >
                 {selectedOption && (
@@ -286,7 +286,7 @@ export function SpaceCreation() {
                       <button
                         key={option.value}
                         type="button"
-                        className="flex items-center gap-3 px-4 py-3 text-sm hover:bg-gray-50 transition-colors duration-150 w-full text-left"
+                        className="flex items-center gap-3 px-4 py-3 text-sm hover:bg-gray-50 transition-colors duration-150 w-full text-left cursor-pointer"
                         onClick={() => {
                           setMembershipType(option.value);
                           setDropdownOpen(false);

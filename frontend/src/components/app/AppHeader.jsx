@@ -27,7 +27,6 @@ export function AppHeader() {
       icon: LayoutDashboard,
       submenu: [
         { name: 'Overview', href: '/app', icon: Home },
-        { name: 'Analytics', href: '/app/analytics', icon: LayoutDashboard },
       ]
     },
     {
@@ -70,7 +69,7 @@ export function AppHeader() {
     <header className="sticky top-0 z-50 w-full backdrop-blur-md shadow-lg" style={{ backgroundColor: colors.headerBg }}>
       <div className="mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-4 md:px-8">
         {/* Logo Section */}
-        <div className="flex items-center gap-4">
+        <Link href="/" className="flex items-center gap-4 cursor-pointer hover:opacity-90 transition-opacity">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 relative rounded-lg p-1">
               <Image
@@ -90,7 +89,7 @@ export function AppHeader() {
               </span>
             </div>
           </div>
-        </div>
+        </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8 relative">

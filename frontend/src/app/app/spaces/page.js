@@ -6,9 +6,9 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Plus, AlertCircle } from 'lucide-react';
 import { SpacesTable } from '@/components/dashboard/SpacesTable';
-import { useAllSpaces, useMemberCounts, useMemberSpaceIds, useAdminSpaceIds, useSpacesByOwner } from '@/hooks/useSubgraph';
+import { useAllSpaces, useMemberCounts, useMemberSpaceIds, useAdminSpaceIds, useSpacesByOwner, useLatestDisplayNameUpdates } from '@/hooks/useSubgraph';
 
-function AllSpacesTable({ spaces, memberCounts, loading, error }) {
+function AllSpacesTable({ spaces, memberCounts, displayNameUpdateData, loading, error }) {
   const { address } = useAccount();
 
   // Get user's joined spaces (member, admin, owner)
@@ -37,16 +37,23 @@ function AllSpacesTable({ spaces, memberCounts, loading, error }) {
     if (!spaces) return { all: [] };
 
     // Add member counts and eligibility type to spaces
-    const spacesWithCounts = spaces.map(space => ({
-      ...space,
-      memberCount: memberCounts?.[space.spaceId] || 0,
-      eligibilityType: 'public', // Default eligibility type since it's not in subgraph yet
-      // For all spaces, we don't have role information
-      role: 'public'
-    }));
+    const spacesWithCounts = spaces.map(space => {
+      // Find the latest display name update for this space
+      const update = displayNameUpdateData?.spaceDisplayNameUpdateds?.find(update => update.spaceId === space.spaceId);
+      const currentDisplayName = update ? update.newDisplayName : space.displayName;
+
+      return {
+        ...space,
+        displayName: currentDisplayName,
+        memberCount: memberCounts?.[space.spaceId] || 0,
+        eligibilityType: 'public', // Default eligibility type since it's not in subgraph yet
+        // For all spaces, we don't have role information
+        role: 'public'
+      };
+    });
 
     return { all: spacesWithCounts };
-  }, [spaces, memberCounts]);
+  }, [spaces, memberCounts, displayNameUpdateData]);
 
   return (
     <SpacesTable
@@ -78,6 +85,9 @@ export default function SpacesPage() {
     [allSpacesData]
   );
   const { data: memberCountsData } = useMemberCounts(spaceIds, mounted && spaceIds.length > 0);
+
+  // Get latest display name updates for all spaces
+  const { data: displayNameUpdateData } = useLatestDisplayNameUpdates(spaceIds, mounted && spaceIds.length > 0);
 
   if (!mounted) {
     return (
@@ -112,6 +122,7 @@ export default function SpacesPage() {
           <AllSpacesTable
             spaces={allSpacesData?.spaces}
             memberCounts={memberCountsData}
+            displayNameUpdateData={displayNameUpdateData}
             loading={allSpacesLoading}
             error={allSpacesError}
           />

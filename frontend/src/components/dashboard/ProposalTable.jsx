@@ -85,7 +85,7 @@ function ProposalRow({ proposal, spaceName }) {
       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
         <div className="flex items-center justify-end gap-2">
           <Link href={`/app/${spaceName}/${proposal.proposalId}`}>
-            <Button variant="ghost" size="sm" className="text-black hover:text-white border border-[#4D89B0] hover:bg-[#4D89B0]">
+            <Button variant="ghost" size="sm" className="text-black hover:text-white border border-[#4D89B0] hover:bg-[#4D89B0] cursor-pointer">
               <Eye className="h-4 w-4" />
             </Button>
           </Link>
@@ -284,7 +284,7 @@ export function ProposalTable({ proposals, loading, error, spaceName, title = "P
                 onMouseLeave={handleMouseLeave}
               >
                 <button
-                  className="flex items-center gap-2 px-3 py-2 rounded-md transition-colors duration-200 font-medium text-sm"
+                  className="flex items-center gap-2 px-3 py-2 rounded-md transition-colors duration-200 font-medium text-sm cursor-pointer"
                   style={{
                     color: colors.black,
                     backgroundColor: hoveredFilter === filter.name ? colors.hoverBg : 'transparent'
@@ -310,7 +310,7 @@ export function ProposalTable({ proposals, loading, error, spaceName, title = "P
                             filter.onChange(option.value);
                             setHoveredFilter(null);
                           }}
-                          className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-[#E8DCC4]/20 transition-colors duration-150 w-full text-left"
+                          className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-[#E8DCC4]/20 transition-colors duration-150 w-full text-left cursor-pointer"
                           style={{ color: colors.black }}
                         >
                           {option.label}
@@ -383,7 +383,7 @@ export function ProposalTable({ proposals, loading, error, spaceName, title = "P
                 size="sm"
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className="flex-shrink-0 border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white"
+                className="flex-shrink-0 border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white cursor-pointer"
               >
                 Previous
               </Button>
@@ -395,7 +395,7 @@ export function ProposalTable({ proposals, loading, error, spaceName, title = "P
                 size="sm"
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
-                className="flex-shrink-0 border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white"
+                className="flex-shrink-0 border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white cursor-pointer"
               >
                 Next
               </Button>

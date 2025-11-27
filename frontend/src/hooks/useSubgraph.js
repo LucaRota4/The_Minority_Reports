@@ -208,6 +208,116 @@ const GET_USER_VOTES = gql`
   }
 `;
 
+const GET_USER_ACTIVITY = gql`
+  query GetUserActivity($user: Bytes!) {
+    # Votes cast by user
+    votes: voteds(
+      where: { user: $user }
+      orderBy: blockTimestamp
+      orderDirection: desc
+      first: 10
+    ) {
+      id
+      user
+      timestamp
+      blockNumber
+      blockTimestamp
+      transactionHash
+      type: id
+    }
+    # Spaces joined by user
+    joins: memberJoineds(
+      where: { member: $user }
+      orderBy: blockTimestamp
+      orderDirection: desc
+      first: 10
+    ) {
+      id
+      spaceId
+      member
+      blockNumber
+      blockTimestamp
+      transactionHash
+      type: id
+    }
+    # Admin roles added for user
+    adminRoles: adminAddeds(
+      where: { admin: $user }
+      orderBy: blockTimestamp
+      orderDirection: desc
+      first: 10
+    ) {
+      id
+      spaceId
+      admin
+      blockNumber
+      blockTimestamp
+      transactionHash
+      type: id
+    }
+    # Spaces created by user
+    spacesCreated: spaceCreateds(
+      where: { owner: $user }
+      orderBy: blockTimestamp
+      orderDirection: desc
+      first: 10
+    ) {
+      id
+      spaceId
+      ensName
+      displayName
+      blockNumber
+      blockTimestamp
+      transactionHash
+      type: id
+    }
+    # Space display name updates by user
+    displayNameUpdates: spaceDisplayNameUpdateds(
+      where: { updatedBy: $user }
+      orderBy: blockTimestamp
+      orderDirection: desc
+      first: 10
+    ) {
+      id
+      spaceId
+      newDisplayName
+      blockNumber
+      blockTimestamp
+      transactionHash
+      type: id
+    }
+    # Spaces transferred by user (as previous owner)
+    spacesTransferred: spaceTransferreds(
+      where: { previousOwner: $user }
+      orderBy: blockTimestamp
+      orderDirection: desc
+      first: 10
+    ) {
+      id
+      spaceId
+      newOwner
+      blockNumber
+      blockTimestamp
+      transactionHash
+      type: id
+    }
+    # Spaces deactivated by user
+    spacesDeactivated: spaceDeactivateds(
+      where: { id: $user }
+      orderBy: blockTimestamp
+      orderDirection: desc
+      first: 10
+    ) {
+      id
+      spaceId
+      blockNumber
+      blockTimestamp
+      transactionHash
+      type: id
+    }
+  }
+`;
+
 const GET_PROPOSALS_BY_SPACES = gql`
   query GetProposalsBySpaces($spaceIds: [Bytes!]!) {
     proposalCreateds(
@@ -435,6 +545,110 @@ export function useUserVotes(voterAddress, enabled = true) {
       return await request(SUBGRAPH_URL, GET_USER_VOTES, { voter: voterAddress });
     },
     enabled: enabled && !!voterAddress
+  });
+}
+
+// Hook for comprehensive user activity
+export function useUserActivity(userAddress, enabled = true) {
+  return useQuery({
+    queryKey: ['userActivity', userAddress],
+    queryFn: async () => {
+      if (!userAddress) return null;
+      const result = await request(SUBGRAPH_URL, GET_USER_ACTIVITY, { user: userAddress });
+      
+      // Combine and sort all activities by timestamp
+      const activities = [];
+      
+      // Add votes
+      result.votes?.forEach(vote => {
+        activities.push({
+          id: vote.id,
+          type: 'vote',
+          timestamp: vote.blockTimestamp,
+          blockNumber: vote.blockNumber,
+          transactionHash: vote.transactionHash,
+          data: vote
+        });
+      });
+      
+      // Add joins
+      result.joins?.forEach(join => {
+        activities.push({
+          id: join.id,
+          type: 'join',
+          timestamp: join.blockTimestamp,
+          blockNumber: join.blockNumber,
+          transactionHash: join.transactionHash,
+          data: join
+        });
+      });
+      
+      // Add admin roles
+      result.adminRoles?.forEach(role => {
+        activities.push({
+          id: role.id,
+          type: 'admin',
+          timestamp: role.blockTimestamp,
+          blockNumber: role.blockNumber,
+          transactionHash: role.transactionHash,
+          data: role
+        });
+      });
+      
+      // Add spaces created
+      result.spacesCreated?.forEach(space => {
+        activities.push({
+          id: space.id,
+          type: 'space_created',
+          timestamp: space.blockTimestamp,
+          blockNumber: space.blockNumber,
+          transactionHash: space.transactionHash,
+          data: space
+        });
+      });
+      
+      // Add display name updates
+      result.displayNameUpdates?.forEach(update => {
+        activities.push({
+          id: update.id,
+          type: 'display_name_updated',
+          timestamp: update.blockTimestamp,
+          blockNumber: update.blockNumber,
+          transactionHash: update.transactionHash,
+          data: update
+        });
+      });
+      
+      // Add spaces transferred
+      result.spacesTransferred?.forEach(transfer => {
+        activities.push({
+          id: transfer.id,
+          type: 'space_transferred',
+          timestamp: transfer.blockTimestamp,
+          blockNumber: transfer.blockNumber,
+          transactionHash: transfer.transactionHash,
+          data: transfer
+        });
+      });
+      
+      // Add spaces deactivated
+      result.spacesDeactivated?.forEach(deactivation => {
+        activities.push({
+          id: deactivation.id,
+          type: 'space_deactivated',
+          timestamp: deactivation.blockTimestamp,
+          blockNumber: deactivation.blockNumber,
+          transactionHash: deactivation.transactionHash,
+          data: deactivation
+        });
+      });
+      
+      // Sort by timestamp descending
+      activities.sort((a, b) => b.timestamp - a.timestamp);
+      
+      return { activities };
+    },
+    enabled: enabled && !!userAddress
   });
 }
 

@@ -50,7 +50,7 @@ export function NavBar() {
           transition={{ duration: 0.6, delay: 0.1 }}
         >
           <motion.a 
-            className="flex items-center space-x-2" 
+            className="flex items-center space-x-2 cursor-pointer" 
             href="/"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -73,7 +73,7 @@ export function NavBar() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <motion.a
-              className="relative transition-colors hover:text-foreground/80 text-foreground/60 py-2"
+              className="relative transition-colors hover:text-foreground/80 text-foreground/60 py-2 cursor-pointer"
               href="/docs"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -87,7 +87,7 @@ export function NavBar() {
               />
             </motion.a>
             <motion.a
-              className="relative transition-colors hover:text-foreground/80 text-foreground/60 py-2"
+              className="relative transition-colors hover:text-foreground/80 text-foreground/60 py-2 cursor-pointer"
               href="/legal"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

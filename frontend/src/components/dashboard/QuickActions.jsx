@@ -38,7 +38,7 @@ export function QuickActions() {
             </div>
           </div>
           <Button size="sm" className="w-full hover:bg-white/90 font-semibold shadow-soft mt-4" style={{ backgroundColor: 'white', color: '#4D89B0' }} asChild>
-            <a href="/app/zama-game">
+            <a href="/app/zama-game" className="cursor-pointer">
               <span>Start Creating</span>
               <ArrowRight className="h-4 w-4 ml-2" />
             </a>

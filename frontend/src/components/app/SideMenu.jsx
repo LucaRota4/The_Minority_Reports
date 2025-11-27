@@ -153,7 +153,7 @@ export function SideMenu() {
                         if (!item.comingSoon) closeMenu();
                       }}
                       className={cn(
-                        'relative flex items-center gap-3 p-3 rounded-lg transition-all duration-200 min-h-[44px]',
+                        'relative flex items-center gap-3 p-3 rounded-lg transition-all duration-200 min-h-[44px] cursor-pointer',
                         'hover:bg-background/70 hover:backdrop-blur-xl active:scale-[0.98] border border-transparent',
                         isActive 
                           ? 'bg-primary/15 text-primary border-primary/30 shadow-lg backdrop-blur-xl' 

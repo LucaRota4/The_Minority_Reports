@@ -258,7 +258,7 @@ export function Hero() {
                     : 'bg-transparent border-white/50 text-white hover:bg-white/10'
                 }`}
               >
-                <a href="/app">
+                <a href="/app" className="cursor-pointer">
                   <motion.div
                     className="absolute inset-0 bg-white/20"
                     initial={{ x: "-100%", skewX: -15 }}

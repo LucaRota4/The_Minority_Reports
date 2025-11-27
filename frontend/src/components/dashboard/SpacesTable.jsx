@@ -122,7 +122,7 @@ function SpaceRow({ space, onToggleExpand, isExpanded, proposalsData, proposalsL
         <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
           <div className="flex items-center">
             {showExpandable && (
-              <button className="mr-2 text-[#4D89B0]/60 hover:text-[#4D89B0]">
+              <button className="mr-2 text-[#4D89B0]/60 hover:text-[#4D89B0] cursor-pointer">
                 {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
               </button>
             )}
@@ -551,7 +551,7 @@ export function SpacesTable({ spaces, loading, error, showFilters = true, title 
                   onMouseLeave={handleMouseLeave}
                 >
                   <button
-                    className="flex items-center gap-2 px-3 py-2 rounded-md transition-colors duration-200 font-medium text-sm"
+                    className="flex items-center gap-2 px-3 py-2 rounded-md transition-colors duration-200 font-medium text-sm cursor-pointer"
                     style={{
                       color: colors.black,
                       backgroundColor: hoveredFilter === filter.name ? colors.hoverBg : 'transparent'
@@ -577,7 +577,7 @@ export function SpacesTable({ spaces, loading, error, showFilters = true, title 
                               filter.onChange(option.value);
                               setHoveredFilter(null);
                             }}
-                            className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50 transition-colors duration-150 w-full text-left"
+                            className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50 transition-colors duration-150 w-full text-left cursor-pointer"
                             style={{ color: colors.black }}
                           >
                             {option.label}

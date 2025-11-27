@@ -86,7 +86,7 @@ export function BottomNavBar() {
                 href={item.comingSoon ? '#' : item.href}
                 onClick={(e) => handleComingSoonClick(item, e)}
                 className={cn(
-                  'relative flex flex-col items-center justify-center px-3 py-2 rounded-lg transition-all duration-200 min-h-[44px] min-w-[44px]', // 44px minimum touch target
+                  'relative flex flex-col items-center justify-center px-3 py-2 rounded-lg transition-all duration-200 min-h-[44px] min-w-[44px] cursor-pointer', // 44px minimum touch target
                   'hover:bg-muted/50 active:scale-95',
                   isActive 
                     ? 'text-primary bg-primary/10' 

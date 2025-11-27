@@ -195,7 +195,7 @@ export default function ProposalResolve({ proposal, signer, fheInitialized, curr
       <CardHeader>
         <CardTitle className="text-black">Proposal Resolution</CardTitle>
         <CardDescription className="text-black">
-          {resultsRevealed ? 'Results have been revealed' : isAfterVoting ? 'Voting has ended. Results can be decrypted and resolved.' : 'Voting is still active.'}
+          {resultsRevealed ? 'Results have been revealed' : isAfterVoting ? 'Decrypt and reveal the voting results' : 'Voting is still active'}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -222,8 +222,8 @@ export default function ProposalResolve({ proposal, signer, fheInitialized, curr
           <div className="space-y-4">
             <p className="text-sm text-black">
               {isAfterVoting 
-                ? 'Results not yet revealed. Click "Resolve Proposal" to decrypt and reveal the voting results.' 
-                : 'Voting is still active. Results will be available after the voting period ends.'
+                ? 'Click "Resolve Proposal" to decrypt and reveal the results' 
+                : 'Results will be available after the voting period ends'
               }
             </p>
             {isAfterVoting && (

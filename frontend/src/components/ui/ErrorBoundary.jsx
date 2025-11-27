@@ -107,7 +107,7 @@ class ErrorBoundary extends Component {
                 If this problem persists, please{' '}
                 <a 
                   href="mailto:support@aequilibra.xyz"
-                  className="text-primary hover:underline focus:underline focus:outline-none"
+                  className="text-primary hover:underline focus:underline focus:outline-none cursor-pointer"
                 >
                   contact our support team
                 </a>

@@ -30,7 +30,7 @@ export default function OnchainWalletDemo() {
                   <button
                     onClick={openConnectModal}
                     type="button"
-                    className="bg-white text-black border border-black rounded-md px-4 py-2 hover:bg-gray-50 hover:scale-105 hover:shadow-md transition-all duration-200 font-medium active:scale-95"
+                    className="bg-white text-black border border-black rounded-md px-4 py-2 hover:bg-gray-50 hover:scale-105 hover:shadow-md transition-all duration-200 font-medium active:scale-95 cursor-pointer"
                   >
                     Connect Wallet
                   </button>
@@ -42,7 +42,7 @@ export default function OnchainWalletDemo() {
                   <button
                     onClick={openChainModal}
                     type="button"
-                    className="bg-red-500 text-white border border-red-500 rounded-md px-4 py-2 hover:bg-red-600 hover:scale-105 hover:shadow-md transition-all duration-200 font-medium active:scale-95"
+                    className="bg-red-500 text-white border border-red-500 rounded-md px-4 py-2 hover:bg-red-600 hover:scale-105 hover:shadow-md transition-all duration-200 font-medium active:scale-95 cursor-pointer"
                   >
                     Wrong network
                   </button>
@@ -54,7 +54,7 @@ export default function OnchainWalletDemo() {
                   <button
                     onClick={openChainModal}
                     type="button"
-                    className="bg-white text-black border border-black rounded-md px-3 py-2 hover:bg-gray-50 hover:scale-105 hover:shadow-md transition-all duration-200 font-medium flex items-center gap-2 active:scale-95"
+                    className="bg-white text-black border border-black rounded-md px-3 py-2 hover:bg-gray-50 hover:scale-105 hover:shadow-md transition-all duration-200 font-medium flex items-center gap-2 active:scale-95 cursor-pointer"
                   >
                     {chain.hasIcon && (
                       <div
@@ -82,7 +82,7 @@ export default function OnchainWalletDemo() {
                   <button
                     onClick={openAccountModal}
                     type="button"
-                    className="bg-white text-black border border-black rounded-md px-3 py-2 hover:bg-gray-50 hover:scale-105 hover:shadow-md transition-all duration-200 font-medium active:scale-95"
+                    className="bg-white text-black border border-black rounded-md px-3 py-2 hover:bg-gray-50 hover:scale-105 hover:shadow-md transition-all duration-200 font-medium active:scale-95 cursor-pointer"
                   >
                     {account.displayName}
                     {account.displayBalance
