@@ -17,7 +17,7 @@ The core purpose of Agora is to democratize governance by solving the fundamenta
 ## What You Can Do
 
 ### For Community Leaders
-- **Create Governance Spaces**: Set up custom DAO environments with configurable rules, member roles, and voting parameters
+- **Create Governance Spaces**: Set up custom DAO environments with configurable rules and member roles
 - **Define Voting Models**: Choose between weighted/unweighted voting, set quorum requirements, and eligibility criteria
 - **Manage Membership**: Invite members, assign permissions, and control access to your governance space
 
@@ -36,31 +36,25 @@ The core purpose of Agora is to democratize governance by solving the fundamenta
 
 ### 1. Create Your Agora Space
 Connect your Web3 wallet and establish a new governance space with custom parameters:
-- Voting eligibility (token holders, NFT owners, or public access)
-- Voting models (weighted by token balance or one-person-one-vote)
-- Quorum thresholds and decision rules
-- Member roles and permissions
+- Joining eligibility (token holders, NFT owners, or public access)
 
 ### 2. Invite Your Community
 Share access with community members and assign appropriate roles:
-- Admin: Full control over space settings
-- Proposer: Can create new proposals
-- Voter: Can participate in voting
+- Owner: Full control over space settings
+- Admin: Can create new proposals
+- Member: Can participate in voting
 - Observer: Read-only access to proposals and results
 
 ### 3. Create Private Proposals
 Submit governance proposals with complete privacy guarantees:
 - Rich text descriptions and multimedia attachments
 - Configurable voting periods and parameters
-- Encrypted proposal data storage
 - Automated workflow management via Chainlink
 
 ### 4. Vote Anonymously, Reveal Verifiable Results
 Participate in governance with full privacy:
 - Cast encrypted votes using FHE technology
 - Maintain anonymity throughout the voting process
-- Receive verifiable outcomes without compromising privacy
-- Automated proposal resolution and execution
 
 ## Technology Stack
 
@@ -96,11 +90,10 @@ Participate in governance with full privacy:
 - **SpaceRegistry.sol**: Manages creation and registration of governance spaces
 - **PrivateProposalFactory.sol**: Factory contract for deploying new proposal instances
 - **PrivateProposal.sol**: Core contract handling encrypted voting logic
-- **MockGovernanceToken.sol**: ERC-20 token for testing voting eligibility
+- **MockGovernanceToken.sol**: Mock Ivotes token for testing voting eligibility
 
 ### Subgraphs
-- **agora-subgraph**: Indexes Agora-specific events and data
-- **main-subgraph**: Comprehensive indexing of spaces, proposals, and voting activities
+- **agora-subgraph**: Comprehensive indexing of spaces, proposals, and voting activities
 
 ### Application Structure
 ```
@@ -123,57 +116,35 @@ frontend/
 ### Installation
 ```bash
 git clone https://github.com/ElioMargiotta/agora_monorepo.git
-cd agora_monorepo/frontend
+cd agora_monorepo/frontend/frontend
 npm install
 npm run dev
 ```
 
 Visit `http://localhost:3000` to access the application.
 
-## Security & Privacy
-
-### FHE Implementation
-Agora uses Zama's fhEVM (Fully Homomorphic Encryption Virtual Machine) to enable:
-- Encrypted vote casting and storage
-- Computation on encrypted data without decryption
-- Verifiable outcomes without revealing individual votes
-- End-to-end privacy guarantees
-
-### Key Security Features
-- **Zero-Knowledge Proofs**: Cryptographic verification without revealing underlying data
-- **Encrypted Tallies**: Vote counting performed on encrypted values
-- **Secure Multi-Party Computation**: Distributed trust model
-- **Auditability**: Transparent processes with privacy preservation
-
 ## Future Roadmap
 
 ### Planned Features
-- **Cross-Chain Governance**: Multi-chain proposal execution
-- **Advanced Voting Models**: Quadratic voting, conviction voting
-- **Integration APIs**: Third-party application integrations
-- **Mobile Applications**: Native iOS and Android apps
+- **Advanced Voting Models**: Quadratic voting, customizable winner selection, and flexible quorum settings
 - **Governance Analytics**: Advanced reporting and insights
+- **Automation** Automatic off-chain public decryption
+- **Confidential Gouvernance Token** Use confidential gouvernance token to hide user balance
+
 
 ### Research Directions
 - **Scalability Improvements**: Optimizing FHE operations for larger communities
 - **Interoperability**: Cross-protocol governance mechanisms
 - **Advanced Privacy**: Enhanced anonymity sets and mixing techniques
 
-## Contributing
-
-We welcome contributions from the community! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
-- Setting up development environment
-- Code standards and testing
-- Submitting pull requests
-- Reporting issues
-
 ## Acknowledgments
 
-- **Zama**: For pioneering FHE technology and fhEVM
-- **Chainlink**: For decentralized automation infrastructure
-- **The Graph**: For decentralized data indexing
-- **Ethereum Foundation**: For the base blockchain infrastructure
+- **[Zama](https://zama.ai/)**: For pioneering FHE technology and fhEVM
+- **[Chainlink](https://chainlink.com/)**: For decentralized automation infrastructure
+- **[The Graph](https://thegraph.com/)**: For decentralized data indexing
+- **[OpenZeppelin](https://openzeppelin.com/)**: For secure smart contract libraries and standards
 - **Open Source Community**: For the tools and libraries that make this possible
+- **[chriswilder](https://github.com/0xchriswilder)** for the fhevm.ts file
 
 ---
 

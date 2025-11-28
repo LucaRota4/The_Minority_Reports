@@ -2,18 +2,6 @@
 
 The frontend component of Agora is a Next.js web application that provides the user interface for the Agora platform. It enables users to interact with the decentralized governance system through a modern, responsive web interface.
 
-## Overview
-
-Agora is the ultimate platform to explore and test Zama's cutting-edge Fully Homomorphic Encryption (FHE) technology. Experience computation on encrypted data without decryption - enabling truly private, secure, and decentralized governance applications.
-
-### Key Features
-
-- **🔐 Fully Homomorphic Encryption**: Perform computations on encrypted data without ever decrypting it
-- **🗳️ Privacy-Preserving Voting**: Cast anonymous votes in governance spaces while maintaining verifiability
-- **🏛️ Decentralized Spaces**: Create and manage governance spaces (DAOs) with member controls
-- **📝 Private Proposals**: Submit and vote on proposals with complete privacy
-- **⚙️ Chainlink Automation**: Seamless, trustless automated processes for proposal resolution
-
 ## Quick Start
 
 ### Prerequisites

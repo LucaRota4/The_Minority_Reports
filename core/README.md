@@ -22,7 +22,7 @@ AGORA enables secure, private voting on proposals within decentralized spaces. V
 - **PrivateProposal**: Handles encrypted voting and proposal logic.
 - **PrivateProposalFactory**: Deploys proposals and integrates with Chainlink Automation.
 
-For detailed architecture, FHE usage, and resolution process, see [AGORA_Documentation.md](./AGORA_Documentation.md).
+For detailed architecture, FHE usage, and resolution process, see [Contract Architecture](../docs/contract.md).
 
 ## 🚀 Quick Start
 
@@ -33,8 +33,8 @@ For detailed architecture, FHE usage, and resolution process, see [AGORA_Documen
 ### Installation
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/eliomargiotta/Zama-Vault.git
-   cd Zama-Vault
+   git clone https://github.com/ElioMargiotta/agora_monorepo.git
+   cd agora_monorepo/core
    ```
 
 2. **Install dependencies**
@@ -106,7 +106,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## 🆘 Support
 
-- **GitHub Issues**: [Report bugs or request features](https://github.com/eliomargiotta/Zama-Vault/issues)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/ElioMargiotta/agora_monorepo/issues)
 - **Zama Documentation**: [FHEVM Docs](https://docs.zama.ai)
 - **Community**: [Zama Discord](https://discord.gg/zama)
 

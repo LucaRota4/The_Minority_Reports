@@ -1,12 +1,6 @@
-# A G O R A: Private Proposal System with FHE
+# 🏗️ Contract Architecture
 
-## 📋 Overview
-
-AGORA is a decentralized proposal infrastructure that leverages **Fully Homomorphic Encryption (FHE)** to ensure complete privacy of votes until proposal resolution. The system uses a factory pattern with Chainlink automation for resolution.
-
-## 🏗️ Contract Architecture
-
-### Interface Contracts
+## Interface Contracts
 
 The system defines several key interfaces to standardize interactions and ensure modularity:
 
@@ -16,7 +10,7 @@ The system defines several key interfaces to standardize interactions and ensure
 
 - **IPrivateProposal**: Defines the interface for private proposal contracts that handle voting with FHE. It includes functions for voting (non-weighted, weighted fractional, weighted single), resolution via Chainlink automation, and retrieving decrypted results after proposal end.
 
-### Core Contracts
+## Core Contracts
 
 The system consists of four main core contracts and one library that implement the interfaces and handle the decentralized proposal logic:
 
@@ -28,7 +22,7 @@ The system consists of four main core contracts and one library that implement t
 
 - **ProposalAutomation**: A library that provides time-bucketed automation logic for efficient proposal upkeep checks. It optimizes Chainlink Automation by grouping proposals into time buckets to reduce gas costs and improve performance.
 
-### Mock/Test Contracts
+## Mock/Test Contracts
 
 For testing and development purposes, the system includes several mock contracts that simulate external dependencies:
 
@@ -40,7 +34,7 @@ For testing and development purposes, the system includes several mock contracts
 
 - **MockUSDC**: A mock stablecoin (USDC) contract for testing token-holder eligibility and payments.
 
-#### FHE Usage and Input Types
+### FHE Usage and Input Types
 
 FHE (Fully Homomorphic Encryption) is required in the `PrivateProposal` contract to ensure vote privacy until proposal resolution. Votes are encrypted on the client-side and remain encrypted on-chain, allowing computations (like tallying) without revealing individual votes.
 
@@ -55,7 +49,7 @@ FHE is used in the following voting functions:
 
 All FHE inputs require cryptographic proofs to verify the encryption was performed correctly, preventing malicious inputs.
 
-#### Resolution Process
+### Resolution Process
 
 Proposal resolution is automated using Chainlink Automation to ensure timely decryption and result revelation:
 
@@ -74,9 +68,9 @@ Further development objectives include automating the off-chain decryption step 
    - Sets `resultsRevealed = true` and `proposalResolved = true`
    - Emits resolution events
 
-#### Voting Math and Resolution Logic
+### Voting Math and Resolution Logic
 
-##### Proposal Types and Vote Calculation
+#### Proposal Types and Vote Calculation
 
 - **NonWeightedSingleChoice**: Each voter casts one vote (weight = 1) for a single choice. The tally for each choice is the count of voters who selected it.
   ```math

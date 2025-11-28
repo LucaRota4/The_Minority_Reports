@@ -4,7 +4,7 @@ The core component of Agora is the smart contract infrastructure, built using Ha
 
 ## Overview
 
-AGORA enables secure, private voting on proposals within decentralized spaces. Votes are encrypted on the client-side and remain private on-chain until the proposal ends, at which point they are decrypted and tallied. The system supports multiple voting types (non-weighted, weighted single-choice, weighted fractional) and integrates with ENS for space management.
+AGORA enables secure, private voting on proposals within decentralized spaces. Votes are encrypted on the client-side and remain private on-chain until the proposal ends, at which point they are decrypted and tallied. The system supports multiple voting types (non-weighted, weighted single-choice, weighted fractional) and integrates with Agora Names Services (MockENS) for space management.
 
 ## Features
 
@@ -21,6 +21,8 @@ AGORA enables secure, private voting on proposals within decentralized spaces. V
 - **SpaceRegistry**: Manages decentralized spaces and membership.
 - **PrivateProposal**: Handles encrypted voting and proposal logic.
 - **PrivateProposalFactory**: Deploys proposals and integrates with Chainlink Automation.
+
+For detailed contract architecture, FHE usage, and resolution process, see [Contract Architecture](contract.md).
 
 ## Quick Start
 
@@ -87,7 +89,27 @@ AGORA enables secure, private voting on proposals within decentralized spaces. V
 | `npx hardhat compile`  | Compile all contracts    |
 | `npx hardhat test`     | Run all tests            |
 | `npx hardhat lint`     | Run linting checks       |
-| `npx hardhat clean`     | Clean build artifacts    |
+| `npx hardhat clean`    | Clean build artifacts    |
+
+## Testing
+
+The core contracts include a comprehensive test suite with 85 passing tests covering all major functionality. Tests are written using Hardhat and include:
+
+- **ENS Management**: MockENS subdomain creation and ownership
+- **Space Management**: Space creation, membership, and administration
+- **Proposal Factory**: Proposal creation, validation, and Chainlink Automation
+- **Voting & Resolution**: All voting types (non-weighted, weighted single-choice, weighted fractional) with FHE encryption
+
+For detailed test results and coverage, see [Test Summary](test-summary.md).
+
+## Tasks
+
+The project includes custom Hardhat tasks for streamlined deployment and interaction:
+
+- **Proposal Deployment**: Automated task to create ENS domains, spaces, and proposals on testnet
+- **Contract Verification**: Automatic Etherscan verification for deployed contracts
+
+For detailed information about deployment tasks, see [Proposal Deployment Task](task_deploy_proposal.md).
 
 ## Documentation
 
