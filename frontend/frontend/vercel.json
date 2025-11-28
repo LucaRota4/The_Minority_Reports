@@ -5,5 +5,15 @@
   "installCommand": "npm install",
   "env": {
     "SKIP_ENV_VALIDATION": "1"
-  }
+  },
+   "rewrites": [
+        {
+            "source": "/docs",
+            "destination": "https://proxy.gitbook.site/sites/site_UP1N2"
+        },
+        {
+            "source": "/docs/:match*",
+            "destination": "https://proxy.gitbook.site/sites/site_UP1N2/:match*"
+        }
+    ]
 }

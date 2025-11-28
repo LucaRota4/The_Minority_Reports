@@ -45,7 +45,7 @@ export function Footer() {
             </motion.a>
             . The source code is available on{' '}
             <motion.a
-              href="https://github.com/ElioMargiotta/ZamaHub"
+              href="https://github.com/ElioMargiotta/agora_monorepo"
               target="_blank"
               rel="noreferrer"
               className="font-medium underline underline-offset-4 hover:text-primary transition-colors"
