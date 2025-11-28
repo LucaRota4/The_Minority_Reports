@@ -143,8 +143,8 @@ Visit `http://localhost:3000` to access the application.
 - **[Chainlink](https://chainlink.com/)**: For decentralized automation infrastructure
 - **[The Graph](https://thegraph.com/)**: For decentralized data indexing
 - **[OpenZeppelin](https://openzeppelin.com/)**: For secure smart contract libraries and standards
+- **[chriswilder](https://github.com/0xchriswilder)** For the fhevm.ts file and his availability
 - **Open Source Community**: For the tools and libraries that make this possible
-- **[chriswilder](https://github.com/0xchriswilder)** for the fhevm.ts file
 
 ---
 
