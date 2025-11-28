@@ -1,32 +1,180 @@
-# Introduction
+# Agora Documentation
 
-Agora is the first on-chain election platform that ensures complete vote privacy while preserving freedom of speech. Built on Ethereum with Fully Homomorphic Encryption (FHE), it enables secure, anonymous voting in decentralized governance spaces.
+## Overview
 
-## What is Agora?
+Agora is a revolutionary privacy-preserving governance platform that leverages Zama's Fully Homomorphic Encryption (FHE) technology to enable truly anonymous and secure decentralized governance. Built on Ethereum-compatible blockchains, Agora allows communities to create private DAO spaces where members can submit proposals and vote anonymously while maintaining full verifiability of outcomes.
 
-Agora is a privacy-first decentralized autonomous organization (DAO) platform that revolutionizes governance through cryptography. Using Zama's Fully Homomorphic Encryption (FHE), Agora allows communities to make collective decisions where votes remain encrypted throughout the process, ensuring anonymity while maintaining verifiability.
+## Purpose
+
+The core purpose of Agora is to democratize governance by solving the fundamental privacy paradox in decentralized systems: how to maintain transparency in decision-making while protecting individual voter privacy. Traditional DAOs often require sacrificing anonymity for accountability, but Agora uses cutting-edge cryptography to provide both.
+
+### Key Problems Solved
+- **Privacy vs. Transparency Trade-off**: FHE enables computation on encrypted data, allowing vote tallying without ever decrypting individual ballots
+- **Voter Intimidation**: Anonymous voting prevents coercion and ensures free expression
+- **Sybil Attacks**: Token-based eligibility systems prevent manipulation while maintaining privacy
+- **Scalability**: Efficient encrypted computation enables large-scale governance without performance degradation
+
+## What You Can Do
+
+### For Community Leaders
+- **Create Governance Spaces**: Set up custom DAO environments with configurable rules, member roles, and voting parameters
+- **Define Voting Models**: Choose between weighted/unweighted voting, set quorum requirements, and eligibility criteria
+- **Manage Membership**: Invite members, assign permissions, and control access to your governance space
+
+### For Community Members
+- **Submit Proposals**: Create and submit governance proposals with rich text descriptions and attachments
+- **Vote Anonymously**: Cast encrypted votes that remain private throughout the process
+- **Track Outcomes**: View verifiable results and proposal statuses in real-time
+- **Participate Securely**: Engage in governance without revealing your identity or voting preferences
+
+### For Developers
+- **Build on FHE**: Use Agora's infrastructure to create privacy-preserving dApps
+- **Integrate Governance**: Add anonymous voting capabilities to existing platforms
+- **Customize Workflows**: Extend the platform with custom proposal types and voting mechanisms
 
 ## How It Works
 
 ### 1. Create Your Agora Space
-Connect your wallet and establish a private DAO space with customizable rules and member roles for your community.
+Connect your Web3 wallet and establish a new governance space with custom parameters:
+- Voting eligibility (token holders, NFT owners, or public access)
+- Voting models (weighted by token balance or one-person-one-vote)
+- Quorum thresholds and decision rules
+- Member roles and permissions
 
 ### 2. Invite Your Community
-Share access with members, assign permissions, and build your governance community within your Agora space.
+Share access with community members and assign appropriate roles:
+- Admin: Full control over space settings
+- Proposer: Can create new proposals
+- Voter: Can participate in voting
+- Observer: Read-only access to proposals and results
 
-### 3. Create a Private Proposal
-Design proposals with flexible voting models (weighted/unweighted), eligibility criteria (token holders, NFT holders, or public), and decision thresholds.
+### 3. Create Private Proposals
+Submit governance proposals with complete privacy guarantees:
+- Rich text descriptions and multimedia attachments
+- Configurable voting periods and parameters
+- Encrypted proposal data storage
+- Automated workflow management via Chainlink
 
 ### 4. Vote Anonymously, Reveal Verifiable Results
-Cast encrypted votes using FHE technology. Chainlink automation handles the tally and publishes outcomes without revealing individual choices.
+Participate in governance with full privacy:
+- Cast encrypted votes using FHE technology
+- Maintain anonymity throughout the voting process
+- Receive verifiable outcomes without compromising privacy
+- Automated proposal resolution and execution
 
-## Key Features
+## Technology Stack
 
-- **FHE-Powered Governance**: Run DAO logic on encrypted data—decisions stay public, votes stay private
-- **Kryptē Psêphos**: Anonymous voting with verifiable outcomes and end-to-end encryption
-- **Seamless Customization**: Choose voting parameters, privacy levels, and governance models
-- **Chainlink Proposal Automation**: Time-based proposal flows and trustless execution
+### Frontend
+- **Next.js 15**: React framework with App Router and server components
+- **React 19**: Latest React with concurrent features
+- **Tailwind CSS**: Utility-first CSS framework for responsive design
+- **Framer Motion**: Animation library for smooth user interactions
+- **Radix UI**: Accessible component primitives
+- **RainbowKit**: Wallet connection interface
+- **Wagmi**: Ethereum interaction hooks
+
+### Blockchain & Smart Contracts
+- **Solidity**: Smart contract development
+- **Hardhat**: Development environment and testing framework
+- **Ethers.js**: Ethereum JavaScript library
+- **Zama FHE**: Fully Homomorphic Encryption for privacy-preserving computation
+- **Chainlink Automation**: Decentralized oracle network for automated processes
+- **Infura**: RPC provider for Ethereum network access
+
+### Data & Indexing
+- **The Graph**: Decentralized protocol for indexing and querying blockchain data
+- **Apollo Client**: GraphQL client for efficient data fetching
+- **IPFS**: Decentralized file storage for proposal attachments (via Pinata gateway)
+
+### Development Tools
+- **JavaScript**: Dynamic scripting for frontend development
+- **ESLint**: Code linting and formatting
+
+## Architecture
+
+### Smart Contracts
+- **SpaceRegistry.sol**: Manages creation and registration of governance spaces
+- **PrivateProposalFactory.sol**: Factory contract for deploying new proposal instances
+- **PrivateProposal.sol**: Core contract handling encrypted voting logic
+- **MockGovernanceToken.sol**: ERC-20 token for testing voting eligibility
+
+### Subgraphs
+- **agora-subgraph**: Indexes Agora-specific events and data
+- **main-subgraph**: Comprehensive indexing of spaces, proposals, and voting activities
+
+### Application Structure
+```
+frontend/
+├── src/app/                 # Next.js App Router pages
+├── src/components/          # Reusable React components
+├── src/lib/                 # Utility libraries and configurations
+├── src/hooks/               # Custom React hooks
+└── public/                  # Static assets
+```
 
 ## Getting Started
 
-To start using Agora, visit the platform and connect your Web3 wallet. For developers interested in the technical implementation, see the [Core](core.md) and [Frontend](frontend.md) documentation.
+### Prerequisites
+- Node.js 18+
+- npm or yarn package manager
+- Web3 wallet (MetaMask, Rainbow, etc.)
+- Access to Ethereum testnet
+
+### Installation
+```bash
+git clone https://github.com/ElioMargiotta/agora_monorepo.git
+cd agora_monorepo/frontend
+npm install
+npm run dev
+```
+
+Visit `http://localhost:3000` to access the application.
+
+## Security & Privacy
+
+### FHE Implementation
+Agora uses Zama's fhEVM (Fully Homomorphic Encryption Virtual Machine) to enable:
+- Encrypted vote casting and storage
+- Computation on encrypted data without decryption
+- Verifiable outcomes without revealing individual votes
+- End-to-end privacy guarantees
+
+### Key Security Features
+- **Zero-Knowledge Proofs**: Cryptographic verification without revealing underlying data
+- **Encrypted Tallies**: Vote counting performed on encrypted values
+- **Secure Multi-Party Computation**: Distributed trust model
+- **Auditability**: Transparent processes with privacy preservation
+
+## Future Roadmap
+
+### Planned Features
+- **Cross-Chain Governance**: Multi-chain proposal execution
+- **Advanced Voting Models**: Quadratic voting, conviction voting
+- **Integration APIs**: Third-party application integrations
+- **Mobile Applications**: Native iOS and Android apps
+- **Governance Analytics**: Advanced reporting and insights
+
+### Research Directions
+- **Scalability Improvements**: Optimizing FHE operations for larger communities
+- **Interoperability**: Cross-protocol governance mechanisms
+- **Advanced Privacy**: Enhanced anonymity sets and mixing techniques
+
+## Contributing
+
+We welcome contributions from the community! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
+- Setting up development environment
+- Code standards and testing
+- Submitting pull requests
+- Reporting issues
+
+## Acknowledgments
+
+- **Zama**: For pioneering FHE technology and fhEVM
+- **Chainlink**: For decentralized automation infrastructure
+- **The Graph**: For decentralized data indexing
+- **Ethereum Foundation**: For the base blockchain infrastructure
+- **Open Source Community**: For the tools and libraries that make this possible
+
+---
+
+*Built with ❤️ using Zama's revolutionary FHE technology for private, secure, and transparent governance.*

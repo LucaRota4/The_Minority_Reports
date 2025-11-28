@@ -31,8 +31,8 @@ AGORA enables secure, private voting on proposals within decentralized spaces. V
 ### Installation
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/eliomargiotta/Zama-Vault.git
-   cd Zama-Vault
+   git clone https://github.com/ElioMargiotta/agora_monorepo.git
+   cd agora_monorepo
    ```
 
 2. **Install dependencies**
@@ -91,9 +91,9 @@ AGORA enables secure, private voting on proposals within decentralized spaces. V
 
 ## Documentation
 
-- [AGORA System Documentation](./documentation.md) - Detailed technical docs
-- [Test Summary](./test-summary.md) - Summary of tests performed
-- [Deployment Details](./deploy.md) - Deployed contracts and deployment process
-- [Proposal Deployment Task](./task_deploy_proposal.md) - Details on deploying proposals
+- [AGORA System Documentation](../core/documentation.md) - Detailed technical docs
+- [Test Summary](../core/test-summary.md) - Summary of tests performed
+- [Deployment Details](../core/deploy.md) - Deployed contracts and deployment process
+- [Proposal Deployment Task](../core/task_deploy_proposal.md) - Details on deploying proposals
 - [FHEVM Documentation](https://docs.zama.ai/fhevm)
 - [FHEVM Hardhat Setup](https://docs.zama.ai/protocol/solidity-guides/getting-started/setup)
