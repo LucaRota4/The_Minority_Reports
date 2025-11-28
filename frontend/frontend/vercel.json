@@ -8,11 +8,11 @@
   },
    "rewrites": [
         {
-            "source": "/docs",
+            "source": "/app/docs",
             "destination": "https://proxy.gitbook.site/sites/site_UP1N2"
         },
         {
-            "source": "/docs/:match*",
+            "source": "/app/docs/:match*",
             "destination": "https://proxy.gitbook.site/sites/site_UP1N2/:match*"
         }
     ]

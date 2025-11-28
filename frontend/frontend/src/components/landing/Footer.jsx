@@ -66,6 +66,20 @@ export function Footer() {
           viewport={{ once: true }}
         >
           <motion.a
+            href="/app/docs"
+            className="text-muted-foreground hover:text-primary transition-colors relative py-2"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Docs
+            <motion.div
+              className="absolute bottom-0 left-0 h-0.5 bg-primary"
+              initial={{ width: 0 }}
+              whileHover={{ width: "100%" }}
+              transition={{ duration: 0.2 }}
+            />
+          </motion.a>
+          <motion.a
             className="text-muted-foreground hover:text-primary transition-colors relative py-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
