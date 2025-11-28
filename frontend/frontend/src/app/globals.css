@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+:root {
+  --radius: 0.5rem; /* More modern, slightly smaller radius */
+
+  /* Primary colors - Zama brand */
+  --primary: #4D89B0; /* Zama blue - main brand color */
+  --primary-foreground: #ffffff; /* White text on primary */
+
+  /* Background hierarchy */
+  --background: #fffefa; /* Zama white - main background */
+  --foreground: #1a1a1a; /* Dark text for contrast */
+
+  /* Surface colors */
+  --card: #ffffff; /* Pure white for cards */
+  --card-foreground: #1a1a1a;
+
+  /* Interactive elements */
+  --popover: #ffffff; /* White for popovers */
+  --popover-foreground: #1a1a1a;
+
+  /* Secondary colors */
+  --secondary: #f8fafc; /* Very light blue-gray */
+  --secondary-foreground: #334155; /* Darker gray for secondary text */
+
+  /* Muted colors for subtle elements */
+  --muted: #f1f5f9; /* Light gray-blue */
+  --muted-foreground: #64748b; /* Medium gray */
+
+  /* Accent colors */
+  --accent: #4D89B0; /* Same as primary for consistency */
+  --accent-foreground: #ffffff;
+
+  /* Semantic colors */
+  --destructive: #dc2626; /* Red for errors */
+  --destructive-foreground: #ffffff;
+
+  /* Border and input */
+  --border: #e2e8f0; /* Light blue-gray border */
+  --input: #ffffff; /* White inputs */
+  --ring: #4D89B0; /* Zama blue for focus rings */
+
+  /* Additional design tokens */
+  --success: #10b981; /* Green for success states */
+  --warning: #f59e0b; /* Amber for warnings */
+  --info: #3b82f6; /* Blue for info */
+}
+
+/* Base layer styles */
+* {
+  border-color: var(--border);
+  outline-color: rgb(from var(--ring) r g b / 0.5);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-cardo), serif;
+}
+
+/* Ancient Greek Typography for headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-cardo), serif;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+}
+
+/* Custom animations for loading states */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted) / 0.6) 0px,
+    hsl(var(--muted) / 0.8) 40px,
+    hsl(var(--muted) / 0.4) 80px
+  );
+  background-size: 200px 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ============================================
+   ACCESSIBILITY & MOTION PREFERENCES
+   ============================================ */
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Enhanced Focus Management */
+.focus-visible:focus {
+  outline: 2px solid rgb(59 130 246);
+  outline-offset: 2px;
+}
+
+.focus-visible:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ============================================
+   LOADING STATES & PAGE TRANSITIONS
+   ============================================ */
+
+/* Skeleton loading animations */
+@keyframes skeleton-loading {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--muted) 0px,
+    rgba(255, 255, 255, 0.1) 40px,
+    var(--muted) 80px
+  );
+  background-size: 200px 100%;
+  animation: skeleton-loading 1.2s ease-in-out infinite;
+}
