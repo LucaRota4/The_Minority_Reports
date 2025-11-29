@@ -91,29 +91,6 @@ frontend/
 └── package.json                    # Dependencies
 ```
 
-## Private Governance
-
-The flagship feature of Agora is **Private Governance** - a privacy-preserving proposal and voting system that demonstrates the power of FHE in decentralized governance.
-
-### How It Works
-
-1. **Create a Space**: Set up a new governance space with custom settings and member controls
-2. **Submit Proposals**: Members propose ideas and initiatives within the space
-3. **Vote Anonymously**: Participants cast encrypted votes with voting power based on eligibility tokens
-4. **Automated Resolution**: Chainlink automation handles vote tallying and proposal execution
-5. **Privacy Guaranteed**: All votes remain encrypted throughout the process
-
-### Smart Contracts
-
-The governance system utilizes several Solidity smart contracts deployed with Hardhat:
-- `SpaceRegistry.sol`: Manages space creation and registration
-- `PrivateProposalFactory.sol`: Creates new private proposal instances
-- `PrivateProposal.sol`: Handles encrypted proposal voting logic
-- `MockGouvernanceToken.sol`: ERC-20 token for voting eligibility
-
-For detailed contract architecture and FHE implementation, see [Contract Architecture](./contract.md).
-
-
 ### Subgraphs
 
 The platform uses The Graph protocol for efficient on-chain data indexing:
@@ -159,6 +136,6 @@ npm run test -- --coverage
 - [Chainlink Documentation](https://docs.chain.link/)
 - [The Graph Documentation](https://thegraph.com/docs/)
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Chriswilder](https://github.com/0xchriswilder/fhevm-react-template/blob/main/packages/fhevm-sdk/src/core/fhevm.ts) for providing the initial skeleton of the `fhevm.ts` file

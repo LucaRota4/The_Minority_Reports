@@ -38,7 +38,7 @@ The deployment uses the Hardhat task `proposal` which automates the entire workf
 
 ## Final Results
 
-🎉 **Deployment Complete!**
+**Deployment Complete!**
 
 - **ENS Domain**: `test3.agora`
 - **Space ID**: `0xe52802385cb06b34e9f37161561886665dd7418c8ea229ac9f3ca2d7b7466b0d`

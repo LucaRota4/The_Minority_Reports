@@ -2,7 +2,7 @@
 
 ## Overview
 
-Agora is a revolutionary privacy-preserving governance platform that leverages Zama's Fully Homomorphic Encryption (FHE) technology to enable truly anonymous and secure decentralized governance. Built on Ethereum-compatible blockchains, Agora allows communities to create private DAO spaces where members can submit proposals and vote anonymously while maintaining full verifiability of outcomes.
+Agora is a privacy-preserving governance platform that leverages Zama's Fully Homomorphic Encryption (FHE) technology to enable truly anonymous and secure decentralized governance. Built on Ethereum-compatible blockchains, Agora allows communities to create private DAO spaces where members can submit proposals and vote anonymously while maintaining full verifiability of outcomes.
 
 ## Purpose
 
@@ -48,10 +48,9 @@ Use your registered `.agora` name to establish a new governance space with custo
 
 ### 4. Invite Your Community
 Share access with community members and assign appropriate roles:
-- Owner: Full control over space settings
-- Admin: Can create new proposals
-- Member: Can participate in voting
-- Observer: Read-only access to proposals and results
+- **Owner**: Full control over space settings, managing admins and members, creating and managing proposals, and voting
+- **Admin**: Can create and manage proposals, and vote
+- **Member**: Can vote on proposals
 
 ### 5. Create Private Proposals
 Submit governance proposals with complete privacy guarantees:
@@ -150,7 +149,3 @@ For detailed setup instructions, environment configuration, and deployment guide
 - **[OpenZeppelin](https://openzeppelin.com/)**: For secure smart contract libraries and standards
 - **[chriswilder](https://github.com/0xchriswilder/fhevm-react-template/blob/main/packages/fhevm-sdk/src/core/fhevm.ts)** For the fhevm.ts file and his availability
 - **Open Source Community**: For the tools and libraries that make this possible
-
----
-
-*Built with ❤️ using Zama's revolutionary FHE technology for private, secure, and transparent governance.*
