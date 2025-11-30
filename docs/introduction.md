@@ -18,8 +18,8 @@ The core purpose of Agora is to democratize governance by solving the fundamenta
 
 ### For Community Leaders
 - **Create Governance Spaces**: Set up custom DAO environments with configurable rules and member roles
-- **Define Voting Models**: Choose between weighted/unweighted voting, set quorum requirements, and eligibility criteria
-- **Manage Membership**: Invite members, assign permissions, and control access to your governance space
+- **Define Voting Models**: Choose between weighted/unweighted voting, set threshold requirements, and eligibility criteria
+- **Manage Membership**: Assign permissions (add admin)
 
 ### For Community Members
 - **Submit Proposals**: Create and submit governance proposals with rich text descriptions and attachments
@@ -132,8 +132,8 @@ For detailed setup instructions, environment configuration, and deployment guide
 ### Planned Features
 - **Advanced Voting Models**: Quadratic voting, customizable winner selection, and flexible quorum settings
 - **Governance Analytics**: Advanced reporting and insights
-- **Automation** Automatic off-chain public decryption
-- **Confidential Gouvernance Token** Use confidential gouvernance token to hide user balance
+- **Automation**: Automatic off-chain public decryption
+- **Confidential Governance Token**: Use confidential governance token to hide user balance
 
 
 ### Research Directions

@@ -112,9 +112,46 @@ The governance system utilizes several Solidity smart contracts deployed with Ha
 ### Subgraphs
 
 The platform uses The Graph protocol for efficient on-chain data indexing:
-- `agora-sub/`: Subgraph for Agora-related events
+- `agora_subgraph/`: Subgraph for Agora-related events
 
 For local development, you can run your own subgraph node instead of using the hosted service. Refer to [The Graph documentation](https://thegraph.com/docs/) for setup instructions.
+
+#### Agora Subgraph Commands
+
+To work with the Agora subgraph locally:
+
+1. **Navigate to the subgraph directory**:
+   ```bash
+   cd agora_subgraph
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Generate types from the ABI**:
+   ```bash
+   npx graph codegen
+   ```
+
+4. **Build the subgraph**:
+   ```bash
+   npx graph build
+   ```
+
+5. **Deploy locally (requires local Graph Node)**:
+   ```bash
+   graph create-local --node http://localhost:8020/
+   graph deploy-local --node http://localhost:8020/
+   ```
+
+6. **Deploy to hosted service** (replace with your Graph Studio details):
+   ```bash
+   graph deploy --product hosted-service your-username/your-subgraph-name
+   ```
+
+Ensure you have the Graph CLI installed globally: `npm install -g @graphprotocol/graph-cli`.
 
 ## Development
 

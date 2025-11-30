@@ -162,27 +162,27 @@ export function HowItWorks() {
   const steps = [
     {
       step: '1',
-      title: 'Create Your Agora Space',
+      title: 'Visit Agora & Register Your Space',
       description:
-        'Connect your wallet, spin up a private DAO space, and define the rules and roles for your community.',
+        'Start by visiting the Agora website and connecting your Web3 wallet. Register a unique .agora domain name to create your decentralized governance space identifier.',
     },
     {
       step: '2',
-      title: 'Invite Your Community',
+      title: 'Configure Governance Rules',
       description:
-        'Share access with members, assign permissions, and assemble your polis inside your Agora.',
+        'Set up your governance space with custom parameters: define membership rules (public, token holders, NFT owners, or whitelist), configure voting models, and establish roles and permissions.',
     },
     {
       step: '3',
-      title: 'Create a Private Proposal',
+      title: 'Invite Community & Create Proposals',
       description:
-        'Customize voting model (weighted/unweighted), thresholds, and eligibility (token holders, NFT holders, or public).',
+        'Share access with community members and assign roles (Owner, Admin, Member). Submit private proposals with rich descriptions, configurable voting periods, and automated Chainlink workflows.',
     },
     {
       step: '4',
-      title: 'Vote Anonymously, Reveal Verifiable Results',
+      title: 'Vote Anonymously, Reveal Results',
       description:
-        'FHE enables an encrypted tally and Chainlink automation finalizes and publishes the outcome.',
+        'Cast encrypted votes using FHE technology to maintain privacy. Chainlink automation handles tallying and reveals verifiable, transparent outcomes without compromising anonymity.',
     },
   ];
 
