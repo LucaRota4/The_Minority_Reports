@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, CheckCircle, AlertCircle, Globe } from 'lucide-react';
 import { ethers } from 'ethers';
+import { SepoliaNetworkGuard } from '@/components/ui/SepoliaNetworkGuard';
 
 // Import the MockENS ABI
 import mockENSABI from '@/abis/MockENS.json';
@@ -160,129 +161,131 @@ export default function ENSRegistrationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex items-center gap-3 mb-8">
-            <Globe className="h-8 w-8 text-[#4D89B0]" />
-            <div>
-              <h1 className="text-3xl font-bold text-black">Register .agora Name</h1>
-              <p className="text-black mt-1">
-                Register a .agora domain name for your governance spaces
-              </p>
+    <SepoliaNetworkGuard>
+      <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-2xl mx-auto">
+            <div className="flex items-center gap-3 mb-8">
+              <Globe className="h-8 w-8 text-[#4D89B0]" />
+              <div>
+                <h1 className="text-3xl font-bold text-black">Register .agora Name</h1>
+                <p className="text-black mt-1">
+                  Register a .agora domain name for your governance spaces
+                </p>
+              </div>
             </div>
-          </div>
 
-          <Card className="bg-white/80 border-[#E8DCC4]/30">
-            <CardHeader>
-              <CardTitle>.agora Registration</CardTitle>
-              <CardDescription>
-                Register a unique .agora domain that you can use to create governance spaces.
-                This uses a mock domain registry contract on Sepolia testnet.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="ensName">.agora Name</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="ensName"
-                      type="text"
-                      placeholder="myspace.agora"
-                      value={ensName}
-                      onChange={(e) => {
-                        setEnsName(e.target.value);
-                        setIsAvailable(null); // Reset availability check
-                        setErrors({ ...errors, ensName: undefined });
-                      }}
-                      className="flex-1 bg-white/50 border-[#E8DCC4]/30"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={checkAvailability}
-                      disabled={!ensName.trim() || checkingAvailability}
-                      className="border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white"
-                    >
-                      {checkingAvailability ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        'Check'
-                      )}
-                    </Button>
+            <Card className="bg-white/80 border-[#E8DCC4]/30">
+              <CardHeader>
+                <CardTitle>.agora Registration</CardTitle>
+                <CardDescription>
+                  Register a unique .agora domain that you can use to create governance spaces.
+                  This uses a mock domain registry contract on Sepolia testnet.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="ensName">.agora Name</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="ensName"
+                        type="text"
+                        placeholder="myspace.agora"
+                        value={ensName}
+                        onChange={(e) => {
+                          setEnsName(e.target.value);
+                          setIsAvailable(null); // Reset availability check
+                          setErrors({ ...errors, ensName: undefined });
+                        }}
+                        className="flex-1 bg-white/50 border-[#E8DCC4]/30"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={checkAvailability}
+                        disabled={!ensName.trim() || checkingAvailability}
+                        className="border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white"
+                      >
+                        {checkingAvailability ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          'Check'
+                        )}
+                      </Button>
+                    </div>
+                    {errors.ensName && (
+                      <p className="text-sm text-red-600">{errors.ensName}</p>
+                    )}
+                    {isAvailable === true && (
+                      <p className="text-sm text-green-600">✓ This name is available!</p>
+                    )}
+                    {isAvailable === false && (
+                      <p className="text-sm text-red-600">✗ This name is already taken</p>
+                    )}
                   </div>
-                  {errors.ensName && (
-                    <p className="text-sm text-red-600">{errors.ensName}</p>
-                  )}
-                  {isAvailable === true && (
-                    <p className="text-sm text-green-600">✓ This name is available!</p>
-                  )}
-                  {isAvailable === false && (
-                    <p className="text-sm text-red-600">✗ This name is already taken</p>
-                  )}
-                </div>
 
-                <div className="bg-[#E8DCC4]/20 p-4 rounded-lg border border-[#E8DCC4]/30">
-                  <h4 className="font-medium text-black mb-2">What happens next?</h4>
-                  <ul className="text-sm text-black space-y-1">
-                    <li>• Your .agora name will be registered to your wallet address</li>
-                    <li>• You can use this name to create governance spaces</li>
-                    <li>• Registration is free on the Sepolia testnet</li>
-                    <li>• Names are unique and cannot be changed once registered</li>
-                  </ul>
-                </div>
+                  <div className="bg-[#E8DCC4]/20 p-4 rounded-lg border border-[#E8DCC4]/30">
+                    <h4 className="font-medium text-black mb-2">What happens next?</h4>
+                    <ul className="text-sm text-black space-y-1">
+                      <li>• Your .agora name will be registered to your wallet address</li>
+                      <li>• You can use this name to create governance spaces</li>
+                      <li>• Registration is free on the Sepolia testnet</li>
+                      <li>• Names are unique and cannot be changed once registered</li>
+                    </ul>
+                  </div>
 
-                {errors.general && (
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{errors.general}</AlertDescription>
-                  </Alert>
+                  {errors.general && (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>{errors.general}</AlertDescription>
+                    </Alert>
+                  )}
+
+                  {success && (
+                    <Alert>
+                      <CheckCircle className="h-4 w-4" />
+                      <AlertDescription>
+                        Successfully registered {ensName}! You can now use this name to create spaces.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
+                  <Button
+                    type="submit"
+                    className="w-full bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white"
+                    disabled={!mounted || isPending || isConfirming || isAvailable === false || !ensName.trim()}
+                  >
+                    {isPending ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Registering...
+                      </>
+                    ) : isConfirming ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Confirming...
+                      </>
+                    ) : (
+                      <>
+                        <Globe className="h-4 w-4 mr-2" />
+                        Register .agora Name
+                      </>
+                    )}
+                  </Button>
+                </form>
+
+                {hash && (
+                  <div className="mt-4 p-3 bg-[#E8DCC4]/10 rounded-lg border border-[#E8DCC4]/30">
+                    <p className="text-sm font-medium text-black">Transaction Hash:</p>
+                    <p className="text-xs font-mono text-black break-all">{hash}</p>
+                  </div>
                 )}
-
-                {success && (
-                  <Alert>
-                    <CheckCircle className="h-4 w-4" />
-                    <AlertDescription>
-                      Successfully registered {ensName}! You can now use this name to create spaces.
-                    </AlertDescription>
-                  </Alert>
-                )}
-
-                <Button
-                  type="submit"
-                  className="w-full bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white"
-                  disabled={!mounted || isPending || isConfirming || isAvailable === false || !ensName.trim()}
-                >
-                  {isPending ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Registering...
-                    </>
-                  ) : isConfirming ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Confirming...
-                    </>
-                  ) : (
-                    <>
-                      <Globe className="h-4 w-4 mr-2" />
-                      Register .agora Name
-                    </>
-                  )}
-                </Button>
-              </form>
-
-              {hash && (
-                <div className="mt-4 p-3 bg-[#E8DCC4]/10 rounded-lg border border-[#E8DCC4]/30">
-                  <p className="text-sm font-medium text-black">Transaction Hash:</p>
-                  <p className="text-xs font-mono text-black break-all">{hash}</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-    </div>
+    </SepoliaNetworkGuard>
   );
 }

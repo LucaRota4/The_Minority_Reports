@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, AlertCircle } from 'lucide-react';
+import { SepoliaNetworkGuard } from '@/components/ui/SepoliaNetworkGuard';
 
 // Import the MockGovernanceToken ABI
 import MockGovernanceTokenAbi from '@/abis/MockGovernanceToken.json';
@@ -106,160 +107,164 @@ export default function TokenPage() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
-        <div className="container mx-auto px-4 py-8">
-          <Alert>
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              Please connect your wallet to access token functionality.
-            </AlertDescription>
-          </Alert>
+      <SepoliaNetworkGuard>
+        <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
+          <div className="container mx-auto px-4 py-8">
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Please connect your wallet to access token functionality.
+              </AlertDescription>
+            </Alert>
+          </div>
         </div>
-      </div>
+      </SepoliaNetworkGuard>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto space-y-6">
-          {/* Header */}
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-black">MockGovernanceToken</h1>
-            <p className="text-black mt-2">
-              Manage your governance tokens for voting in ZamaHub spaces.
-            </p>
-          </div>
+    <SepoliaNetworkGuard>
+      <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto space-y-6">
+            {/* Header */}
+            <div className="text-center">
+              <h1 className="text-3xl font-bold text-black">MockGovernanceToken</h1>
+              <p className="text-black mt-2">
+                Manage your governance tokens for voting in ZamaHub spaces.
+              </p>
+            </div>
 
-          {/* Token Balance Card */}
-          <Card className="bg-white/80 border-[#E8DCC4]/30">
-            <CardHeader>
-              <CardTitle>Token Balance</CardTitle>
-              <CardDescription>
-                Your current MockGovernanceToken balance.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center">
-                {balanceLoading ? (
-                  <Loader2 className="h-6 w-6 animate-spin mx-auto" />
-                ) : (
-                  <div className="text-3xl font-bold text-black">
-                    {tokenBalance ? tokenBalance.toString() : '0'} <span className="text-lg text-[#4D89B0]/70">MGT</span>
+            {/* Token Balance Card */}
+            <Card className="bg-white/80 border-[#E8DCC4]/30">
+              <CardHeader>
+                <CardTitle>Token Balance</CardTitle>
+                <CardDescription>
+                  Your current MockGovernanceToken balance.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center">
+                  {balanceLoading ? (
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+                  ) : (
+                    <div className="text-3xl font-bold text-black">
+                      {tokenBalance ? tokenBalance.toString() : '0'} <span className="text-lg text-[#4D89B0]/70">MGT</span>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Mint Tokens Card */}
+            <Card className="bg-white/80 border-[#E8DCC4]/30">
+              <CardHeader>
+                <CardTitle>Mint Tokens</CardTitle>
+                <CardDescription>
+                  Mint new MockGovernanceToken for testing purposes.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      placeholder="Amount to mint"
+                      value={mintAmountInput}
+                      onChange={(e) => setMintAmountInput(e.target.value)}
+                      className="flex-1 border border-[#E8DCC4]/30 rounded px-3 py-2 bg-white/50"
+                      min="1"
+                    />
+                    <Button
+                      onClick={handleMintToken}
+                      disabled={isMintPending || isMintConfirming}
+                      className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white"
+                    >
+                      {isMintPending || isMintConfirming ? 'Minting...' : 'Mint'}
+                    </Button>
                   </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Mint Tokens Card */}
-          <Card className="bg-white/80 border-[#E8DCC4]/30">
-            <CardHeader>
-              <CardTitle>Mint Tokens</CardTitle>
-              <CardDescription>
-                Mint new MockGovernanceToken for testing purposes.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex gap-2">
-                  <input
-                    type="number"
-                    placeholder="Amount to mint"
-                    value={mintAmountInput}
-                    onChange={(e) => setMintAmountInput(e.target.value)}
-                    className="flex-1 border border-[#E8DCC4]/30 rounded px-3 py-2 bg-white/50"
-                    min="1"
-                  />
-                  <Button
-                    onClick={handleMintToken}
-                    disabled={isMintPending || isMintConfirming}
-                    className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white"
-                  >
-                    {isMintPending || isMintConfirming ? 'Minting...' : 'Mint'}
-                  </Button>
+                  {mintError && (
+                    <p className="text-sm text-red-600">{mintError.message}</p>
+                  )}
                 </div>
-                {mintError && (
-                  <p className="text-sm text-red-600">{mintError.message}</p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
-          {/* Delegate Voting Power Card */}
-          <Card className="bg-white/80 border-[#E8DCC4]/30">
-            <CardHeader>
-              <CardTitle>Delegate Voting Power</CardTitle>
-              <CardDescription>
-                Delegate your voting power to another address or undelegate to vote yourself.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm font-medium text-black mb-2">Current Delegatee:</p>
-                  <p className="text-sm text-[#4D89B0]/70">
-                    {delegateeLoading ? 'Loading...' : (currentDelegatee && currentDelegatee !== '0x0000000000000000000000000000000000000000' ? (currentDelegatee.toLowerCase() === address?.toLowerCase() ? 'Self Delegated' : currentDelegatee) : 'None')}
-                  </p>
+            {/* Delegate Voting Power Card */}
+            <Card className="bg-white/80 border-[#E8DCC4]/30">
+              <CardHeader>
+                <CardTitle>Delegate Voting Power</CardTitle>
+                <CardDescription>
+                  Delegate your voting power to another address or undelegate to vote yourself.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm font-medium text-black mb-2">Current Delegatee:</p>
+                    <p className="text-sm text-[#4D89B0]/70">
+                      {delegateeLoading ? 'Loading...' : (currentDelegatee && currentDelegatee !== '0x0000000000000000000000000000000000000000' ? (currentDelegatee.toLowerCase() === address?.toLowerCase() ? 'Self Delegated' : currentDelegatee) : 'None')}
+                    </p>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="0xDelegateAddress"
+                      value={delegateAddressInput}
+                      onChange={(e) => setDelegateAddressInput(e.target.value)}
+                      className="flex-1 border border-[#E8DCC4]/30 rounded px-3 py-2 bg-white/50"
+                    />
+                    <Button
+                      onClick={handleDelegateToken}
+                      disabled={isDelegatePending || isDelegateConfirming}
+                      className="border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white"
+                    >
+                      {isDelegatePending || isDelegateConfirming ? 'Delegating...' : 'Delegate'}
+                    </Button>
+                    <Button
+                      onClick={handleUndelegateToken}
+                      disabled={isDelegatePending || isDelegateConfirming}
+                      className="border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white"
+                    >
+                      {isDelegatePending || isDelegateConfirming ? 'Undelegating...' : 'Undelegate'}
+                    </Button>
+                  </div>
+
+                  {delegateError && (
+                    <p className="text-sm text-red-600">{delegateError.message}</p>
+                  )}
                 </div>
+              </CardContent>
+            </Card>
 
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="0xDelegateAddress"
-                    value={delegateAddressInput}
-                    onChange={(e) => setDelegateAddressInput(e.target.value)}
-                    className="flex-1 border border-[#E8DCC4]/30 rounded px-3 py-2 bg-white/50"
-                  />
-                  <Button
-                    onClick={handleDelegateToken}
-                    disabled={isDelegatePending || isDelegateConfirming}
-                    className="border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white"
-                  >
-                    {isDelegatePending || isDelegateConfirming ? 'Delegating...' : 'Delegate'}
-                  </Button>
-                  <Button
-                    onClick={handleUndelegateToken}
-                    disabled={isDelegatePending || isDelegateConfirming}
-                    className="border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white"
-                  >
-                    {isDelegatePending || isDelegateConfirming ? 'Undelegating...' : 'Undelegate'}
-                  </Button>
-                </div>
-
-                {delegateError && (
-                  <p className="text-sm text-red-600">{delegateError.message}</p>
+            {/* Past Delegations Card */}
+            <Card className="bg-white/80 border-[#E8DCC4]/30">
+              <CardHeader>
+                <CardTitle>Past Delegations</CardTitle>
+                <CardDescription>
+                  History of your delegation actions.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {delegations.length > 0 ? (
+                  <ul className="space-y-2">
+                    {delegations.map((d, i) => (
+                      <li key={i} className="flex justify-between items-center p-3 bg-[#E8DCC4]/10 rounded border border-[#E8DCC4]/30">
+                        <span className="text-sm text-black">
+                          Delegated {d.amount ? d.amount.toString() : '0'} tokens to {d.address.toLowerCase() === address?.toLowerCase() ? 'Self' : d.address}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-[#4D89B0]/70 text-center py-4">No past delegations</p>
                 )}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Past Delegations Card */}
-          <Card className="bg-white/80 border-[#E8DCC4]/30">
-            <CardHeader>
-              <CardTitle>Past Delegations</CardTitle>
-              <CardDescription>
-                History of your delegation actions.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {delegations.length > 0 ? (
-                <ul className="space-y-2">
-                  {delegations.map((d, i) => (
-                    <li key={i} className="flex justify-between items-center p-3 bg-[#E8DCC4]/10 rounded border border-[#E8DCC4]/30">
-                      <span className="text-sm text-black">
-                        Delegated {d.amount ? d.amount.toString() : '0'} tokens to {d.address.toLowerCase() === address?.toLowerCase() ? 'Self' : d.address}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-sm text-[#4D89B0]/70 text-center py-4">No past delegations</p>
-              )}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-    </div>
+    </SepoliaNetworkGuard>
   );
 }

@@ -11,6 +11,7 @@ import { Users, Calendar, Settings, AlertCircle, Loader2, ChevronDown, ChevronUp
 import { ProposalTable } from '@/components/dashboard/ProposalTable';
 import { CreateProposalDialog } from '@/components/dashboard/CreateProposalDialog';
 import Link from 'next/link';
+import { SepoliaNetworkGuard } from '@/components/ui/SepoliaNetworkGuard';
 
 // Import the SpaceRegistry ABI
 import spaceRegistryAbi from '@/abis/SpaceRegistry.json';
@@ -182,242 +183,248 @@ const SPACE_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_SPACE_REGISTRY_ADDRESS;  
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-[#4D89B0]" />
-      </div>
+      <SepoliaNetworkGuard>
+        <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-[#4D89B0]" />
+        </div>
+      </SepoliaNetworkGuard>
     );
   }
 
   if (error || !spaceData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
-        <div className="container mx-auto px-4 py-8">
-          <Alert variant="destructive" className="bg-white/80 border-[#E8DCC4]/30">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription className="text-black">
-              Space &quot;{spaceName}&quot; not found or does not exist.
-            </AlertDescription>
-          </Alert>
+      <SepoliaNetworkGuard>
+        <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
+          <div className="container mx-auto px-4 py-8">
+            <Alert variant="destructive" className="bg-white/80 border-[#E8DCC4]/30">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription className="text-black">
+                Space &quot;{spaceName}&quot; not found or does not exist.
+              </AlertDescription>
+            </Alert>
+          </div>
         </div>
-      </div>
+      </SepoliaNetworkGuard>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto space-y-6">
-          {/* Space Header */}
-          <Card className="bg-white/80 border-[#E8DCC4]/30">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-3xl text-black">{currentDisplayName}</CardTitle>
-                  <CardDescription className="text-lg text-black">
-                    {spaceData.ensName}
-                  </CardDescription>
+    <SepoliaNetworkGuard>
+      <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto space-y-6">
+            {/* Space Header */}
+            <Card className="bg-white/80 border-[#E8DCC4]/30">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-3xl text-black">{currentDisplayName}</CardTitle>
+                    <CardDescription className="text-lg text-black">
+                      {spaceData.ensName}
+                    </CardDescription>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant={spaceData.isActive ? "default" : "secondary"} className={spaceData.isActive ? "bg-[#4D89B0] text-white" : ""}>
+                      {spaceData.isActive ? "Active" : "Inactive"}
+                    </Badge>
+                    {(isOwner || isAdmin) ? (
+                      <>
+                        {isOwner ? (
+                          <Badge variant="outline" className="border-[#4D89B0] text-[#4D89B0]">Owner</Badge>
+                        ) : (
+                          <Badge variant="outline" className="border-[#4D89B0] text-[#4D89B0]">Admin</Badge>
+                        )}
+                      </>
+                    ) : isMember ? (
+                      <Badge variant="outline" className="border-[#4D89B0] text-[#4D89B0]">Member</Badge>
+                    ) : null}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowHeaderOverview(!showHeaderOverview)}
+                      className="text-[#4D89B0] hover:bg-transparent p-1 h-6 w-6 cursor-pointer"
+                    >
+                      {showHeaderOverview ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant={spaceData.isActive ? "default" : "secondary"} className={spaceData.isActive ? "bg-[#4D89B0] text-white" : ""}>
-                    {spaceData.isActive ? "Active" : "Inactive"}
-                  </Badge>
-                  {(isOwner || isAdmin) ? (
-                    <>
-                      {isOwner ? (
-                        <Badge variant="outline" className="border-[#4D89B0] text-[#4D89B0]">Owner</Badge>
-                      ) : (
-                        <Badge variant="outline" className="border-[#4D89B0] text-[#4D89B0]">Admin</Badge>
-                      )}
-                    </>
-                  ) : isMember ? (
-                    <Badge variant="outline" className="border-[#4D89B0] text-[#4D89B0]">Member</Badge>
-                  ) : null}
+              </CardHeader>
+              <CardContent>
+                {showHeaderOverview && (
+                  <div className="mb-4">
+                    <p className="text-black">
+                      Learn about this governance space and its activities. Space functionality coming soon. This space was created through the SpaceRegistry contract with ENS verification.
+                    </p>
+                    {!isConnected && (
+                      <p className="text-sm text-black mt-2">
+                        Connect your wallet to interact with this space.
+                      </p>
+                    )}
+                  </div>
+                )}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="flex items-center gap-2">
+                    <Users className="h-5 w-5 text-[#4D89B0]/60" />
+                    <span className="text-sm text-black">{displayMemberCount.toString()} members</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-5 w-5 text-[#4D89B0]/60" />
+                    <span className="text-sm text-black">
+                      Created: {new Date(Number(spaceData.createdAt) * 1000).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Space Content */}
+            <div className="space-y-6">
+              {/* Proposals Section */}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-semibold text-black">All Proposals</h2>
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setShowHeaderOverview(!showHeaderOverview)}
-                    className="text-[#4D89B0] hover:bg-transparent p-1 h-6 w-6 cursor-pointer"
+                    onClick={() => setShowProposals(!showProposals)}
+                    className="text-[#4D89B0] hover:bg-[#4D89B0]/10 cursor-pointer"
                   >
-                    {showHeaderOverview ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                    {showProposals ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                   </Button>
                 </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {showHeaderOverview && (
-                <div className="mb-4">
-                  <p className="text-black">
-                    Learn about this governance space and its activities. Space functionality coming soon. This space was created through the SpaceRegistry contract with ENS verification.
-                  </p>
-                  {!isConnected && (
-                    <p className="text-sm text-black mt-2">
-                      Connect your wallet to interact with this space.
-                    </p>
-                  )}
-                </div>
-              )}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="flex items-center gap-2">
-                  <Users className="h-5 w-5 text-[#4D89B0]/60" />
-                  <span className="text-sm text-black">{displayMemberCount.toString()} members</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-5 w-5 text-[#4D89B0]/60" />
-                  <span className="text-sm text-black">
-                    Created: {new Date(Number(spaceData.createdAt) * 1000).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Space Content */}
-          <div className="space-y-6">
-            {/* Proposals Section */}
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-black">All Proposals</h2>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowProposals(!showProposals)}
-                  className="text-[#4D89B0] hover:bg-[#4D89B0]/10 cursor-pointer"
-                >
-                  {showProposals ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </Button>
-              </div>
-              {showProposals && (
-                <>
-                  {(isMember || isAdmin || isOwner) ? (
-                    <ProposalTable
-                      proposals={proposalsData?.proposalCreateds || []}
-                      loading={proposalsLoading}
-                      error={proposalsError}
-                      spaceName={spaceName}
-                      title=""
-                    />
-                  ) : (
-                    <Card className="bg-white/80 border-[#E8DCC4]/30">
-                      <CardContent className="flex flex-col items-center justify-center py-12">
-                        <Users className="h-12 w-12 text-[#4D89B0]/60 mb-4" />
-                        <h3 className="text-lg font-semibold text-black mb-2">Join Space to View Proposals</h3>
-                        <p className="text-sm text-black/70 text-center mb-4">
-                          You need to be a member of this space to view and participate in proposals.
-                        </p>
-                        {isConnected ? (
-                          <Button
-                            onClick={handleJoinSpace}
-                            disabled={isTxPending || isConfirming}
-                            className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white cursor-pointer"
-                          >
-                            {isTxPending || isConfirming ? 'Joining...' : 'Join Space'}
-                          </Button>
-                        ) : (
-                          <p className="text-sm text-black/70">Connect your wallet to join this space.</p>
-                        )}
-                      </CardContent>
-                    </Card>
-                  )}
-                </>
-              )}
-            </div>
-
-            {(isOwner || isAdmin) ? (
-              /* Owner/Admin View */
-              <>
-                <Card className="bg-white/80 border-[#E8DCC4]/30">
-                  <CardHeader>
-                    <CardTitle className="text-black">Space Management</CardTitle>
-                    <CardDescription className="text-black">
-                      Manage your space settings and create governance proposals.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <CreateProposalDialog
-                        spaceId={spaceData.spaceId}
-                        spaceName={currentDisplayName}
+                {showProposals && (
+                  <>
+                    {(isMember || isAdmin || isOwner) ? (
+                      <ProposalTable
+                        proposals={proposalsData?.proposalCreateds || []}
+                        loading={proposalsLoading}
+                        error={proposalsError}
+                        spaceName={spaceName}
+                        title=""
                       />
-                      <div className="flex items-center gap-2">
-                        {isOwner && (
-                          <Button variant="outline" className="flex items-center gap-2 border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white cursor-pointer" onClick={() => setManageMembersOpen(!manageMembersOpen)}>
-                            <Users className="h-4 w-4" />
-                            Manage Space
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                    {manageMembersOpen && (
-                      <div className="mt-6 space-y-4 border-t border-[#E8DCC4]/30 pt-4">
-                        <div className="flex flex-col md:flex-row gap-2">
-                          <input
-                            type="text"
-                            placeholder="0xAdminAddress"
-                            value={adminAddressInput}
-                            onChange={(e) => setAdminAddressInput(e.target.value)}
-                            className="w-full md:w-2/3 border border-[#E8DCC4]/30 rounded px-3 py-2 bg-white/50"
-                          />
-                          <div className="flex gap-2">
-                            <Button onClick={handleNominateAdmin} disabled={isTxPending || isConfirming} className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white cursor-pointer">Nominate Admin</Button>
-                            <Button variant="ghost" onClick={handleRevokeAdmin} disabled={isTxPending || isConfirming} className="border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white cursor-pointer">Revoke Admin</Button>
-                          </div>
-                        </div>
+                    ) : (
+                      <Card className="bg-white/80 border-[#E8DCC4]/30">
+                        <CardContent className="flex flex-col items-center justify-center py-12">
+                          <Users className="h-12 w-12 text-[#4D89B0]/60 mb-4" />
+                          <h3 className="text-lg font-semibold text-black mb-2">Join Space to View Proposals</h3>
+                          <p className="text-sm text-black/70 text-center mb-4">
+                            You need to be a member of this space to view and participate in proposals.
+                          </p>
+                          {isConnected ? (
+                            <Button
+                              onClick={handleJoinSpace}
+                              disabled={isTxPending || isConfirming}
+                              className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white cursor-pointer"
+                            >
+                              {isTxPending || isConfirming ? 'Joining...' : 'Join Space'}
+                            </Button>
+                          ) : (
+                            <p className="text-sm text-black/70">Connect your wallet to join this space.</p>
+                          )}
+                        </CardContent>
+                      </Card>
+                    )}
+                  </>
+                )}
+              </div>
 
-                        <div className="pt-4 border-t border-[#E8DCC4]/30">
-                          <p className="text-sm text-black mb-2">Update space display name</p>
-                          <div className="flex gap-2">
+              {(isOwner || isAdmin) ? (
+                /* Owner/Admin View */
+                <>
+                  <Card className="bg-white/80 border-[#E8DCC4]/30">
+                    <CardHeader>
+                      <CardTitle className="text-black">Space Management</CardTitle>
+                      <CardDescription className="text-black">
+                        Manage your space settings and create governance proposals.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <CreateProposalDialog
+                          spaceId={spaceData.spaceId}
+                          spaceName={currentDisplayName}
+                        />
+                        <div className="flex items-center gap-2">
+                          {isOwner && (
+                            <Button variant="outline" className="flex items-center gap-2 border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white cursor-pointer" onClick={() => setManageMembersOpen(!manageMembersOpen)}>
+                              <Users className="h-4 w-4" />
+                              Manage Space
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                      {manageMembersOpen && (
+                        <div className="mt-6 space-y-4 border-t border-[#E8DCC4]/30 pt-4">
+                          <div className="flex flex-col md:flex-row gap-2">
                             <input
                               type="text"
-                              placeholder="Enter new display name"
-                              value={newDisplayNameInput}
-                              onChange={(e) => setNewDisplayNameInput(e.target.value)}
-                              className="flex-1 border border-[#E8DCC4]/30 rounded px-3 py-2 bg-white/50"
+                              placeholder="0xAdminAddress"
+                              value={adminAddressInput}
+                              onChange={(e) => setAdminAddressInput(e.target.value)}
+                              className="w-full md:w-2/3 border border-[#E8DCC4]/30 rounded px-3 py-2 bg-white/50"
                             />
-                            <Button onClick={handleUpdateDisplayName} disabled={isTxPending || isConfirming || !spaceData || newDisplayNameInput === spaceData.displayName} className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white cursor-pointer">Update</Button>
+                            <div className="flex gap-2">
+                              <Button onClick={handleNominateAdmin} disabled={isTxPending || isConfirming} className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white cursor-pointer">Nominate Admin</Button>
+                              <Button variant="ghost" onClick={handleRevokeAdmin} disabled={isTxPending || isConfirming} className="border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white cursor-pointer">Revoke Admin</Button>
+                            </div>
                           </div>
-                        </div>
 
-                        {isOwner && (
-                          <>
-                            <div className="pt-4 border-t border-[#E8DCC4]/30">
-                              <p className="text-sm text-black mb-2">Transfer ownership</p>
-                              <div className="flex gap-2">
-                                <input
-                                  type="text"
-                                  placeholder="0xNewOwnerAddress"
-                                  value={newOwnerAddressInput}
-                                  onChange={(e) => setNewOwnerAddressInput(e.target.value)}
-                                  className="flex-1 border border-[#E8DCC4]/30 rounded px-3 py-2 bg-white/50"
-                                />
-                                <Button onClick={handleTransferOwnership} disabled={isTxPending || isConfirming} className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white cursor-pointer">Transfer</Button>
+                          <div className="pt-4 border-t border-[#E8DCC4]/30">
+                            <p className="text-sm text-black mb-2">Update space display name</p>
+                            <div className="flex gap-2">
+                              <input
+                                type="text"
+                                placeholder="Enter new display name"
+                                value={newDisplayNameInput}
+                                onChange={(e) => setNewDisplayNameInput(e.target.value)}
+                                className="flex-1 border border-[#E8DCC4]/30 rounded px-3 py-2 bg-white/50"
+                              />
+                              <Button onClick={handleUpdateDisplayName} disabled={isTxPending || isConfirming || !spaceData || newDisplayNameInput === spaceData.displayName} className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white cursor-pointer">Update</Button>
+                            </div>
+                          </div>
+
+                          {isOwner && (
+                            <>
+                              <div className="pt-4 border-t border-[#E8DCC4]/30">
+                                <p className="text-sm text-black mb-2">Transfer ownership</p>
+                                <div className="flex gap-2">
+                                  <input
+                                    type="text"
+                                    placeholder="0xNewOwnerAddress"
+                                    value={newOwnerAddressInput}
+                                    onChange={(e) => setNewOwnerAddressInput(e.target.value)}
+                                    className="flex-1 border border-[#E8DCC4]/30 rounded px-3 py-2 bg-white/50"
+                                  />
+                                  <Button onClick={handleTransferOwnership} disabled={isTxPending || isConfirming} className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white cursor-pointer">Transfer</Button>
+                                </div>
                               </div>
-                            </div>
 
-                            <div className="pt-4 border-t border-[#9e0e40]">
-                              <p className="text-sm text-black mb-2">Deactivate space</p>
-                              <Button onClick={handleDeactivateSpace} disabled={isTxPending || isConfirming} variant="destructive" className="bg-[#9e0e40] hover:bg-[#9e0e40]/90 text-white cursor-pointer">Deactivate Space</Button>
-                            </div>
-                          </>
-                        )}
+                              <div className="pt-4 border-t border-[#9e0e40]">
+                                <p className="text-sm text-black mb-2">Deactivate space</p>
+                                <Button onClick={handleDeactivateSpace} disabled={isTxPending || isConfirming} variant="destructive" className="bg-[#9e0e40] hover:bg-[#9e0e40]/90 text-white cursor-pointer">Deactivate Space</Button>
+                              </div>
+                            </>
+                          )}
 
-                        {writeError && (
-                          <div className="text-sm text-red-600">{writeError.message}</div>
-                        )}
-                        {isTxPending && (
-                          <div className="text-sm text-black">Transaction pending...</div>
-                        )}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </>
-            ) : (
-              /* Public View - No additional content */
-              null
-            )}
+                          {writeError && (
+                            <div className="text-sm text-red-600">{writeError.message}</div>
+                          )}
+                          {isTxPending && (
+                            <div className="text-sm text-black">Transaction pending...</div>
+                          )}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </>
+              ) : (
+                /* Public View - No additional content */
+                null
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </SepoliaNetworkGuard>
   );
 }

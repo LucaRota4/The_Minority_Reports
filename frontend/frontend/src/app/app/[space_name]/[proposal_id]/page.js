@@ -13,6 +13,7 @@ import { ConnectWallet } from '@/components/wallet/ConnectWallet';
 import PrivateProposalABI from '@/abis/PrivateProposal.json';
 import ProposalResolve from '@/components/app/ProposalResolve';
 import { CheckCircle, Loader2 } from 'lucide-react';
+import { SepoliaNetworkGuard } from '@/components/ui/SepoliaNetworkGuard';
 
 // Helper function to format time
 const formatTime = (seconds) => {
@@ -441,135 +442,81 @@ export default function ProposalVotePage() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
-        <div className="container mx-auto px-4 py-8">
-          <Card className="bg-white/80 border-[#E8DCC4]/30">
-            <CardHeader>
-              <CardTitle className="text-black">Connect Wallet</CardTitle>
-              <CardDescription className="text-black">Please connect your wallet to vote on proposals</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ConnectWallet />
-            </CardContent>
-          </Card>
+      <SepoliaNetworkGuard>
+        <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
+          <div className="container mx-auto px-4 py-8">
+            <Card className="bg-white/80 border-[#E8DCC4]/30">
+              <CardHeader>
+                <CardTitle className="text-black">Connect Wallet</CardTitle>
+                <CardDescription className="text-black">Please connect your wallet to vote on proposals</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ConnectWallet />
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </div>
+      </SepoliaNetworkGuard>
     );
   }
 
   if (currentState === 'loading') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4D89B0] mx-auto mb-4"></div>
-          <p className="text-black text-lg">Loading proposal...</p>
+      <SepoliaNetworkGuard>
+        <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4D89B0] mx-auto mb-4"></div>
+            <p className="text-black text-lg">Loading proposal...</p>
+          </div>
         </div>
-      </div>
+      </SepoliaNetworkGuard>
     );
   }
 
   if (error || spaceError || !proposal) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
-        <div className="container mx-auto px-4 py-8">
-          <Card className="bg-white/80 border-[#E8DCC4]/30">
-            <CardHeader>
-              <CardTitle className="text-black">Error</CardTitle>
-              <CardDescription className="text-black">
-                {error ? 'Failed to load proposal' : 'Proposal not found'}
-              </CardDescription>
-            </CardHeader>
-          </Card>
+      <SepoliaNetworkGuard>
+        <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
+          <div className="container mx-auto px-4 py-8">
+            <Card className="bg-white/80 border-[#E8DCC4]/30">
+              <CardHeader>
+                <CardTitle className="text-black">Error</CardTitle>
+                <CardDescription className="text-black">
+                  {error ? 'Failed to load proposal' : 'Proposal not found'}
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
         </div>
-      </div>
+      </SepoliaNetworkGuard>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
-      <div className="container mx-auto px-4 py-8">
-        {currentState === 'upcoming' && (
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <Card className="bg-white/80 border-[#E8DCC4]/30 max-w-2xl w-full">
-              <CardHeader className="text-center">
-                <CardTitle className="text-black text-2xl">Voting Starts Soon</CardTitle>
-                <CardDescription className="text-black">
-                  This proposal is not yet open for voting
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="text-center space-y-6">
-                <div className="text-6xl font-bold text-[#4D89B0] mb-4">
-                  {timeUntilStart}
-                </div>
-                <p className="text-black text-lg mb-4">
-                  Voting begins on {new Date(pStart * 1000).toLocaleString()}
-                </p>
-                
-                {/* Proposal Title */}
-                <div className="text-center">
-                  <h2 className="text-3xl font-bold text-black mb-6">{proposal.p_title}</h2>
-                </div>
-                
-                {/* Proposal Description */}
-                <div className="p-4 bg-[#E8DCC4]/20 rounded-lg border-l-4 border-[#4D89B0] text-left">
-                  <h3 className="text-lg font-semibold mb-2 text-black">Proposal Description</h3>
-                  {descriptionLoading ? (
-                    <p className="text-black">Loading description...</p>
-                  ) : descriptionText ? (
-                    <div>
-                      <p className="text-black whitespace-pre-wrap">{descriptionText}</p>
-                      <a href={`https://sapphire-impressive-salamander-839.mypinata.cloud/ipfs/${proposal.p_bodyURI.replace('ipfs://', '')}`} target="_blank" rel="noopener noreferrer" className="text-[#4D89B0] underline text-sm cursor-pointer">
-                        View on IPFS
-                      </a>
-                    </div>
-                  ) : proposal.p_bodyURI ? (
-                    <div>
-                      <p className="text-black">Description stored on IPFS:</p>
-                      <a href={`https://sapphire-impressive-salamander-839.mypinata.cloud/ipfs/${proposal.p_bodyURI.replace('ipfs://', '')}`} target="_blank" rel="noopener noreferrer" className="text-[#4D89B0] underline text-sm cursor-pointer">{proposal.p_bodyURI}</a>
-                    </div>
-                  ) : (
-                    <p className="text-black italic">No description provided for this proposal.</p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-
-        {(currentState === 'voting' || currentState === 'ended') && (
-          currentState === 'ended' ? (
+    <SepoliaNetworkGuard>
+      <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
+        <div className="container mx-auto px-4 py-8">
+          {currentState === 'upcoming' && (
             <div className="flex items-center justify-center min-h-[60vh]">
               <Card className="bg-white/80 border-[#E8DCC4]/30 max-w-2xl w-full">
                 <CardHeader className="text-center">
-                  <CardTitle className="text-black text-2xl">
-                    {proposalResolved ? proposal.p_title : 'Voting Period Ended'}
-                  </CardTitle>
+                  <CardTitle className="text-black text-2xl">Voting Starts Soon</CardTitle>
                   <CardDescription className="text-black">
-                    {proposalResolved 
-                      ? 'This proposal has been resolved and results are available'
-                      : 'The voting period has ended. Results will be available once tally is revealed.'
-                    }
+                    This proposal is not yet open for voting
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="text-center space-y-6">
-                  {proposalResolved ? null : (
-                    <div className="text-4xl font-bold text-[#4D89B0] mb-4 flex items-center justify-center gap-3">
-                      {(tallyRevealRequested || shouldBeResolvable) ? (
-                        <>
-                          <CheckCircle className="w-10 h-10 text-[#4D89B0]" />
-                          Ready to Resolve
-                        </>
-                      ) : (
-                        <>
-                          <Loader2 className="w-10 h-10 text-[#4D89B0] animate-spin" />
-                          Waiting for Tally Reveal
-                        </>
-                      )}
-                    </div>
-                  )}
+                  <div className="text-6xl font-bold text-[#4D89B0] mb-4">
+                    {timeUntilStart}
+                  </div>
                   <p className="text-black text-lg mb-4">
-                    Voting ended on {new Date(pEnd * 1000).toLocaleString()}
+                    Voting begins on {new Date(pStart * 1000).toLocaleString()}
                   </p>
+                  
+                  {/* Proposal Title */}
+                  <div className="text-center">
+                    <h2 className="text-3xl font-bold text-black mb-6">{proposal.p_title}</h2>
+                  </div>
                   
                   {/* Proposal Description */}
                   <div className="p-4 bg-[#E8DCC4]/20 rounded-lg border-l-4 border-[#4D89B0] text-left">
@@ -582,392 +529,454 @@ export default function ProposalVotePage() {
                         <a href={`https://sapphire-impressive-salamander-839.mypinata.cloud/ipfs/${proposal.p_bodyURI.replace('ipfs://', '')}`} target="_blank" rel="noopener noreferrer" className="text-[#4D89B0] underline text-sm cursor-pointer">
                           View on IPFS
                         </a>
-                        <div className="mt-4 p-3 bg-[#4D89B0]/10 rounded-lg border border-[#4D89B0]/20">
-                          <p className="text-sm text-black">
-                            <strong>Passing Threshold:</strong> {thresholdData ? `${(parseInt(thresholdData.toString()) / 100).toFixed(1)}%` : 'Loading...'}
-                          </p>
-                        </div>
                       </div>
                     ) : proposal.p_bodyURI ? (
                       <div>
                         <p className="text-black">Description stored on IPFS:</p>
-                        <div className="mt-2 p-3 bg-[#4D89B0]/10 rounded-lg border border-[#4D89B0]/20">
-                          <p className="text-sm text-black">
-                            <strong>Passing Threshold:</strong> {thresholdData ? `${(parseInt(thresholdData.toString()) / 100).toFixed(1)}%` : 'Loading...'}
-                          </p>
-                        </div>
                         <a href={`https://sapphire-impressive-salamander-839.mypinata.cloud/ipfs/${proposal.p_bodyURI.replace('ipfs://', '')}`} target="_blank" rel="noopener noreferrer" className="text-[#4D89B0] underline text-sm cursor-pointer">{proposal.p_bodyURI}</a>
                       </div>
                     ) : (
-                      <div>
-                        <p className="text-black italic">No description provided for this proposal.</p>
-                        <div className="mt-2 p-3 bg-[#4D89B0]/10 rounded-lg border border-[#4D89B0]/20">
-                          <p className="text-sm text-black">
-                            <strong>Passing Threshold:</strong> {thresholdData ? `${(parseInt(thresholdData.toString()) / 100).toFixed(1)}%` : 'Loading...'}
-                          </p>
-                        </div>
-                      </div>
+                      <p className="text-black italic">No description provided for this proposal.</p>
                     )}
-                  </div>
-
-                  {/* Status and Resolve Section */}
-                  <div className="p-4 bg-[#4D89B0]/10 rounded-lg">
-                    <div className="space-y-4">
-                      {!proposalResolved && (
-                        <div className="text-center">
-                          {!tallyRevealRequested && !shouldBeResolvable && (
-                            <p className="text-xs text-black">
-                              Checking for tally reveal event every 30 seconds...
-                            </p>
-                          )}
-                          {shouldBeResolvable && !tallyRevealRequested && (
-                            <p className="text-xs text-orange-600">
-                              Proposal ended {Math.floor(secondsSinceEnd / 60)} minutes ago - should be resolvable
-                            </p>
-                          )}
-                        </div>
-                      )}
-                      
-                      {(tallyRevealRequested || shouldBeResolvable) && !proposalResolved && (
-                        <div className="mt-6">
-                          <ProposalResolve
-                            proposal={proposalStable}
-                            signer={signer}
-                            fheInitialized={fheInitialized}
-                            currentTime={currentTime}
-                            pEnd={pEnd}
-                            publicProvider={publicProvider}
-                          />
-                        </div>
-                      )}
-                      
-                      {proposalResolved && (
-                        <div className="text-center p-6 bg-[#E8DCC4]/20 rounded-lg border border-[#E8DCC4]/30">
-                          <div className="space-y-4">
-                            {resolvedResults ? (
-                              <>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                                  <div className="bg-white p-4 rounded-lg border border-[#E8DCC4]/30">
-                                    <h4 className="font-semibold text-black mb-2">Winning Choice</h4>
-                                    <p className="text-[#4D89B0] font-medium">
-                                      {choices[parseInt(resolvedResults.winningChoice)]}
-                                    </p>
-                                  </div>
-                                  
-                                  <div className="bg-white p-4 rounded-lg border border-[#E8DCC4]/30">
-                                    <h4 className="font-semibold text-black mb-2">Proposal Status</h4>
-                                    <p className={`font-medium ${resolvedResults.passed ? 'text-[#4D89B0]' : 'text-red-600'}`}>
-                                      {resolvedResults.passed ? `PASSED (met ${(parseInt(resolvedResults.threshold) / 100).toFixed(1)}% threshold)` : `FAILED (did not meet ${(parseInt(resolvedResults.threshold) / 100).toFixed(1)}% threshold)`}
-                                    </p>
-                                  </div>
-                                </div>
-                                
-                                <div className="bg-white p-4 rounded-lg border border-[#E8DCC4]/30 mt-4">
-                                  <h4 className="font-semibold text-black mb-3">Vote Distribution</h4>
-                                  <div className="space-y-2">
-                                    {choices.map((choice, index) => (
-                                      <div key={index} className="flex justify-between items-center">
-                                        <span className="text-black text-sm">
-                                          {choice}
-                                        </span>
-                                        <div className="flex items-center gap-2">
-                                          <div className="w-24 bg-[#E8DCC4]/30 rounded-full h-2">
-                                            <div 
-                                              className="bg-[#4D89B0] h-2 rounded-full transition-all duration-300"
-                                              style={{ width: `${resolvedResults.percentages[index]}%` }}
-                                            ></div>
-                                          </div>
-                                          <span className="text-black font-medium text-sm w-12 text-right">
-                                            {resolvedResults.percentages[index]}%
-                                          </span>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              </>
-                            ) : (
-                              <div className="mt-4">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#4D89B0] mx-auto mb-2"></div>
-                                <p className="text-[#4D89B0]">Loading results...</p>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
-          ) : (
-            <Card className="bg-white/80 border-[#E8DCC4]/30">
-              <CardHeader className="text-center">
-                <CardTitle className="text-black text-3xl font-bold mb-2">{proposal.p_title}</CardTitle>
-                <CardDescription className="text-black mb-4">
-                  Proposal ID: {proposal.proposalId}
-                </CardDescription>
-                <div className="flex items-center justify-center gap-2">
-                  <Badge variant="default" className="bg-[#4D89B0] text-white px-4 py-1">
-                    {status}
-                  </Badge>
-                  <span className="text-sm text-black font-medium">
-                    Ends in {timeUntilEnd}
-                  </span>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-6">
-                  {/* Description Section - Always visible at the top */}
-                  <div className="p-4 bg-[#E8DCC4]/20 rounded-lg border-l-4 border-[#4D89B0]">
-                    <h3 className="text-lg font-semibold mb-2 text-black">Proposal Description</h3>
-                    {descriptionLoading ? (
-                      <p className="text-black">Loading description...</p>
-                    ) : descriptionText ? (
-                      <div>
-                        <p className="text-black whitespace-pre-wrap">{descriptionText}</p>
-                        <a href={`https://sapphire-impressive-salamander-839.mypinata.cloud/ipfs/${proposal.p_bodyURI.replace('ipfs://', '')}`} target="_blank" rel="noopener noreferrer" className="text-[#4D89B0] underline text-sm cursor-pointer">
-                          View on IPFS
-                        </a>
-                        <div className="mt-4 p-3 bg-[#4D89B0]/10 rounded-lg border border-[#4D89B0]/20">
-                          <p className="text-sm text-black">
-                            <strong>Passing Threshold:</strong> {thresholdData ? `${(parseInt(thresholdData.toString()) / 100).toFixed(1)}%` : 'Loading...'}
-                          </p>
-                        </div>
-                      </div>
-                    ) : proposal.p_bodyURI ? (
-                      <div>
-                        <p className="text-black">Description stored on IPFS:</p>
-                        <div className="mt-2 p-3 bg-[#4D89B0]/10 rounded-lg border border-[#4D89B0]/20">
-                          <p className="text-sm text-black">
-                            <strong>Passing Threshold:</strong> {thresholdData ? `${(parseInt(thresholdData.toString()) / 100).toFixed(1)}%` : 'Loading...'}
-                          </p>
-                        </div>
-                        <a href={`https://sapphire-impressive-salamander-839.mypinata.cloud/ipfs/${proposal.p_bodyURI.replace('ipfs://', '')}`} target="_blank" rel="noopener noreferrer" className="text-[#4D89B0] underline text-sm cursor-pointer">{proposal.p_bodyURI}</a>
-                      </div>
-                    ) : (
-                      <div>
-                        <p className="text-black italic">No description provided for this proposal.</p>
-                        <div className="mt-2 p-3 bg-[#4D89B0]/10 rounded-lg border border-[#4D89B0]/20">
-                          <p className="text-sm text-black">
-                            <strong>Passing Threshold:</strong> {thresholdData ? `${(parseInt(thresholdData.toString()) / 100).toFixed(1)}%` : 'Loading...'}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+          )}
 
-                  <div className="p-4 bg-[#4D89B0]/10 rounded-lg border border-[#4D89B0]/20">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-black">Your Voting Power:</span>
-                      <span className="text-lg font-bold text-[#4D89B0]">
-                        {pType === 0 ? '1 vote' : `${votingPower} tokens`}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-xl font-semibold mb-4 text-black">Cast Your Vote</h3>
-                    {currentState === 'voting' && !hasVoted && isEligible ? (
-                      pType === 2 ? (
-                        <div className="space-y-4">
-                          {Array.from({ length: choicesLength }, (_, index) => {
-                            const choiceText = choices[index] || `Choice ${index + 1}`;
-                            return (
-                              <div key={index} className="space-y-2">
-                                <div className="flex items-center justify-between">
-                                  <label className="font-medium text-black">{choiceText}</label>
-                                  <div className="flex items-center gap-2">
-                                    <input
-                                      type="number"
-                                      placeholder="0"
-                                      value={percentages[index] || ''}
-                                      onChange={(e) => {
-                                        const val = Math.max(0, Math.min(100, parseInt(e.target.value) || 0));
-                                        setPercentages({...percentages, [index]: val});
-                                      }}
-                                      className="w-16 px-2 py-1 border rounded text-center text-sm cursor-pointer"
-                                      min="0"
-                                      max="100"
-                                    />
-                                    <span className="text-sm text-black">%</span>
-                                  </div>
-                                </div>
-                                <div className="relative">
-                                  <div 
-                                    className="w-full bg-[#E8DCC4]/30 rounded-full h-6 cursor-pointer relative overflow-hidden"
-                                    onClick={(e) => {
-                                      const rect = e.currentTarget.getBoundingClientRect();
-                                      const clickX = e.clientX - rect.left;
-                                      const percentage = Math.round((clickX / rect.width) * 100);
-                                      const val = Math.max(0, Math.min(100, percentage));
-                                      setPercentages({...percentages, [index]: val});
-                                    }}
-                                  >
-                                    <div 
-                                      className="bg-[#4D89B0] h-6 rounded-full transition-all duration-300 flex items-center justify-end pr-2"
-                                      style={{ width: `${percentages[index] || 0}%` }}
-                                    >
-                                      <span className="text-white text-xs font-medium">
-                                        {percentages[index] || 0}%
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      ) : (
-                        <div className="space-y-3">
-                          {Array.from({ length: choicesLength }, (_, choiceIndex) => {
-                            const choiceText = choices[choiceIndex] || `Choice ${choiceIndex + 1}`;
-                            const isSelected = selectedChoice === choiceIndex;
-                            return (
-                              <div
-                                key={choiceIndex}
-                                onClick={() => setSelectedChoice(choiceIndex)}
-                                className={`p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
-                                  isSelected
-                                    ? 'border-[#4D89B0] bg-[#4D89B0]/10 shadow-md'
-                                    : 'border-[#E8DCC4]/30 bg-white hover:border-[#4D89B0]/50 hover:bg-[#4D89B0]/5'
-                                }`}
-                              >
-                                <div className="flex items-center space-x-3">
-                                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                                    isSelected
-                                      ? 'border-[#4D89B0] bg-[#4D89B0]'
-                                      : 'border-gray-300'
-                                  }`}>
-                                    {isSelected && (
-                                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                                    )}
-                                  </div>
-                                  <label
-                                    htmlFor={`choice-${choiceIndex}`}
-                                    className={`text-lg font-medium cursor-pointer ${
-                                      isSelected ? 'text-[#4D89B0]' : 'text-black'
-                                    }`}
-                                  >
-                                    {choiceText}
-                                  </label>
-                                </div>
-                                <input
-                                  type="radio"
-                                  id={`choice-${choiceIndex}`}
-                                  name="vote-choice"
-                                  value={choiceIndex}
-                                  onChange={() => setSelectedChoice(choiceIndex)}
-                                  checked={isSelected}
-                                  className="sr-only"
-                                />
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )
-                    ) : (
-                      <div className="space-y-2">
-                        {Array.from({ length: choicesLength }, (_, index) => {
-                          const choiceText = choices[index] || `Choice ${index + 1}`;
-                          return (
-                            <div key={index} className="flex items-center justify-between">
-                              <span className="text-black">{choiceText}</span>
-                              {pType === 2 && percentages[index] && (
-                                <span className="text-sm text-black">{percentages[index]}%</span>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                    {pType === 2 && currentState === 'voting' && !hasVoted && isEligible && (
-                      <div className="mt-4 p-3 bg-[#E8DCC4]/10 rounded-lg">
-                        <div className="flex justify-between items-center">
-                          <span className="font-medium text-black">Total Allocation:</span>
-                          <span className={`font-bold ${totalPercentage === 100 ? 'text-[#4D89B0]' : 'text-red-600'}`}>
-                            {totalPercentage}%
-                          </span>
-                        </div>
-                        <div className="w-full bg-[#E8DCC4]/30 rounded-full h-3 mt-2">
-                          <div 
-                            className={`h-3 rounded-full transition-all duration-300 ${
-                              totalPercentage === 100 ? 'bg-[#4D89B0]' : totalPercentage > 100 ? 'bg-red-600' : 'bg-[#4D89B0]'
-                            }`}
-                            style={{ width: `${Math.min(totalPercentage, 100)}%` }}
-                          ></div>
-                        </div>
-                        {totalPercentage !== 100 && (
-                          <p className="text-sm text-red-600 mt-1">
-                            Percentages must sum to exactly 100%
-                          </p>
+          {(currentState === 'voting' || currentState === 'ended') && (
+            currentState === 'ended' ? (
+              <div className="flex items-center justify-center min-h-[60vh]">
+                <Card className="bg-white/80 border-[#E8DCC4]/30 max-w-2xl w-full">
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-black text-2xl">
+                      {proposalResolved ? proposal.p_title : 'Voting Period Ended'}
+                    </CardTitle>
+                    <CardDescription className="text-black">
+                      {proposalResolved 
+                        ? 'This proposal has been resolved and results are available'
+                        : 'The voting period has ended. Results will be available once tally is revealed.'
+                      }
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-center space-y-6">
+                    {proposalResolved ? null : (
+                      <div className="text-4xl font-bold text-[#4D89B0] mb-4 flex items-center justify-center gap-3">
+                        {(tallyRevealRequested || shouldBeResolvable) ? (
+                          <>
+                            <CheckCircle className="w-10 h-10 text-[#4D89B0]" />
+                            Ready to Resolve
+                          </>
+                        ) : (
+                          <>
+                            <Loader2 className="w-10 h-10 text-[#4D89B0] animate-spin" />
+                            Waiting for Tally Reveal
+                          </>
                         )}
                       </div>
                     )}
-                  </div>
-
-                  {currentState === 'voting' ? (
-                    hasVoted ? (
-                      <div className="p-4 bg-[#4D89B0]/10 rounded-lg">
-                        <p className="text-black">You have already voted.</p>
-                      </div>
-                    ) : isEligible ? (
-                      <div className="mt-8 p-6 bg-[#E8DCC4]/10 rounded-lg border-2 border-[#4D89B0]/20">
-                        <Button
-                          onClick={() => handleVote(pType === 2 ? null : selectedChoice)}
-                          disabled={(pType !== 2 && selectedChoice === null) || (pType === 2 && totalPercentage !== 100) || voting}
-                          className="w-full bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white cursor-pointer py-3 text-lg font-semibold"
-                        >
-                          {voting ? 'Submitting Vote...' : 'Submit Vote'}
-                        </Button>
-                        {voteMessage && (
-                          <div className={`mt-4 p-4 rounded-lg ${
-                            voteMessageType === 'success' 
-                              ? 'bg-green-50 border border-green-200' 
-                              : 'bg-red-50 border border-red-200'
-                          }`}>
-                            <p className={`text-sm ${
-                              voteMessageType === 'success' ? 'text-green-800' : 'text-red-800'
-                            }`}>
-                              {voteMessage}
+                    <p className="text-black text-lg mb-4">
+                      Voting ended on {new Date(pEnd * 1000).toLocaleString()}
+                    </p>
+                    
+                    {/* Proposal Description */}
+                    <div className="p-4 bg-[#E8DCC4]/20 rounded-lg border-l-4 border-[#4D89B0] text-left">
+                      <h3 className="text-lg font-semibold mb-2 text-black">Proposal Description</h3>
+                      {descriptionLoading ? (
+                        <p className="text-black">Loading description...</p>
+                      ) : descriptionText ? (
+                        <div>
+                          <p className="text-black whitespace-pre-wrap">{descriptionText}</p>
+                          <a href={`https://sapphire-impressive-salamander-839.mypinata.cloud/ipfs/${proposal.p_bodyURI.replace('ipfs://', '')}`} target="_blank" rel="noopener noreferrer" className="text-[#4D89B0] underline text-sm cursor-pointer">
+                            View on IPFS
+                          </a>
+                          <div className="mt-4 p-3 bg-[#4D89B0]/10 rounded-lg border border-[#4D89B0]/20">
+                            <p className="text-sm text-black">
+                              <strong>Passing Threshold:</strong> {thresholdData ? `${(parseInt(thresholdData.toString()) / 100).toFixed(1)}%` : 'Loading...'}
                             </p>
+                          </div>
+                        </div>
+                      ) : proposal.p_bodyURI ? (
+                        <div>
+                          <p className="text-black">Description stored on IPFS:</p>
+                          <div className="mt-2 p-3 bg-[#4D89B0]/10 rounded-lg border border-[#4D89B0]/20">
+                            <p className="text-sm text-black">
+                              <strong>Passing Threshold:</strong> {thresholdData ? `${(parseInt(thresholdData.toString()) / 100).toFixed(1)}%` : 'Loading...'}
+                            </p>
+                          </div>
+                          <a href={`https://sapphire-impressive-salamander-839.mypinata.cloud/ipfs/${proposal.p_bodyURI.replace('ipfs://', '')}`} target="_blank" rel="noopener noreferrer" className="text-[#4D89B0] underline text-sm cursor-pointer">{proposal.p_bodyURI}</a>
+                        </div>
+                      ) : (
+                        <div>
+                          <p className="text-black italic">No description provided for this proposal.</p>
+                          <div className="mt-2 p-3 bg-[#4D89B0]/10 rounded-lg border border-[#4D89B0]/20">
+                            <p className="text-sm text-black">
+                              <strong>Passing Threshold:</strong> {thresholdData ? `${(parseInt(thresholdData.toString()) / 100).toFixed(1)}%` : 'Loading...'}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Status and Resolve Section */}
+                    <div className="p-4 bg-[#4D89B0]/10 rounded-lg">
+                      <div className="space-y-4">
+                        {!proposalResolved && (
+                          <div className="text-center">
+                            {!tallyRevealRequested && !shouldBeResolvable && (
+                              <p className="text-xs text-black">
+                                Checking for tally reveal event every 30 seconds...
+                              </p>
+                            )}
+                            {shouldBeResolvable && !tallyRevealRequested && (
+                              <p className="text-xs text-orange-600">
+                                Proposal ended {Math.floor(secondsSinceEnd / 60)} minutes ago - should be resolvable
+                              </p>
+                            )}
+                          </div>
+                        )}
+                        
+                        {(tallyRevealRequested || shouldBeResolvable) && !proposalResolved && (
+                          <div className="mt-6">
+                            <ProposalResolve
+                              proposal={proposalStable}
+                              signer={signer}
+                              fheInitialized={fheInitialized}
+                              currentTime={currentTime}
+                              pEnd={pEnd}
+                              publicProvider={publicProvider}
+                            />
+                          </div>
+                        )}
+                        
+                        {proposalResolved && (
+                          <div className="text-center p-6 bg-[#E8DCC4]/20 rounded-lg border border-[#E8DCC4]/30">
+                            <div className="space-y-4">
+                              {resolvedResults ? (
+                                <>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                    <div className="bg-white p-4 rounded-lg border border-[#E8DCC4]/30">
+                                      <h4 className="font-semibold text-black mb-2">Winning Choice</h4>
+                                      <p className="text-[#4D89B0] font-medium">
+                                        {choices[parseInt(resolvedResults.winningChoice)]}
+                                      </p>
+                                    </div>
+                                    
+                                    <div className="bg-white p-4 rounded-lg border border-[#E8DCC4]/30">
+                                      <h4 className="font-semibold text-black mb-2">Proposal Status</h4>
+                                      <p className={`font-medium ${resolvedResults.passed ? 'text-[#4D89B0]' : 'text-red-600'}`}>
+                                        {resolvedResults.passed ? `PASSED (met ${(parseInt(resolvedResults.threshold) / 100).toFixed(1)}% threshold)` : `FAILED (did not meet ${(parseInt(resolvedResults.threshold) / 100).toFixed(1)}% threshold)`}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="bg-white p-4 rounded-lg border border-[#E8DCC4]/30 mt-4">
+                                    <h4 className="font-semibold text-black mb-3">Vote Distribution</h4>
+                                    <div className="space-y-2">
+                                      {choices.map((choice, index) => (
+                                        <div key={index} className="flex justify-between items-center">
+                                          <span className="text-black text-sm">
+                                            {choice}
+                                          </span>
+                                          <div className="flex items-center gap-2">
+                                            <div className="w-24 bg-[#E8DCC4]/30 rounded-full h-2">
+                                              <div 
+                                                className="bg-[#4D89B0] h-2 rounded-full transition-all duration-300"
+                                                style={{ width: `${resolvedResults.percentages[index]}%` }}
+                                              ></div>
+                                            </div>
+                                            <span className="text-black font-medium text-sm w-12 text-right">
+                                              {resolvedResults.percentages[index]}%
+                                            </span>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </>
+                              ) : (
+                                <div className="mt-4">
+                                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#4D89B0] mx-auto mb-2"></div>
+                                  <p className="text-[#4D89B0]">Loading results...</p>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         )}
                       </div>
-                    ) : (
-                      <div className="p-4 bg-red-50 rounded-lg">
-                        <p className="text-red-700">
-                          {!isMember && !isAdmin && !isOwner 
-                            ? "You must be a member of this space to vote." 
-                            : "You are not eligible to vote."
-                          }
-                        </p>
-                      </div>
-                    )
-                  ) : (
-                    <div className="mt-6">
-                      <ProposalResolve
-                        proposal={proposalStable}
-                        signer={signer}
-                        fheInitialized={fheInitialized}
-                        currentTime={currentTime}
-                        pEnd={pEnd}
-                        publicProvider={publicProvider}
-                      />
                     </div>
-                  )}
+                  </CardContent>
+                </Card>
+              </div>
+            ) : (
+              <Card className="bg-white/80 border-[#E8DCC4]/30">
+                <CardHeader className="text-center">
+                  <CardTitle className="text-black text-3xl font-bold mb-2">{proposal.p_title}</CardTitle>
+                  <CardDescription className="text-black mb-4">
+                    Proposal ID: {proposal.proposalId}
+                  </CardDescription>
+                  <div className="flex items-center justify-center gap-2">
+                    <Badge variant="default" className="bg-[#4D89B0] text-white px-4 py-1">
+                      {status}
+                    </Badge>
+                    <span className="text-sm text-black font-medium">
+                      Ends in {timeUntilEnd}
+                    </span>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-6">
+                    {/* Description Section - Always visible at the top */}
+                    <div className="p-4 bg-[#E8DCC4]/20 rounded-lg border-l-4 border-[#4D89B0]">
+                      <h3 className="text-lg font-semibold mb-2 text-black">Proposal Description</h3>
+                      {descriptionLoading ? (
+                        <p className="text-black">Loading description...</p>
+                      ) : descriptionText ? (
+                        <div>
+                          <p className="text-black whitespace-pre-wrap">{descriptionText}</p>
+                          <a href={`https://sapphire-impressive-salamander-839.mypinata.cloud/ipfs/${proposal.p_bodyURI.replace('ipfs://', '')}`} target="_blank" rel="noopener noreferrer" className="text-[#4D89B0] underline text-sm cursor-pointer">
+                            View on IPFS
+                          </a>
+                          <div className="mt-4 p-3 bg-[#4D89B0]/10 rounded-lg border border-[#4D89B0]/20">
+                            <p className="text-sm text-black">
+                              <strong>Passing Threshold:</strong> {thresholdData ? `${(parseInt(thresholdData.toString()) / 100).toFixed(1)}%` : 'Loading...'}
+                            </p>
+                          </div>
+                        </div>
+                      ) : proposal.p_bodyURI ? (
+                        <div>
+                          <p className="text-black">Description stored on IPFS:</p>
+                          <div className="mt-2 p-3 bg-[#4D89B0]/10 rounded-lg border border-[#4D89B0]/20">
+                            <p className="text-sm text-black">
+                              <strong>Passing Threshold:</strong> {thresholdData ? `${(parseInt(thresholdData.toString()) / 100).toFixed(1)}%` : 'Loading...'}
+                            </p>
+                          </div>
+                          <a href={`https://sapphire-impressive-salamander-839.mypinata.cloud/ipfs/${proposal.p_bodyURI.replace('ipfs://', '')}`} target="_blank" rel="noopener noreferrer" className="text-[#4D89B0] underline text-sm cursor-pointer">{proposal.p_bodyURI}</a>
+                        </div>
+                      ) : (
+                        <div>
+                          <p className="text-black italic">No description provided for this proposal.</p>
+                          <div className="mt-2 p-3 bg-[#4D89B0]/10 rounded-lg border border-[#4D89B0]/20">
+                            <p className="text-sm text-black">
+                              <strong>Passing Threshold:</strong> {thresholdData ? `${(parseInt(thresholdData.toString()) / 100).toFixed(1)}%` : 'Loading...'}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
 
-                  {!fheInitialized && (
-                    <div className="text-sm text-black">
-                      Preparing encryption system...
+                    <div className="p-4 bg-[#4D89B0]/10 rounded-lg border border-[#4D89B0]/20">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-black">Your Voting Power:</span>
+                        <span className="text-lg font-bold text-[#4D89B0]">
+                          {pType === 0 ? '1 vote' : `${votingPower} tokens`}
+                        </span>
+                      </div>
                     </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          )
-        )}
+
+                    <div>
+                      <h3 className="text-xl font-semibold mb-4 text-black">Cast Your Vote</h3>
+                      {currentState === 'voting' && !hasVoted && isEligible ? (
+                        pType === 2 ? (
+                          <div className="space-y-4">
+                            {Array.from({ length: choicesLength }, (_, index) => {
+                              const choiceText = choices[index] || `Choice ${index + 1}`;
+                              return (
+                                <div key={index} className="space-y-2">
+                                  <div className="flex items-center justify-between">
+                                    <label className="font-medium text-black">{choiceText}</label>
+                                    <div className="flex items-center gap-2">
+                                      <input
+                                        type="number"
+                                        placeholder="0"
+                                        value={percentages[index] || ''}
+                                        onChange={(e) => {
+                                          const val = Math.max(0, Math.min(100, parseInt(e.target.value) || 0));
+                                          setPercentages({...percentages, [index]: val});
+                                        }}
+                                        className="w-16 px-2 py-1 border rounded text-center text-sm cursor-pointer"
+                                        min="0"
+                                        max="100"
+                                      />
+                                      <span className="text-sm text-black">%</span>
+                                    </div>
+                                  </div>
+                                  <div className="relative">
+                                    <div 
+                                      className="w-full bg-[#E8DCC4]/30 rounded-full h-6 cursor-pointer relative overflow-hidden"
+                                      onClick={(e) => {
+                                        const rect = e.currentTarget.getBoundingClientRect();
+                                        const clickX = e.clientX - rect.left;
+                                        const percentage = Math.round((clickX / rect.width) * 100);
+                                        const val = Math.max(0, Math.min(100, percentage));
+                                        setPercentages({...percentages, [index]: val});
+                                      }}
+                                    >
+                                      <div 
+                                        className="bg-[#4D89B0] h-6 rounded-full transition-all duration-300 flex items-center justify-end pr-2"
+                                        style={{ width: `${percentages[index] || 0}%` }}
+                                      >
+                                        <span className="text-white text-xs font-medium">
+                                          {percentages[index] || 0}%
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className="space-y-3">
+                            {Array.from({ length: choicesLength }, (_, choiceIndex) => {
+                              const choiceText = choices[choiceIndex] || `Choice ${choiceIndex + 1}`;
+                              const isSelected = selectedChoice === choiceIndex;
+                              return (
+                                <div
+                                  key={choiceIndex}
+                                  onClick={() => setSelectedChoice(choiceIndex)}
+                                  className={`p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
+                                    isSelected
+                                      ? 'border-[#4D89B0] bg-[#4D89B0]/10 shadow-md'
+                                      : 'border-[#E8DCC4]/30 bg-white hover:border-[#4D89B0]/50 hover:bg-[#4D89B0]/5'
+                                  }`}
+                                >
+                                  <div className="flex items-center space-x-3">
+                                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                                      isSelected
+                                        ? 'border-[#4D89B0] bg-[#4D89B0]'
+                                        : 'border-gray-300'
+                                    }`}>
+                                      {isSelected && (
+                                        <div className="w-2 h-2 bg-white rounded-full"></div>
+                                      )}
+                                    </div>
+                                    <label
+                                      htmlFor={`choice-${choiceIndex}`}
+                                      className={`text-lg font-medium cursor-pointer ${
+                                        isSelected ? 'text-[#4D89B0]' : 'text-black'
+                                      }`}
+                                    >
+                                      {choiceText}
+                                    </label>
+                                  </div>
+                                  <input
+                                    type="radio"
+                                    id={`choice-${choiceIndex}`}
+                                    name="vote-choice"
+                                    value={choiceIndex}
+                                    onChange={() => setSelectedChoice(choiceIndex)}
+                                    checked={isSelected}
+                                    className="sr-only"
+                                  />
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )
+                      ) : (
+                        <div className="space-y-2">
+                          {Array.from({ length: choicesLength }, (_, index) => {
+                            const choiceText = choices[index] || `Choice ${index + 1}`;
+                            return (
+                              <div key={index} className="flex items-center justify-between">
+                                <span className="text-black">{choiceText}</span>
+                                {pType === 2 && percentages[index] && (
+                                  <span className="text-sm text-black">{percentages[index]}%</span>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                      {pType === 2 && currentState === 'voting' && !hasVoted && isEligible && (
+                        <div className="mt-4 p-3 bg-[#E8DCC4]/10 rounded-lg">
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium text-black">Total Allocation:</span>
+                            <span className={`font-bold ${totalPercentage === 100 ? 'text-[#4D89B0]' : 'text-red-600'}`}>
+                              {totalPercentage}%
+                            </span>
+                          </div>
+                          <div className="w-full bg-[#E8DCC4]/30 rounded-full h-3 mt-2">
+                            <div 
+                              className={`h-3 rounded-full transition-all duration-300 ${
+                                totalPercentage === 100 ? 'bg-[#4D89B0]' : totalPercentage > 100 ? 'bg-red-600' : 'bg-[#4D89B0]'
+                              }`}
+                              style={{ width: `${Math.min(totalPercentage, 100)}%` }}
+                            ></div>
+                          </div>
+                          {totalPercentage !== 100 && (
+                            <p className="text-sm text-red-600 mt-1">
+                              Percentages must sum to exactly 100%
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {currentState === 'voting' ? (
+                      hasVoted ? (
+                        <div className="p-4 bg-[#4D89B0]/10 rounded-lg">
+                          <p className="text-black">You have already voted.</p>
+                        </div>
+                      ) : isEligible ? (
+                        <div className="mt-8 p-6 bg-[#E8DCC4]/10 rounded-lg border-2 border-[#4D89B0]/20">
+                          <Button
+                            onClick={() => handleVote(pType === 2 ? null : selectedChoice)}
+                            disabled={(pType !== 2 && selectedChoice === null) || (pType === 2 && totalPercentage !== 100) || voting}
+                            className="w-full bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white cursor-pointer py-3 text-lg font-semibold"
+                          >
+                            {voting ? 'Submitting Vote...' : 'Submit Vote'}
+                          </Button>
+                          {voteMessage && (
+                            <div className={`mt-4 p-4 rounded-lg ${
+                              voteMessageType === 'success' 
+                                ? 'bg-green-50 border border-green-200' 
+                                : 'bg-red-50 border border-red-200'
+                            }`}>
+                              <p className={`text-sm ${
+                                voteMessageType === 'success' ? 'text-green-800' : 'text-red-800'
+                              }`}>
+                                {voteMessage}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="p-4 bg-red-50 rounded-lg">
+                          <p className="text-red-700">
+                            {!isMember && !isAdmin && !isOwner 
+                              ? "You must be a member of this space to vote." 
+                              : "You are not eligible to vote."
+                            }
+                          </p>
+                        </div>
+                      )
+                    ) : (
+                      <div className="mt-6">
+                        <ProposalResolve
+                          proposal={proposalStable}
+                          signer={signer}
+                          fheInitialized={fheInitialized}
+                          currentTime={currentTime}
+                          pEnd={pEnd}
+                          publicProvider={publicProvider}
+                        />
+                      </div>
+                    )}
+
+                    {!fheInitialized && (
+                      <div className="text-sm text-black">
+                        Preparing encryption system...
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            )
+          )}
+        </div>
       </div>
-    </div>
+    </SepoliaNetworkGuard>
   );
 }

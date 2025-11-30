@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Plus, AlertCircle } from 'lucide-react';
 import { SpacesTable } from '@/components/dashboard/SpacesTable';
 import { useAllSpaces, useMemberCounts, useMemberSpaceIds, useAdminSpaceIds, useSpacesByOwner, useLatestDisplayNameUpdates } from '@/hooks/useSubgraph';
+import { SepoliaNetworkGuard } from '@/components/ui/SepoliaNetworkGuard';
 
 function AllSpacesTable({ spaces, memberCounts, displayNameUpdateData, loading, error }) {
   const { address } = useAccount();
@@ -91,43 +92,47 @@ export default function SpacesPage() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
-        <div className="container mx-auto px-4 py-8">
-          <Alert>
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              Loading...
-            </AlertDescription>
-          </Alert>
+      <SepoliaNetworkGuard>
+        <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
+          <div className="container mx-auto px-4 py-8">
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Loading...
+              </AlertDescription>
+            </Alert>
+          </div>
         </div>
-      </div>
+      </SepoliaNetworkGuard>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-7xl mx-auto space-y-6">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-[#4D89B0]">Explore Spaces</h1>
-              <p className="text-gray-700 mt-1">
-                Discover and join governance spaces in the community
-              </p>
+    <SepoliaNetworkGuard>
+      <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-7xl mx-auto space-y-6">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-[#4D89B0]">Explore Spaces</h1>
+                <p className="text-gray-700 mt-1">
+                  Discover and join governance spaces in the community
+                </p>
+              </div>
             </div>
-          </div>
 
-          {/* Spaces Table */}
-          <AllSpacesTable
-            spaces={allSpacesData?.spaces}
-            memberCounts={memberCountsData}
-            displayNameUpdateData={displayNameUpdateData}
-            loading={allSpacesLoading}
-            error={allSpacesError}
-          />
+            {/* Spaces Table */}
+            <AllSpacesTable
+              spaces={allSpacesData?.spaces}
+              memberCounts={memberCountsData}
+              displayNameUpdateData={displayNameUpdateData}
+              loading={allSpacesLoading}
+              error={allSpacesError}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </SepoliaNetworkGuard>
   );
 }
