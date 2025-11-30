@@ -119,7 +119,7 @@ frontend/
 - Node.js 18+
 - npm or yarn package manager
 - Web3 wallet (MetaMask, Rainbow, etc.)
-- Access to Ethereum testnet
+- Access to Ethereum Sepolia testnet
 
 ### Quick Start
 1. **Visit the Agora website**: [https://agora-staged.vercel.app/](https://agora-staged.vercel.app/)

@@ -14,7 +14,7 @@ The system defines several key interfaces to standardize interactions and ensure
 
 The system consists of four main core contracts and one library that implement the interfaces and handle the decentralized proposal logic:
 
-- **SpaceRegistry**: Implements `ISpaceRegistry` to manage decentralized spaces. It allows users to create spaces tied to ENS names they own, manage membership types (Public, Whitelist, TokenHolder, NFTHolder), and handle space administration. Spaces serve as containers for proposals, ensuring only authorized members can participate.
+- **SpaceRegistry**: Implements `ISpaceRegistry` to manage decentralized spaces. It allows users to create spaces tied to mock ENS names they own, manage membership types (Public, Whitelist, TokenHolder, NFTHolder), and handle space administration. Spaces serve as containers for proposals, ensuring only authorized members can participate.
 
 - **PrivateProposal**: Implements `IPrivateProposal` and is the core voting contract. It handles proposal metadata, timing, eligibility checks, and most importantly, encrypted voting using Fully Homomorphic Encryption (FHE). Each proposal is deployed as a separate contract instance.
 

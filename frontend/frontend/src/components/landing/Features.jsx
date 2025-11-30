@@ -83,24 +83,24 @@ export function Features() {
 
   const features = [
     {
-      title: 'FHE-Powered Governance',
+      title: 'Privacy vs. Transparency Trade-off',
       description:
-        'Use Fully Homomorphic Encryption to run DAO logic on encrypted ballots and data—decisions stay public, votes stay private.',
+        'FHE enables computation on encrypted data, allowing vote tallying without ever decrypting individual ballots—decisions stay public, votes stay private.',
     },
     {
-      title: 'Kryptē Psêphos',
+      title: 'Voter Intimidation',
       description:
-        'Cast anonymous votes with verifiable outcomes. Your identity and choice remain encrypted end-to-end.',
+        'Anonymous voting prevents coercion and ensures free expression, protecting participants from external pressures.',
     },
     {
-      title: 'Steemless Customization',
+      title: 'Sybil Attacks',
       description:
-        'Choose voting parameters, privacy levels, and governance models that fit your community’s unique needs without sacrificing security.',
+        'Token-based eligibility systems prevent manipulation while maintaining privacy, ensuring fair and secure governance.',
     },
     {
-      title: 'Chainlink Proposal Automation',
+      title: 'Scalability',
       description:
-        'Time-based proposal flows and upkeep powered by Chainlink for seamless, trustless execution of governance cycles.',
+        'Efficient encrypted computation enables large-scale governance without performance degradation, supporting growing communities.',
     },
   ];
 
@@ -148,7 +148,7 @@ export function Features() {
           <motion.h2 
             className="section-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#4D89B0]"
           >
-            {"Why Us ?".split('').map((char, i) => (
+            {"My Vision".split('').map((char, i) => (
               <motion.span
                 key={i}
                 className="inline-block"
@@ -167,8 +167,23 @@ export function Features() {
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.8 }}
           >
-          Step into Agora’s privacy-first DAO. With FHE, your vote stays hidden, your voice stays free, and collective decisions remain verifiable without sacrificing anonymity.
+            The core purpose of Agora is to democratize governance by solving the fundamental privacy paradox in decentralized systems: how to maintain transparency in decision-making while protecting individual voter privacy. Traditional DAOs often require sacrificing anonymity for accountability, but Agora uses cutting-edge cryptography to provide both.
           </motion.p>
+        </motion.div>
+        
+        {/* Subheading for problems solved */}
+        <motion.div 
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, delay: 1.0 }}
+        >
+          <h3 className="text-2xl sm:text-3xl font-semibold text-[#4D89B0] mb-4">
+            The Problems Agora Solves
+          </h3>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Here's how Agora addresses the key challenges in decentralized governance:
+          </p>
         </motion.div>
         
         {/* Clean list with staggered animation */}

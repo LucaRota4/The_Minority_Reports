@@ -149,7 +149,7 @@ Ensure you have the Graph CLI installed globally: `npm install -g @graphprotocol
 
 For local development, ensure you have:
 
-1. **Blockchain Network**: Access to testnet (Sepolia, Base Sepolia, etc.)
+1. **Blockchain Network**: Access to testnet (Sepolia)
 2. **Wallet**: Connected wallet with test tokens
 
 ### Testing
