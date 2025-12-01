@@ -167,7 +167,7 @@ export function Features() {
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.8 }}
           >
-            The core purpose of Agora is to democratize governance by solving the fundamental privacy paradox in decentralized systems: how to maintain transparency in decision-making while protecting individual voter privacy. Traditional DAOs often require sacrificing anonymity for accountability, but Agora uses cutting-edge cryptography to provide both.
+            The core purpose of Agora is to democratize governance by solving the fundamental privacy paradox in decentralized systems: how to maintain transparency in decision-making while protecting individual voter privacy. Traditional DAOs often require sacrificing anonymity for accountability, but Agora uses Zama's Fully Homomorphic Encryption technology to provide both.
           </motion.p>
         </motion.div>
         

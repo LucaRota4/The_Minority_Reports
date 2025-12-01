@@ -2,7 +2,7 @@
 
 ## Overview
 
-Agora is a privacy-preserving governance platform that leverages Zama's Fully Homomorphic Encryption (FHE) technology to enable truly anonymous and secure decentralized governance. Built on Ethereum-compatible blockchains, Agora allows communities to create private DAO spaces where members can submit proposals and vote anonymously while maintaining full verifiability of outcomes.
+Agora is a privacy-preserving governance platform that leverages Zama's Fully Homomorphic Encryption (FHE) technology to enable truly anonymous and secure decentralized governance. Built on Ethereum-compatible blockchains, Agora allows communities to create private DAO spaces where admins and owners can submit proposals and members vote anonymously while maintaining full verifiability of outcomes.
 
 ## Purpose
 
