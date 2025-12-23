@@ -49,6 +49,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 - **Frontend**: Next.js 15, React 19, Tailwind CSS
 - **Blockchain**: EVM, Solidity smart contracts
 - **Indexing**: The Graph protocol for subgraph queries
+- **Data Storage**: JSON file-based storage for off-chain metadata (descriptions, logos), with MongoDB support for migration. See [Metadata Storage Architecture](metadata-storage.md) for details.
 - **Deployment**: Hardhat development environment
 - **Encryption**: Zama FHE (@zama-fhe/relayer-sdk)
 - **Wallet**: RainbowKit, Wagmi
@@ -63,6 +64,9 @@ frontend/
 │   ├── app/
 │   │   ├── page.js                 # Landing page
 │   │   ├── docs/                   # Documentation
+│   │   ├── api/
+│   │   │   └── space-description/
+│   │   │       └── route.js        # Space description API
 │   │   └── app/
 │   │       ├── layout.js           # App layout
 │   │       ├── page.js             # App dashboard
@@ -83,10 +87,14 @@ frontend/
 │   │   ├── wagmi.js                # Web3 configuration
 │   │   ├── apollo.ts               # GraphQL client
 │   │   ├── fhevm.ts                # FHE utilities
+│   │   ├── spaceDescriptions.js    # Space description storage
 │   │   └── utils.js                # Utility functions
 │   ├── hooks/
-│   │   └── useSubgraph.js          # Subgraph hooks
+│   │   ├── useSubgraph.js          # Subgraph hooks
+│   │   └── useSpaceDescription.js  # Space description hook
 │   └── styles/
+├── data/
+│   └── space-descriptions.json     # Space descriptions storage
 ├── public/                         # Static assets
 └── package.json                    # Dependencies
 ```

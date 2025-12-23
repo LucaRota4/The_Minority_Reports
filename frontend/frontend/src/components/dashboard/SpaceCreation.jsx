@@ -22,6 +22,8 @@ export function SpaceCreation() {
   const [mounted, setMounted] = useState(false);
   const [ensName, setEnsName] = useState('');
   const [displayName, setDisplayName] = useState('');
+  const [description, setDescription] = useState('');
+  const [logo, setLogo] = useState('');
   const [membershipType, setMembershipType] = useState('0'); // Default to public (0)
   const [criteriaContract, setCriteriaContract] = useState('');
   const [criteriaAmount, setCriteriaAmount] = useState('');
@@ -88,6 +90,10 @@ export function SpaceCreation() {
       newErrors.displayName = 'Display name must be 30 characters or less';
     }
 
+    if (description.length > 500) {
+      newErrors.description = 'Description must be 500 characters or less';
+    }
+
     // Validate criteria contract and amount for token/NFT membership
     if (membershipType === '1' || membershipType === '2') { // token or nft
       if (!criteriaContract.trim()) {
@@ -148,13 +154,31 @@ export function SpaceCreation() {
       console.log('Space creation successful! Transaction hash:', hash);
       setSuccess(true);
       setErrors({});
+      
+      // Save description to backend if provided
+      if (description.trim() || logo.trim()) {
+        const spaceName = ensName.replace('.agora', '');
+        fetch('/api/space-description', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            spaceId: spaceName,
+            ensName: ensName,
+            description: description.trim(),
+            logo: logo.trim(),
+            createdBy: address,
+            txHash: hash
+          })
+        }).catch(err => console.error('Failed to save description:', err));
+      }
+      
       // Redirect to the newly created space page
       const spaceName = ensName.replace('.agora', '');
       setTimeout(() => {
         router.push(`/app/${spaceName}`);
       }, 2000); // Small delay to show success message
     }
-  }, [isSuccess, hash, isConfirming, ensName, router]);
+  }, [isSuccess, hash, isConfirming, ensName, description, address, router]);
 
   // Reset success state when transaction completes
   if (isSuccess && !success) {
@@ -260,6 +284,63 @@ export function SpaceCreation() {
             <p className="text-sm text-black">
               Maximum 30 characters. This will be displayed in the UI.
             </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <textarea
+              id="description"
+              placeholder="Describe the purpose and goals of this governance space..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={4}
+              className={`w-full px-3 py-2 rounded-md bg-white/50 border border-[#E8DCC4]/30 text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-[#4D89B0] focus:border-transparent ${errors.description ? 'border-red-500' : ''}`}
+            />
+            {errors.description && (
+              <p className="text-sm text-red-600">{errors.description}</p>
+            )}
+            <p className="text-sm text-black">
+              Optional. Maximum 500 characters. Helps members understand your space.
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="logo">Logo Image</Label>
+            <Input
+              id="logo"
+              type="file"
+              accept="image/png,image/jpeg,image/svg+xml,image/webp"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  // Check file size (max 2MB)
+                  if (file.size > 2 * 1024 * 1024) {
+                    setErrors({...errors, logo: 'Image must be smaller than 2MB'});
+                    return;
+                  }
+                  // Convert to base64
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setLogo(reader.result);
+                    setErrors({...errors, logo: undefined});
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+              className={`bg-white/50 border-[#E8DCC4]/30 ${errors.logo ? 'border-red-500' : ''}`}
+            />
+            {errors.logo && (
+              <p className="text-sm text-red-600">{errors.logo}</p>
+            )}
+            <p className="text-sm text-black">
+              Optional. Upload PNG, JPG, SVG, or WebP. Max size: 2MB. Recommended: 200x200px.
+            </p>
+            {logo && (
+              <div className="mt-2 p-2 border border-[#E8DCC4]/30 rounded-md bg-white/50">
+                <p className="text-xs text-black mb-1">Preview:</p>
+                <img src={logo} alt="Logo preview" className="w-16 h-16 object-contain [filter:brightness(0)_saturate(100%)_invert(42%)_sepia(18%)_saturate(1034%)_hue-rotate(163deg)_brightness(91%)_contrast(89%)]" onError={(e) => e.target.style.display = 'none'} />
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">

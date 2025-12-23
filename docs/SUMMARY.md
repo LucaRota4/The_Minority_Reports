@@ -7,3 +7,4 @@
     * [Test Summary](test-summary.md) - Summary of tests performed
     * [Proposal Deployment Task](task_deploy_proposal.md) - Details on deploying proposals
   * [Frontend](frontend.md)
+    * [Metadata Storage Architecture](metadata-storage.md) - Off-chain data storage system
