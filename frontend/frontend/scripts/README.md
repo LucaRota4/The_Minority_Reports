@@ -14,7 +14,7 @@ Migrates space metadata from JSON file storage (`data/space-descriptions.json`) 
 
 1. **Set MongoDB URI**:
 ```bash
-export MONGODB_URI=""
+export MONGODB_URI="your creditentials"
 # or use .env.local file
 ```
 

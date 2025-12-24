@@ -372,7 +372,7 @@ export async function updateSpaceDescription(spaceId, updates) {
 
 Add to `.env.local`:
 ```bash
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/agora?retryWrites=true&w=majority
+MONGODB_URI="your creditential"
 ```
 
 **MongoDB Setup Options**:
