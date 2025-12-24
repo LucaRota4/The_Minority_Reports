@@ -21,3 +21,6 @@ PINATA_JWT=your-pinata-jwt-token
 
 # Infura Project Secret (keep secure)
 INFURA_PROJECT_SECRET=your-infura-project-secret
+
+# MongoDB Connection (Space Metadata Storage)
+MONGODB_URI=your-mongodb-connection-string

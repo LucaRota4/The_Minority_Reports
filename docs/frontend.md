@@ -33,6 +33,27 @@ The frontend component of Agora is a Next.js web application that provides the u
    
    Edit `.env.local` and fill in the required values. It is mandatory to edit the Infura and Pinata credentials; the other values can be used as provided in the example. Please refer to the documentation of Pinata and Infura to create your own credentials.
 
+   **MongoDB Setup (Required for Space Metadata)**:
+   
+   The application requires MongoDB for storing space descriptions and logos. You have two options:
+   
+   **Option A: MongoDB Atlas (Recommended for Production)**
+   - Create a free account at https://mongodb.com/atlas
+   - Create a new cluster
+   - Get the connection string from "Connect" → "Connect your application"
+   - Add to `.env.local`:
+     ```
+     MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/agora?retryWrites=true&w=majority
+     ```
+   
+   **Option B: Local MongoDB**
+   - Install MongoDB locally: https://www.mongodb.com/try/download/community
+   - Start MongoDB service: `mongod`
+   - Add to `.env.local`:
+     ```
+     MONGODB_URI=mongodb://localhost:27017/agora
+     ```
+
 
 
 4. **Start the development server**
@@ -49,7 +70,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 - **Frontend**: Next.js 15, React 19, Tailwind CSS
 - **Blockchain**: EVM, Solidity smart contracts
 - **Indexing**: The Graph protocol for subgraph queries
-- **Data Storage**: JSON file-based storage for off-chain metadata (descriptions, logos), with MongoDB support for migration. See [Metadata Storage Architecture](metadata-storage.md) for details.
+- **Data Storage**: MongoDB for off-chain metadata (space descriptions and logos). See [Metadata Storage Architecture](metadata-storage.md) for details.
 - **Deployment**: Hardhat development environment
 - **Encryption**: Zama FHE (@zama-fhe/relayer-sdk)
 - **Wallet**: RainbowKit, Wagmi

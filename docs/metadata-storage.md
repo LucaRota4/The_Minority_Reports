@@ -6,7 +6,7 @@ This section describes the off-chain metadata storage system used in Agora for s
 
 Agora uses a hybrid storage approach:
 - **On-chain**: Core governance data (spaces, proposals, votes) stored in smart contracts
-- **Off-chain**: Metadata (descriptions, logos, images) stored in a separate data layer
+- **Off-chain**: Metadata (descriptions, logos, images) stored in MongoDB
 
 This separation reduces gas costs and allows for flexible data management without blockchain constraints.
 
@@ -36,21 +36,18 @@ await updateSpaceDescription(spaceId, {
 });
 ```
 
-**Current Implementation**: JSON file storage
-- Location: `data/space-descriptions.json`
-- Format: Key-value pairs (spaceId → metadata)
-- Automatic timestamps (createdAt, updatedAt)
+**Implementation**: MongoDB with Mongoose ODM
+- Database: MongoDB Atlas (cloud) or local MongoDB instance
+- Collection: `spacemetadatas`
+- Schema: Defined in `src/lib/models/SpaceMetadata.js`
+- Connection: Managed via `src/lib/mongodb.js` with connection pooling
+- Automatic timestamps (createdAt, updatedAt) handled by Mongoose
 
-**Benefits**:
-- Simple setup, no external dependencies
-- Version control friendly
-- Easy to inspect and debug
-- Suitable for MVP and small-scale deployments
-
-**Limitations**:
-- Not suitable for high-concurrency scenarios
-- Limited query capabilities
-- No built-in backup/replication
+**Configuration**:
+Set `MONGODB_URI` in `.env.local`:
+```
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/agora?retryWrites=true&w=majority
+```
 
 ### API Layer (`src/app/api/space-description/route.js`)
 
@@ -140,33 +137,49 @@ function SpaceDetails({ spaceName }) {
 
 ```typescript
 interface SpaceMetadata {
-  ensName: string;          // Full ENS name (e.g., "myspace.agora")
-  description: string;      // Space description (max 500 chars)
-  logo: string;            // Base64 encoded image or empty string
-  createdBy: string;       // Creator's Ethereum address
-  txHash?: string;         // Transaction hash of space creation
-  createdAt: string;       // ISO 8601 timestamp
-  updatedAt: string;       // ISO 8601 timestamp
+  spaceId: string;         // Space identifier (e.g., "myspace")
+  ensName: string;         // Full ENS name (e.g., "myspace.agora")
+  description: string;     // Space description (max 500 chars)
+  logo: string;           // Base64 encoded image or empty string
+  createdBy: string;      // Creator's Ethereum address
+  txHash?: string;        // Transaction hash of space creation
+  createdAt: Date;        // Timestamp of creation
+  updatedAt: Date;        // Timestamp of last update
 }
 ```
 
-### Storage Format (JSON)
+### MongoDB Schema
 
-```json
-{
-  "myspace": {
-    "ensName": "myspace.agora",
-    "description": "A decentralized governance space for...",
-    "logo": "data:image/png;base64,iVBORw0KG...",
-    "createdBy": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
-    "txHash": "0xabc123...",
-    "createdAt": "2025-12-23T10:00:00.000Z",
-    "updatedAt": "2025-12-23T10:00:00.000Z"
+The data is stored in MongoDB using the following Mongoose schema:
+
+```javascript
+const SpaceMetadataSchema = new mongoose.Schema({
+  spaceId: {
+    type: String,
+    required: true,
+    unique: true,
+    index: true  // Indexed for fast lookups
   },
-  "anotherspace": {
-    ...
-  }
-}
+  ensName: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    maxlength: 500
+  },
+  logo: {
+    type: String,
+    default: ''
+  },
+  createdBy: {
+    type: String,
+    required: true
+  },
+  txHash: String
+}, {
+  timestamps: true  // Automatically manages createdAt and updatedAt
+});
 ```
 
 ## Features
@@ -222,27 +235,55 @@ interface SpaceMetadata {
 - Enforced in UI (button visibility)
 - Should be enforced in API with signature verification (future enhancement)
 
-## Migration to MongoDB
+## MongoDB Implementation
 
-### Why Migrate?
+### Database Connection
 
-Consider migrating from JSON to MongoDB when:
-- Multiple concurrent users editing metadata
-- Need for complex queries (search, filtering)
-- Require atomic operations and transactions
-- Scale beyond single-server deployment
-- Need backup and replication
+The application uses a connection pooling strategy to efficiently manage MongoDB connections:
 
-### Migration Steps
+**Connection Handler** (`src/lib/mongodb.js`):
+```javascript
+import mongoose from 'mongoose';
 
-1. **Install MongoDB** (already in package.json):
-```bash
-npm install mongodb mongoose
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  throw new Error('Please define MONGODB_URI in .env.local');
+}
+
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+async function connectDB() {
+  if (cached.conn) return cached.conn;
+
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGODB_URI, {
+      bufferCommands: false
+    }).then((mongoose) => {
+      return mongoose;
+    });
+  }
+  cached.conn = await cached.promise;
+  return cached.conn;
+}
+
+export default connectDB;
 ```
 
-2. **Create Mongoose Schema**:
+This connection handler:
+- Reuses existing connections across requests
+- Prevents connection exhaustion
+- Handles connection errors gracefully
+- Works seamlessly with Next.js serverless functions
+
+### Data Model
+
+**Mongoose Model** (`src/lib/models/SpaceMetadata.js`):
 ```javascript
-// src/lib/models/SpaceMetadata.js
 import mongoose from 'mongoose';
 
 const SpaceMetadataSchema = new mongoose.Schema({
@@ -270,48 +311,17 @@ const SpaceMetadataSchema = new mongoose.Schema({
   },
   txHash: String
 }, {
-  timestamps: true // Automatic createdAt/updatedAt
+  timestamps: true
 });
 
 export default mongoose.models.SpaceMetadata || 
   mongoose.model('SpaceMetadata', SpaceMetadataSchema);
 ```
 
-3. **Create Database Connection**:
+### Storage Operations
+
+**Implementation** (`src/lib/spaceDescriptions.js`):
 ```javascript
-// src/lib/mongodb.js
-import mongoose from 'mongoose';
-
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  throw new Error('Please define MONGODB_URI in .env.local');
-}
-
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
-
-async function connectDB() {
-  if (cached.conn) return cached.conn;
-
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => {
-      return mongoose;
-    });
-  }
-  cached.conn = await cached.promise;
-  return cached.conn;
-}
-
-export default connectDB;
-```
-
-4. **Update Storage Layer**:
-```javascript
-// src/lib/spaceDescriptions.js
 import connectDB from './mongodb';
 import SpaceMetadata from './models/SpaceMetadata';
 
@@ -329,18 +339,24 @@ export async function saveSpaceDescription(spaceId, data) {
 export async function getSpaceDescription(spaceId) {
   await connectDB();
   
-  const metadata = await SpaceMetadata.findOne({ spaceId });
+  const metadata = await SpaceMetadata.findOne({ spaceId }).lean();
   return metadata;
 }
 
 export async function updateSpaceDescription(spaceId, updates) {
   await connectDB();
   
+  // Explicitly handle logo field to allow empty string (clear logo)
+  const updateData = { ...updates };
+  if (updates.hasOwnProperty('logo')) {
+    updateData.logo = updates.logo || '';
+  }
+  
   const metadata = await SpaceMetadata.findOneAndUpdate(
     { spaceId },
-    { $set: updates },
+    { $set: updateData },
     { new: true }
-  );
+  ).lean();
   
   if (!metadata) {
     return { success: false, error: 'Space not found' };
@@ -350,291 +366,141 @@ export async function updateSpaceDescription(spaceId, updates) {
 }
 ```
 
-5. **Add Environment Variable**:
+### Configuration
+
+**Environment Setup**:
+
+Add to `.env.local`:
 ```bash
-# .env.local
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/agora?retryWrites=true&w=majority
 ```
 
-6. **Data Migration Script**:
-```javascript
-// scripts/migrate-to-mongodb.js
-import fs from 'fs';
-import connectDB from '../src/lib/mongodb.js';
-import SpaceMetadata from '../src/lib/models/SpaceMetadata.js';
+**MongoDB Setup Options**:
 
-async function migrate() {
-  await connectDB();
-  
-  const jsonData = JSON.parse(
-    fs.readFileSync('./data/space-descriptions.json', 'utf-8')
-  );
-  
-  for (const [spaceId, data] of Object.entries(jsonData)) {
-    await SpaceMetadata.findOneAndUpdate(
-      { spaceId },
-      { spaceId, ...data },
-      { upsert: true, new: true }
-    );
-    console.log(`Migrated ${spaceId}`);
-  }
-  
-  console.log('Migration complete');
-  process.exit(0);
-}
+1. **MongoDB Atlas** (Recommended for production):
+   - Create free account at https://mongodb.com/atlas
+   - Create a new cluster
+   - Get connection string from "Connect" → "Connect your application"
+   - Replace `<username>` and `<password>` with your credentials
+   - Whitelist your IP address or use 0.0.0.0/0 for development
 
-migrate();
-```
-
-7. **Run Migration**:
-```bash
-node scripts/migrate-to-mongodb.js
-```
-
-## Alternative Storage Solutions
-
-### IPFS (InterPlanetary File System)
-
-**Pros**:
-- Decentralized storage
-- Content-addressed (immutable)
-- Good for large files
-- Censorship resistant
-
-**Cons**:
-- Need pinning service (Pinata, Infura)
-- Slower retrieval than centralized
-- Cost for pinning services
-- Requires IPFS gateway
-
-**Use Case**: Store large images, documents, or when decentralization is critical.
-
-### Arweave
-
-**Pros**:
-- Permanent storage
-- One-time payment
-- Decentralized
-- Good for archives
-
-**Cons**:
-- Higher upfront cost
-- Cannot delete/update
-- Slower retrieval
-- Complex integration
-
-**Use Case**: Permanent records, historical data, immutable documents.
-
-### AWS S3 / Cloud Storage
-
-**Pros**:
-- Highly scalable
-- Fast retrieval
-- Global CDN
-- Mature tooling
-
-**Cons**:
-- Centralized
-- Ongoing costs
-- Vendor lock-in
-- Privacy concerns
-
-**Use Case**: Production deployments with high traffic, need for CDN.
+2. **Local MongoDB** (For development):
+   - Install MongoDB: https://www.mongodb.com/try/download/community
+   - Start MongoDB service: `mongod`
+   - Use connection string: `mongodb://localhost:27017/agora`
 
 ## Security Considerations
 
 ### Access Control
 
 **Current Implementation**:
-- UI-level restrictions (owner/admin check)
-- No server-side authentication
+- UI-level restrictions verify space owner/admin status
+- Updates only allowed through authenticated requests
 
-**Recommended Enhancements**:
-1. **Signature Verification**:
-```javascript
-// Verify that request comes from space owner
-const message = `Update space ${spaceId}`;
-const signature = await signer.signMessage(message);
-// Send signature with request
-// Server verifies signature matches owner address
-```
-
-2. **Rate Limiting**:
-```javascript
-// Prevent spam/abuse
-import rateLimit from 'express-rate-limit';
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
-});
-```
-
-3. **Input Validation**:
-```javascript
-// Sanitize user input
-import validator from 'validator';
-
-if (!validator.isLength(description, { max: 500 })) {
-  throw new Error('Description too long');
-}
-
-if (logo && !validator.isDataURI(logo)) {
-  throw new Error('Invalid logo format');
-}
-```
+**Best Practices**:
+- Always verify user owns/administers the space before updates
+- Validate all input data (description length, logo format)
+- Sanitize user-provided content to prevent injection attacks
 
 ### Data Privacy
 
-- Space descriptions are **public** by default
-- Consider encryption for sensitive data
-- Logos should not contain personal information
-- Store minimal PII (Personally Identifiable Information)
+- Space descriptions and logos are **public** by default
+- Do not store sensitive or personal information in descriptions
+- Logos should not contain personally identifiable information (PII)
 
 ### Backup Strategy
 
-**JSON File Storage**:
-- Git version control provides history
-- Manual backups before deployments
-- Consider automated backups to cloud storage
-
-**MongoDB**:
-- Configure replica sets (3+ nodes)
-- Automated daily backups
-- Point-in-time recovery
+**MongoDB Atlas** (Recommended):
+- Automated daily backups included
+- Point-in-time recovery available
+- Replica sets for high availability
 - Off-site backup storage
+
+**Local MongoDB**:
+- Configure regular backup schedule using `mongodump`
+- Store backups in secure off-site location
+- Test backup restoration periodically
 
 ## Performance Optimization
 
-### Caching
+### Caching Strategy
 
 **Client-Side**:
-- React Query caching (5 minutes default)
-- Service Worker for offline access
-- IndexedDB for persistent cache
+- React Query caching with 5-minute default TTL
+- Automatic cache invalidation on updates
+- Background refetching on focus
 
-**Server-Side**:
-- Redis for frequently accessed data
-- CDN for static assets (logos)
-- Database query optimization
+**Database**:
+- Indexed queries on `spaceId` field for fast lookups
+- Connection pooling to reduce connection overhead
+- `.lean()` queries return plain JavaScript objects (faster than Mongoose documents)
 
-### Image Optimization
+### Image Handling
 
-**Current**: Base64 encoding increases size by ~33%
+**Current Implementation**:
+- Base64 encoding for logos
+- Client-side validation (2MB max file size)
+- Supports PNG, JPG, SVG, WebP formats
+- Automatic color filtering applied in UI (#4D89B0)
 
-**Alternatives**:
-1. **Separate image storage** (S3/CDN)
-2. **Image compression** before base64
-3. **WebP format** for smaller sizes
-4. **Responsive images** (multiple sizes)
+**Optimization Tips**:
+- Compress images before upload
+- Use appropriate image formats (WebP for photos, SVG for icons)
+- Consider smaller dimensions (logos displayed at 80x80px)
 
-**Implementation Example**:
-```javascript
-// Compress before converting to base64
-import imageCompression from 'browser-image-compression';
+## Monitoring
 
-const options = {
-  maxSizeMB: 0.5,
-  maxWidthOrHeight: 200,
-  useWebWorker: true
-};
+### MongoDB Atlas Dashboard
 
-const compressedFile = await imageCompression(file, options);
-// Then convert to base64
-```
+MongoDB Atlas provides built-in monitoring:
+- Real-time performance metrics
+- Query performance analysis
+- Storage size tracking
+- Connection pool statistics
+- Automated alerts for issues
 
-## Monitoring & Analytics
+### Application Monitoring
 
-### Recommended Metrics
-
-- API response times
-- Storage size growth
-- Failed upload attempts
-- Most active spaces
-- Logo format distribution
-
-### Tools
-
-- **Application Performance**: Vercel Analytics, New Relic
-- **Error Tracking**: Sentry
-- **Logs**: Logtail, Papertrail
-- **Database**: MongoDB Atlas monitoring
-
-## Future Enhancements
-
-### Planned Features
-
-1. **Rich Text Descriptions**
-   - Markdown support
-   - Syntax highlighting
-   - Link previews
-
-2. **Multiple Images**
-   - Cover photos
-   - Gallery for proposals
-   - Member avatars
-
-3. **Media Library**
-   - Reusable assets
-   - Versioning
-   - Organization folders
-
-4. **Search & Discovery**
-   - Full-text search
-   - Tag system
-   - Category filters
-
-5. **Audit Log**
-   - Track all metadata changes
-   - Show edit history
-   - Revert capabilities
-
-### Technical Roadmap
-
-- [ ] Migrate to MongoDB
-- [ ] Implement signature verification
-- [ ] Add rate limiting
-- [ ] Set up automated backups
-- [ ] Implement CDN for images
-- [ ] Add compression pipeline
-- [ ] Create admin dashboard
-- [ ] Add analytics tracking
-- [ ] Implement search functionality
-- [ ] Build migration tools
+Consider implementing:
+- Error tracking (Sentry, LogRocket)
+- API response time monitoring
+- Database query performance logs
+- Failed upload attempt tracking
 
 ## Troubleshooting
 
 ### Common Issues
 
-**Issue**: "Space description not found"
-- Check if space was created successfully on blockchain
-- Verify spaceId matches ENS name
-- Check API endpoint is accessible
+**"Space description not found"**
+- Verify the space was created successfully on the blockchain
+- Check that the spaceId matches the ENS name
+- Ensure MongoDB connection is active (check `.env.local`)
 
-**Issue**: "Logo not displaying"
-- Verify file size < 2MB
-- Check base64 format is valid
-- Ensure image format is supported
+**"Logo not displaying"**
+- Verify file size is under 2MB
+- Check that the image format is supported (PNG, JPG, SVG, WebP)
+- Ensure base64 encoding is valid
 - Check browser console for errors
 
-**Issue**: "Cannot update description"
-- Verify user is space owner or admin
-- Check wallet is connected
-- Ensure spaceId exists in database
-- Check API response for errors
+**"Cannot update description"**
+- Verify the connected wallet is the space owner or admin
+- Ensure wallet is properly connected
+- Check that the space exists in the database
+- Review API response for specific error messages
+
+**MongoDB connection errors**
+- Verify `MONGODB_URI` is set correctly in `.env.local`
+- Check IP whitelist settings in MongoDB Atlas
+- Ensure database credentials are correct
+- Test connection string using `mongosh`
 
 ### Debug Mode
 
-Enable detailed logging:
-```javascript
-// .env.local
-DEBUG=true
-LOG_LEVEL=debug
-```
+Enable detailed logging by checking the browser console and Next.js terminal output for error messages and API responses.
 
-### Support
+### Getting Help
 
 For issues or questions:
-- GitHub Issues: [agora_monorepo/issues](https://github.com/ElioMargiotta/agora_monorepo/issues)
-- Documentation: [docs/](../docs/)
-- Community: Discord/Telegram (add links)
+- Check the [Frontend Documentation](frontend.md)
+- Review [GitHub Issues](https://github.com/ElioMargiotta/agora_monorepo/issues)
+- Consult the [MongoDB Documentation](https://docs.mongodb.com/)

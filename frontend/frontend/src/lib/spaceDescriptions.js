@@ -1,23 +1,10 @@
 /**
- * Simple in-memory storage for space descriptions
- * This can be replaced with MongoDB or a database later
+ * MongoDB storage for space descriptions
+ * Replaces the previous JSON file storage
  */
 
-import fs from 'fs';
-import path from 'path';
-
-const DATA_DIR = path.join(process.cwd(), 'data');
-const DATA_FILE = path.join(DATA_DIR, 'space-descriptions.json');
-
-// Ensure data directory exists
-if (typeof window === 'undefined') { // Server-side only
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-  if (!fs.existsSync(DATA_FILE)) {
-    fs.writeFileSync(DATA_FILE, JSON.stringify({}));
-  }
-}
+import connectDB from './mongodb';
+import SpaceMetadata from './models/SpaceMetadata';
 
 /**
  * Save a space description
@@ -25,22 +12,31 @@ if (typeof window === 'undefined') { // Server-side only
  * @param {Object} data - The data to save
  * @param {string} data.ensName - Full ENS name (e.g., "myspace.agora")
  * @param {string} data.description - Space description
- * @param {string} data.logo - Logo URL or data URI
+ * @param {string} data.logo - Logo base64 data URI
  * @param {string} data.createdBy - Creator's address
  * @param {string} data.txHash - Transaction hash
  */
 export async function saveSpaceDescription(spaceId, data) {
   try {
-    const descriptions = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+    await connectDB();
     
-    descriptions[spaceId] = {
-      ...data,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+    const metadata = await SpaceMetadata.create({
+      spaceId,
+      ...data
+    });
+    
+    return { 
+      success: true, 
+      data: {
+        ensName: metadata.ensName,
+        description: metadata.description,
+        logo: metadata.logo,
+        createdBy: metadata.createdBy,
+        txHash: metadata.txHash,
+        createdAt: metadata.createdAt,
+        updatedAt: metadata.updatedAt
+      }
     };
-    
-    fs.writeFileSync(DATA_FILE, JSON.stringify(descriptions, null, 2));
-    return { success: true, data: descriptions[spaceId] };
   } catch (error) {
     console.error('Error saving space description:', error);
     return { success: false, error: error.message };
@@ -53,8 +49,23 @@ export async function saveSpaceDescription(spaceId, data) {
  */
 export async function getSpaceDescription(spaceId) {
   try {
-    const descriptions = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
-    return descriptions[spaceId] || null;
+    await connectDB();
+    
+    const metadata = await SpaceMetadata.findOne({ spaceId }).lean();
+    
+    if (!metadata) {
+      return null;
+    }
+    
+    return {
+      ensName: metadata.ensName,
+      description: metadata.description,
+      logo: metadata.logo,
+      createdBy: metadata.createdBy,
+      txHash: metadata.txHash,
+      createdAt: metadata.createdAt,
+      updatedAt: metadata.updatedAt
+    };
   } catch (error) {
     console.error('Error getting space description:', error);
     return null;
@@ -66,7 +77,24 @@ export async function getSpaceDescription(spaceId) {
  */
 export async function getAllSpaceDescriptions() {
   try {
-    const descriptions = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+    await connectDB();
+    
+    const allMetadata = await SpaceMetadata.find({}).lean();
+    
+    // Convert array to object with spaceId as key for compatibility
+    const descriptions = {};
+    allMetadata.forEach(metadata => {
+      descriptions[metadata.spaceId] = {
+        ensName: metadata.ensName,
+        description: metadata.description,
+        logo: metadata.logo,
+        createdBy: metadata.createdBy,
+        txHash: metadata.txHash,
+        createdAt: metadata.createdAt,
+        updatedAt: metadata.updatedAt
+      };
+    });
+    
     return descriptions;
   } catch (error) {
     console.error('Error getting all space descriptions:', error);
@@ -81,28 +109,36 @@ export async function getAllSpaceDescriptions() {
  */
 export async function updateSpaceDescription(spaceId, updates) {
   try {
-    const descriptions = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+    await connectDB();
     
-    if (!descriptions[spaceId]) {
+    // Handle logo field explicitly - allow empty string to clear logo
+    const updateData = { ...updates };
+    if (updates.hasOwnProperty('logo')) {
+      updateData.logo = updates.logo || '';
+    }
+    
+    const metadata = await SpaceMetadata.findOneAndUpdate(
+      { spaceId },
+      { $set: updateData },
+      { new: true }
+    ).lean();
+    
+    if (!metadata) {
       return { success: false, error: 'Space not found' };
     }
     
-    // Handle logo field explicitly - allow empty string to clear logo
-    const updatedData = {
-      ...descriptions[spaceId],
-      ...updates,
-      updatedAt: new Date().toISOString()
+    return { 
+      success: true, 
+      data: {
+        ensName: metadata.ensName,
+        description: metadata.description,
+        logo: metadata.logo,
+        createdBy: metadata.createdBy,
+        txHash: metadata.txHash,
+        createdAt: metadata.createdAt,
+        updatedAt: metadata.updatedAt
+      }
     };
-    
-    // If logo is explicitly set to empty string, keep it (don't fall back to old value)
-    if (updates.hasOwnProperty('logo')) {
-      updatedData.logo = updates.logo || '';
-    }
-    
-    descriptions[spaceId] = updatedData;
-    
-    fs.writeFileSync(DATA_FILE, JSON.stringify(descriptions, null, 2));
-    return { success: true, data: descriptions[spaceId] };
   } catch (error) {
     console.error('Error updating space description:', error);
     return { success: false, error: error.message };
