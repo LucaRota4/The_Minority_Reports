@@ -134,7 +134,7 @@ export function Hero() {
         />
 
         {/* Smaller decorative elements */}
-        {Array.from({ length: 18 }).map((_, i) => (
+        {Array.from({ length: 0 }).map((_, i) => (
           <motion.div
             key={i}
             className={`absolute w-2 h-2 rounded-full opacity-40 ${
@@ -176,11 +176,9 @@ export function Hero() {
           <motion.div variants={fadeInUp} className="space-y-6 sm:space-y-8">
             {/* Animated tagline */}
             <motion.p 
-              className={`text-xs sm:text-sm md:text-base font-mono tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium ${
-                isLight ? 'text-slate-800' : 'text-[#4D89B0]'
-              }`}
+              className={`text-xs sm:text-sm md:text-base font-mono tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium text-white`}
             >
-              {['K', 'r', 'y', 'p', 't', 'ē', ' ', 'p', 's', 'ê', 'p', 'h', 'o', 's', ' ', '—', ' ', 'p', 'a', 'r', 'r', 'h', 'e', 's', 'í', 'a', ' ', 'd', 'i', 'a', 't', 'ē', 'r', 'o', 'u', 'm', 'é', 'n', 'ē'].map((char, i) => (
+              {['V', 'o', 't', 'e', ' ', 'a', 'g', 'a', 'i', 'n', 's', 't', ' ', 't', 'h', 'e', ' ', 'g', 'r', 'a', 'i', 'n', ' ', '—', ' ', 'y', 'o', 'u', 'r', ' ', 'v', 'o', 't', 'e', ' ', 's', 't', 'a', 'y', 's', ' ', 's', 'e', 'c', 'r', 'e', 't'].map((char, i) => (
                 <motion.span
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
@@ -201,13 +199,14 @@ export function Hero() {
               className="mb-6"
             >
               <img 
-                src="/agora.svg" 
-                alt="Agora Logo" 
+                src="/minority-report-logo.svg" 
+                alt="The Minority Report Logo" 
                 className="w-48 h-48 md:w-64 md:h-64 mx-auto"
+                style={{ backgroundColor: 'transparent' }}
               />
             </motion.div>
             <motion.h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold leading-tight">
-              {["A G O R A"].map((word, i) => (
+              {["THE MINORITY", "REPORT"].map((word, i) => (
                 <motion.span
                   key={i}
                   initial={{ opacity: 0, y: 100, rotateX: -90 }}
@@ -225,11 +224,7 @@ export function Hero() {
                     scale: 1.05,
                     transition: { duration: 0.3 }
                   }}
-                  className={`inline-block ${
-                    isLight 
-                      ? "text-slate-900" 
-                      : "text-[#4D89B0]"
-                  }`}
+                  className={`inline-block text-white`}
                 >
                   {word}
                 </motion.span>
@@ -265,35 +260,14 @@ export function Hero() {
                     whileHover={{ x: "100%" }}
                     transition={{ duration: 0.8 }}
                   />
-                  <span className="relative z-10">Enter The Agora</span>
+                  <span className="relative z-10">Start Playing</span>
                 </a>
               </Button>
             </motion.div>
           </motion.div>
 
           {/* Scroll indicator */}
-          <motion.div
-            className="flex justify-center mt-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2, duration: 0.8 }}
-          >
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className={`w-6 h-10 border-2 rounded-full flex justify-center ${
-                isLight ? 'border-slate-500/60' : 'border-[#4D89B0]/60'
-              }`}
-            >
-              <motion.div
-                animate={{ y: [0, 12, 0], opacity: [0, 1, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className={`w-1 h-3 rounded-full mt-2 ${
-                  isLight ? 'bg-slate-600' : 'bg-[#4D89B0]'
-                }`}
-              />
-            </motion.div>
-          </motion.div>
+          {/* Removed */}
 
           </motion.div>
       </motion.div>

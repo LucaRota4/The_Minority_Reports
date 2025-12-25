@@ -248,7 +248,7 @@ const SPACE_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_SPACE_REGISTRY_ADDRESS;  
   if (loading) {
     return (
       <SepoliaNetworkGuard>
-        <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white flex items-center justify-center">
+        <div className="min-h-screen bg-black flex items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-[#4D89B0]" />
         </div>
       </SepoliaNetworkGuard>

@@ -13,11 +13,11 @@ export function AppHeader() {
 
   // Define colors for consistency and clarity
   const colors = {
-    primary: '#4D89B0', // Zama blue
+    primary: '#00d4ff', // Cyan
     white: '#ffffff',
     black: '#000000',
-    headerBg: '#4D89B0',
-    hoverBg: 'rgba(255, 255, 255, 0.1)',
+    headerBg: '#0f172a', // Dark background
+    hoverBg: 'rgba(0, 212, 255, 0.1)',
   };
 
   const navItems = [
@@ -30,13 +30,13 @@ export function AppHeader() {
       ]
     },
     {
-      name: 'Spaces',
-      href: '/app/spaces',
+      name: 'Reports',
+      href: '/app/reports',
       icon: Users,
       submenu: [
-        { name: 'My Spaces', href: '/app/spaces/my', icon: Users },
-        { name: 'Create Space', href: '/app/spaces/create', icon: Plus },
-        { name: 'Explore Spaces', href: '/app/spaces', icon: Search },
+        { name: 'My Reports', href: '/app/reports/my', icon: Users },
+        { name: 'Create Report', href: '/app/reports/create', icon: Plus },
+        { name: 'Explore Reports', href: '/app/reports', icon: Search },
       ]
     }
   ];
@@ -73,19 +73,19 @@ export function AppHeader() {
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 relative rounded-lg p-1">
               <Image
-                src="/agora_white.svg"
-                alt="Agora Logo"
+                src="/minority-report-logo.svg"
+                alt="The Minority Report Logo"
                 fill
                 className="object-contain"
                 priority
               />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-xl tracking-tight" style={{ color: colors.white }}>
-                A G O R A
+              <span className="font-bold text-xl tracking-tight" style={{ color: colors.primary }}>
+                M I N O R I T Y
               </span>
-              <span className="text-xs -mt-1" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                kryptē psêphos — parrhesia tēroumenē
+              <span className="text-xs -mt-1" style={{ color: 'rgba(0, 212, 255, 0.6)' }}>
+                Second never, least always
               </span>
             </div>
           </div>

@@ -66,16 +66,16 @@ function StepCard({ step, index, totalSteps }) {
       >
         <Card className={`relative overflow-hidden h-full border-0 transition-all duration-500 group ${
           isActive 
-            ? 'bg-[#4D89B0]/5 dark:bg-[#4D89B0]/10' 
+            ? 'bg-cyan-500/5' 
             : ''
-        } hover:shadow-xl hover:shadow-[#4D89B0]/20`}>
+        } hover:shadow-xl hover:shadow-cyan-500/20`}>
           {/* Animated background */}
-          <motion.div 
-            className="absolute inset-0"
-            initial={{ opacity: 0 }}
-            animate={isActive ? { 
-              opacity: 1,
-              background: "linear-gradient(135deg, rgba(77, 137, 176, 0.05) 0%, rgba(77, 137, 176, 0.05) 100%)"
+<motion.div
+              className="absolute inset-0"
+              initial={{ opacity: 0 }}
+              animate={isActive ? { 
+                opacity: 1,
+                background: "linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(0, 212, 255, 0.05) 100%)"
             } : { opacity: 0 }}
             transition={{ duration: 0.8 }}
           />
@@ -101,8 +101,8 @@ function StepCard({ step, index, totalSteps }) {
             <motion.div
               className={`flex h-16 w-16 mx-auto items-center justify-center rounded-full font-bold text-xl mb-4 shadow-lg transition-all duration-500 ${
                 isActive
-                  ? 'bg-[#4D89B0] text-white scale-110'
-                  : 'bg-[#4D89B0]/80 text-white'
+                  ? 'bg-cyan-500 text-white scale-110'
+                  : 'bg-cyan-600/60 text-white'
               }`}
               whileHover={{ 
                 scale: isActive ? 1.2 : 1.1,
@@ -116,18 +116,14 @@ function StepCard({ step, index, totalSteps }) {
               {step.step}
             </motion.div>
             
-            <CardTitle className={`text-xl font-bold transition-all duration-300 ${
-              isActive ? 'text-white' : 'group-hover:text-[#4D89B0]'
-            }`}>
+            <CardTitle className={`text-xl font-bold transition-all duration-300 text-white`}>
               {step.title}
             </CardTitle>
           </CardHeader>
           
           <CardContent className="relative z-10 text-center">
             <motion.p 
-              className={`text-sm leading-relaxed transition-colors duration-300 text-justify ${
-                isActive ? 'text-white/80' : 'text-muted-foreground group-hover:text-foreground/80'
-              }`}
+              className={`text-sm leading-relaxed transition-colors duration-300 text-justify text-slate-300`}
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : { opacity: 0 }}
               transition={{ delay: 0.5 + (index * 0.1) }}
@@ -142,7 +138,7 @@ function StepCard({ step, index, totalSteps }) {
               animate={isActive ? { opacity: 1 } : { opacity: 0 }}
             >
               <motion.div
-                className="bg-[#4D89B0] h-2 rounded-full"
+                className="bg-cyan-400 h-2 rounded-full"
                 initial={{ width: 0 }}
                 animate={isActive ? { width: "100%" } : { width: 0 }}
                 transition={{ duration: 1, delay: 0.5 }}
@@ -162,27 +158,21 @@ export function HowItWorks() {
   const steps = [
     {
       step: '1',
-      title: 'Visit Agora & Register Your Space',
+      title: 'Create Your Contest',
       description:
-        'Start by visiting the Agora website and connecting your Web3 wallet. Register a unique .agora domain name to create your decentralized governance space identifier.',
+        'Define specific entrance criteria—an NFT, a token requirement, or a whitelist. Set the rules: how many questions, what format, and who can participate. Your contest, your rules.',
     },
     {
       step: '2',
-      title: 'Configure Governance Rules',
+      title: 'Voting Phase',
       description:
-        'Set up your governance space with custom parameters: define membership rules (public, token holders, NFT owners, or whitelist), configure voting models, and establish roles and permissions.',
+        'Participants cast anonymous votes on each question. No one sees live results. No one knows where the votes are going. People think hard, guess strategically, and stay true to their contrarian instinct.',
     },
     {
       step: '3',
-      title: 'Invite Community & Create Proposals',
+      title: 'Reveal Results',
       description:
-        'Share access with community members and assign roles (Owner, Admin, Member). Submit private proposals with rich descriptions, configurable voting periods, and automated Chainlink workflows.',
-    },
-    {
-      step: '4',
-      title: 'Vote Anonymously, Reveal Results',
-      description:
-        'Cast encrypted votes using FHE technology to maintain privacy. Chainlink automation handles tallying and reveals verifiable, transparent outcomes without compromising anonymity.',
+        'The voting ends. Results are revealed. The least popular answer wins. Winners are announced and rewarded. The game is fair, the votes were secret, and the outcome is verifiable.',
     },
   ];
 
@@ -228,24 +218,24 @@ export function HowItWorks() {
         >
           
           <motion.h2 
-            className="section-title text-4xl sm:text-5xl lg:text-6xl font-bold text-[#4D89B0]"
+            className="section-title text-4xl sm:text-5xl lg:text-6xl font-bold text-white"
           >
             How It Works
           </motion.h2>
           
           <motion.p 
-            className="section-description max-w-3xl mx-auto text-lg sm:text-xl leading-relaxed text-justify"
+            className="section-description max-w-3xl mx-auto text-lg sm:text-xl leading-relaxed text-justify text-slate-300"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.6 }}
           >
-            Experience the power of privacy-preserving governance with Agora. Follow these four steps to create secure, decentralized spaces where your community's votes remain encrypted.
+            Experience the Minority Report game. Three simple steps: set up your contest with entrance criteria, let people vote anonymously, reveal the results. Fair, transparent, anonymous.
           </motion.p>
         </motion.div>
         
         {/* Steps grid with enhanced animations */}
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative"
+          className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 relative max-w-5xl mx-auto"
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}

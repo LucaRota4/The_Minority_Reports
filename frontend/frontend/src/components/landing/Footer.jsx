@@ -22,8 +22,8 @@ export function Footer() {
         >
           <div className="flex items-center space-x-2">
             <motion.img 
-              src="/agora.svg" 
-              alt="Agora Logo" 
+              src="/minority-report-logo.svg" 
+              alt="The Minority Report Logo" 
               className="w-16 h-16"
               whileHover={{
                 scale: 1.05,
@@ -31,24 +31,24 @@ export function Footer() {
               }}
             />
           </div>
-          <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
+          <p className="text-center text-sm leading-loose text-slate-400 md:text-left">
             Built by{' '}
             <motion.a
-              href="https://github.com/ElioMargiotta"
+              href="https://github.com/lurot"
               target="_blank"
               rel="noreferrer"
-              className="font-medium underline underline-offset-4 hover:text-primary transition-colors"
+              className="font-medium underline underline-offset-4 hover:text-cyan-400 transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Elio Margiotta
+              Luca Rota
             </motion.a>
             . The source code is available on{' '}
             <motion.a
-              href="https://github.com/ElioMargiotta/agora_monorepo"
+              href="https://github.com/lurot/agora_monorepo"
               target="_blank"
               rel="noreferrer"
-              className="font-medium underline underline-offset-4 hover:text-primary transition-colors"
+              className="font-medium underline underline-offset-4 hover:text-cyan-400 transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -67,52 +67,52 @@ export function Footer() {
         >
           <motion.a
             href="/app/docs"
-            className="text-muted-foreground hover:text-primary transition-colors relative py-2"
+            className="text-slate-400 hover:text-cyan-400 transition-colors relative py-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Docs
             <motion.div
-              className="absolute bottom-0 left-0 h-0.5 bg-primary"
+              className="absolute bottom-0 left-0 h-0.5 bg-cyan-400"
               initial={{ width: 0 }}
               whileHover={{ width: "100%" }}
               transition={{ duration: 0.2 }}
             />
           </motion.a>
           <motion.a
-            className="text-muted-foreground hover:text-primary transition-colors relative py-2"
+            className="text-slate-400 hover:text-cyan-400 transition-colors relative py-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Terms
             <motion.div
-              className="absolute bottom-0 left-0 h-0.5 bg-primary"
+              className="absolute bottom-0 left-0 h-0.5 bg-cyan-400"
               initial={{ width: 0 }}
               whileHover={{ width: "100%" }}
               transition={{ duration: 0.2 }}
             />
           </motion.a>
           <motion.a
-            className="text-muted-foreground hover:text-primary transition-colors relative py-2"
+            className="text-slate-400 hover:text-cyan-400 transition-colors relative py-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Privacy
             <motion.div
-              className="absolute bottom-0 left-0 h-0.5 bg-primary"
+              className="absolute bottom-0 left-0 h-0.5 bg-cyan-400"
               initial={{ width: 0 }}
               whileHover={{ width: "100%" }}
               transition={{ duration: 0.2 }}
             />
           </motion.a>
           <motion.a
-            className="text-muted-foreground hover:text-primary transition-colors relative py-2"
+            className="text-slate-400 hover:text-cyan-400 transition-colors relative py-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Risk Disclosure
             <motion.div
-              className="absolute bottom-0 left-0 h-0.5 bg-primary"
+              className="absolute bottom-0 left-0 h-0.5 bg-cyan-400"
               initial={{ width: 0 }}
               whileHover={{ width: "100%" }}
               transition={{ duration: 0.2 }}
@@ -129,8 +129,8 @@ export function Footer() {
         viewport={{ once: true }}
       >
         <Separator className="mb-4" />
-        <p className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} AGORA Labs. All rights reserved. 
+        <p className="text-xs text-slate-400">
+          © {new Date().getFullYear()} The Minority Report. All rights reserved. 
           <span className="block mt-1">
             Crypto derivatives are risky. Nothing here is financial advice. DYOR.
           </span>

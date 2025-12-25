@@ -443,7 +443,7 @@ export default function ProposalVotePage() {
   if (!isConnected) {
     return (
       <SepoliaNetworkGuard>
-        <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
+        <div className="min-h-screen bg-black">
           <div className="container mx-auto px-4 py-8">
             <Card className="bg-white/80 border-[#E8DCC4]/30">
               <CardHeader>
@@ -463,7 +463,7 @@ export default function ProposalVotePage() {
   if (currentState === 'loading') {
     return (
       <SepoliaNetworkGuard>
-        <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white flex items-center justify-center">
+        <div className="min-h-screen bg-black flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4D89B0] mx-auto mb-4"></div>
             <p className="text-black text-lg">Loading proposal...</p>
@@ -476,7 +476,7 @@ export default function ProposalVotePage() {
   if (error || spaceError || !proposal) {
     return (
       <SepoliaNetworkGuard>
-        <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
+        <div className="min-h-screen bg-black">
           <div className="container mx-auto px-4 py-8">
             <Card className="bg-white/80 border-[#E8DCC4]/30">
               <CardHeader>
@@ -494,7 +494,7 @@ export default function ProposalVotePage() {
 
   return (
     <SepoliaNetworkGuard>
-      <div className="min-h-screen bg-gradient-to-br from-white via-[#E8DCC4]/20 to-white">
+      <div className="min-h-screen bg-black">
         <div className="container mx-auto px-4 py-8">
           {currentState === 'upcoming' && (
             <div className="flex items-center justify-center min-h-[60vh]">

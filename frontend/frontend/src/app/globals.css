@@ -8,24 +8,24 @@
   --primary-foreground: #ffffff; /* White text on primary */
 
   /* Background hierarchy */
-  --background: #fffefa; /* Zama white - main background */
-  --foreground: #1a1a1a; /* Dark text for contrast */
+  --background: #0f172a; /* Dark background */
+  --foreground: #f1f5f9; /* Light text for contrast */
 
   /* Surface colors */
-  --card: #ffffff; /* Pure white for cards */
-  --card-foreground: #1a1a1a;
+  --card: #1e293b; /* Dark card */
+  --card-foreground: #f1f5f9;
 
   /* Interactive elements */
-  --popover: #ffffff; /* White for popovers */
-  --popover-foreground: #1a1a1a;
+  --popover: #1e293b; /* Dark popover */
+  --popover-foreground: #f1f5f9;
 
   /* Secondary colors */
-  --secondary: #f8fafc; /* Very light blue-gray */
-  --secondary-foreground: #334155; /* Darker gray for secondary text */
+  --secondary: #1e293b; /* Dark secondary */
+  --secondary-foreground: #cbd5e1; /* Light gray for secondary text */
 
   /* Muted colors for subtle elements */
-  --muted: #f1f5f9; /* Light gray-blue */
-  --muted-foreground: #64748b; /* Medium gray */
+  --muted: #334155; /* Dark gray */
+  --muted-foreground: #cbd5e1; /* Light gray text */
 
   /* Accent colors */
   --accent: #4D89B0; /* Same as primary for consistency */
@@ -36,9 +36,9 @@
   --destructive-foreground: #ffffff;
 
   /* Border and input */
-  --border: #e2e8f0; /* Light blue-gray border */
-  --input: #ffffff; /* White inputs */
-  --ring: #4D89B0; /* Zama blue for focus rings */
+  --border: #334155; /* Dark border */
+  --input: #1e293b; /* Dark input */
+  --ring: #00d4ff; /* Cyan for focus rings */
 
   /* Additional design tokens */
   --success: #10b981; /* Green for success states */

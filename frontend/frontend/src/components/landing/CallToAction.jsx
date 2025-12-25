@@ -54,7 +54,7 @@ export function CallToAction() {
         transition={{ duration: 0.8 }}
       >
         <motion.h2 
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#4D89B0] px-4 sm:px-0"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white px-4 sm:px-0"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, delay: 0.2 }}
@@ -63,16 +63,16 @@ export function CallToAction() {
         </motion.h2>
         
         <motion.p 
-          className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4 sm:px-0 mt-8 text-justify"
+          className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed px-4 sm:px-0 mt-8 text-justify"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-        Discover how Zama’s Fully Homomorphic Encryption brings private governance to public blockchains. Enter Agora to create your space, launch encrypted proposals, and let Chainlink automate verifiable outcomes.        
+        Discover how Zama's Fully Homomorphic Encryption brings private governance to public blockchains. Enter Agora to create your space, launch encrypted proposals, and let Chainlink automate verifiable outcomes.        
         </motion.p>
 
         <motion.p 
-          className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4 sm:px-0 mt-8 text-justify"
+          className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed px-4 sm:px-0 mt-8 text-justify"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, delay: 0.5 }}
@@ -90,10 +90,10 @@ export function CallToAction() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <motion.a
               href="/app"
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#4D89B0] text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+              className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-cyan-500 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
               whileHover={{ 
                 scale: 1.05,
-                boxShadow: "0 20px 40px rgba(77, 137, 176, 0.3)"
+                boxShadow: "0 20px 40px rgba(0, 212, 255, 0.3)"
               }}
               whileTap={{ scale: 0.95 }}
             >

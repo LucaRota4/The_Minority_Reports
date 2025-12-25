@@ -177,7 +177,7 @@ export function UserDashboard() {
 
   const tabs = [
     { id: 'overview', label: 'Overview' },
-    { id: 'proposals', label: 'Active Proposals' },
+    { id: 'proposals', label: 'Active Reports' },
     { id: 'activity', label: 'Recent Activity' }
   ];
 
@@ -190,8 +190,7 @@ export function UserDashboard() {
         className="space-y-6"
       >
         <div className="bg-white/80 rounded-lg border border-[#E8DCC4]/30 p-6">
-          <h1 className="text-2xl font-bold text-black mb-2">Welcome back!</h1>
-          <p className="text-black">Loading your governance activity...</p>
+          <p className="text-white">Loading your governance activity...</p>
         </div>
       </motion.div>
     );
@@ -207,27 +206,21 @@ export function UserDashboard() {
       transition={{ duration: 0.6 }}
       className="space-y-6"
     >
-      {/* Welcome Header */}
-      <div className="bg-white/80 rounded-lg border border-[#E8DCC4]/30 p-6">
-        <h1 className="text-2xl font-bold text-black mb-2">Welcome back!</h1>
-        <p className="text-black">Here's your governance activity overview</p>
-      </div>
-
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="bg-white/80 rounded-lg border border-[#E8DCC4]/30 p-4"
+          className="bg-slate-900/50 rounded-lg border border-cyan-500/30 p-4"
         >
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#4D89B0]/10 rounded-lg">
-              <Users className="h-5 w-5 text-[#4D89B0]" />
+            <div className="p-2 bg-cyan-500/10 rounded-lg">
+              <Users className="h-5 w-5 text-cyan-400" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-black">{userStats.joinedSpaces}</p>
-              <p className="text-sm text-black">Joined Spaces</p>
+              <p className="text-2xl font-bold text-white">{userStats.joinedSpaces}</p>
+              <p className="text-sm text-slate-300">Joined Reports</p>
             </div>
           </div>
         </motion.div>
@@ -236,15 +229,15 @@ export function UserDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
-          className="bg-white/80 rounded-lg border border-[#E8DCC4]/30 p-4"
+          className="bg-slate-900/50 rounded-lg border border-cyan-500/30 p-4"
         >
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#4D89B0]/10 rounded-lg">
-              <Vote className="h-5 w-5 text-[#4D89B0]" />
+            <div className="p-2 bg-cyan-500/10 rounded-lg">
+              <Vote className="h-5 w-5 text-cyan-400" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-black">{userStats.activeProposals}</p>
-              <p className="text-sm text-black">Active Proposals</p>
+              <p className="text-2xl font-bold text-white">{userStats.activeProposals}</p>
+              <p className="text-sm text-slate-300">Active Reports</p>
             </div>
           </div>
         </motion.div>
@@ -253,30 +246,30 @@ export function UserDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
-          className="bg-white/80 rounded-lg border border-[#E8DCC4]/30 p-4"
+          className="bg-slate-900/50 rounded-lg border border-cyan-500/30 p-4"
         >
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#4D89B0]/10 rounded-lg">
-              <BarChart3 className="h-5 w-5 text-[#4D89B0]" />
+            <div className="p-2 bg-cyan-500/10 rounded-lg">
+              <BarChart3 className="h-5 w-5 text-cyan-400" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-black">{userStats.spacesCreated}</p>
-              <p className="text-sm text-black">Spaces Created</p>
+              <p className="text-2xl font-bold text-white">{userStats.spacesCreated}</p>
+              <p className="text-sm text-slate-300">Reports Created</p>
             </div>
           </div>
         </motion.div>
       </div>
 
       {/* Tabs */}
-      <div className="flex space-x-1 bg-[#E8DCC4]/20 p-1 rounded-lg w-fit">
+      <div className="flex space-x-1 bg-slate-900/50 p-1 rounded-lg w-fit border border-cyan-500/20">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer ${
               activeTab === tab.id
-                ? 'bg-white shadow-sm text-black'
-                : 'text-black hover:text-[#4D89B0]'
+                ? 'bg-cyan-500/20 shadow-sm text-cyan-300 border border-cyan-500/50'
+                : 'text-slate-300 hover:text-cyan-400'
             }`}
           >
             {tab.label}
@@ -292,15 +285,15 @@ export function UserDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="bg-white/80 rounded-lg border border-[#E8DCC4]/30 p-6"
+            className="bg-slate-900/50 rounded-lg border border-cyan-500/30 p-6"
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-black">My Spaces</h2>
+              <h2 className="text-lg font-semibold text-white">My Reports</h2>
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-black hover:text-white border border-[#4D89B0] hover:bg-[#4D89B0]"
-                onClick={() => router.push('/app/spaces/my')}
+                className="text-cyan-400 hover:text-white border border-cyan-500/50 hover:bg-cyan-500/20"
+                onClick={() => router.push('/app/reports/my')}
               >
                 View All
                 <ArrowRight className="h-3 w-3 ml-1" />
@@ -308,15 +301,15 @@ export function UserDashboard() {
             </div>
             <div className="space-y-3">
               {joinedSpaces.map((space) => (
-                <div key={space.id} className="flex items-center justify-between p-3 bg-[#E8DCC4]/10 rounded-lg">
+                <div key={space.id} className="flex items-center justify-between p-3 bg-cyan-500/10 rounded-lg border border-cyan-500/20">
                   <div>
-                    <p className="font-medium text-black">{space.displayName}</p>
-                    <p className="text-sm text-black">{space.role} • {space.activeProposals} active proposals</p>
+                    <p className="font-medium text-white">{space.displayName}</p>
+                    <p className="text-sm text-slate-400">{space.role} • {space.activeProposals} active proposals</p>
                   </div>
                   <Button 
                     size="sm" 
                     variant="outline"
-                    className="border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white"
+                    className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/20 hover:text-cyan-300"
                     onClick={() => router.push(`/app/${encodeURIComponent(space.name)}`)}
                   >
                     Enter
@@ -324,7 +317,7 @@ export function UserDashboard() {
                 </div>
               ))}
               {proposalsLoading && joinedSpaces.length > 0 && (
-                <div className="text-center py-2 text-black text-sm">
+                <div className="text-center py-2 text-slate-300 text-sm">
                   Loading proposal counts...
                 </div>
               )}
@@ -336,9 +329,9 @@ export function UserDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.2 }}
-            className="bg-white/80 rounded-lg border border-[#E8DCC4]/30 p-6"
+            className="bg-slate-900/50 rounded-lg border border-cyan-500/30 p-6"
           >
-            <h2 className="text-lg font-semibold text-black mb-6">Recent Activity</h2>
+            <h2 className="text-lg font-semibold text-white mb-6">Recent Activity</h2>
             <div className="space-y-4">
               {recentActivity.slice(0, 5).map((activity, index) => (
                 <motion.div
@@ -349,27 +342,27 @@ export function UserDashboard() {
                   className="flex items-start gap-4 group"
                 >
                   <div className="flex flex-col items-center">
-                    <div className="p-2 rounded-full bg-[#4D89B0]/10 group-hover:bg-[#4D89B0]/20 transition-colors duration-200">
-                      {activity.type === 'vote' && <Vote className="h-3 w-3 text-[#4D89B0]" />}
-                      {activity.type === 'join' && <Users className="h-3 w-3 text-[#4D89B0]" />}
-                      {activity.type === 'admin' && <Settings className="h-3 w-3 text-[#4D89B0]" />}
-                      {activity.type === 'space_created' && <Plus className="h-3 w-3 text-[#4D89B0]" />}
-                      {activity.type === 'display_name_updated' && <Edit className="h-3 w-3 text-[#4D89B0]" />}
-                      {activity.type === 'space_transferred' && <ArrowRightLeft className="h-3 w-3 text-[#4D89B0]" />}
-                      {activity.type === 'space_deactivated' && <X className="h-3 w-3 text-[#4D89B0]" />}
+                    <div className="p-2 rounded-full bg-cyan-500/10 group-hover:bg-cyan-500/20 transition-colors duration-200">
+                      {activity.type === 'vote' && <Vote className="h-3 w-3 text-cyan-400" />}
+                      {activity.type === 'join' && <Users className="h-3 w-3 text-cyan-400" />}
+                      {activity.type === 'admin' && <Settings className="h-3 w-3 text-cyan-400" />}
+                      {activity.type === 'space_created' && <Plus className="h-3 w-3 text-cyan-400" />}
+                      {activity.type === 'display_name_updated' && <Edit className="h-3 w-3 text-cyan-400" />}
+                      {activity.type === 'space_transferred' && <ArrowRightLeft className="h-3 w-3 text-cyan-400" />}
+                      {activity.type === 'space_deactivated' && <X className="h-3 w-3 text-cyan-400" />}
                     </div>
                     {index < recentActivity.slice(0, 5).length - 1 && (
-                      <div className="w-px h-6 bg-gradient-to-b from-[#4D89B0]/30 to-transparent mt-2"></div>
+                      <div className="w-px h-6 bg-gradient-to-b from-cyan-500/30 to-transparent mt-2"></div>
                     )}
                   </div>
                   <div className="flex-1 pb-2">
-                    <p className="text-sm text-black font-medium leading-relaxed">{activity.description}</p>
-                    <p className="text-xs text-black/70 mt-1">{activity.spaceName} • {activity.time}</p>
+                    <p className="text-sm text-white font-medium leading-relaxed">{activity.description}</p>
+                    <p className="text-xs text-slate-400 mt-1">{activity.spaceName} • {activity.time}</p>
                   </div>
                 </motion.div>
               ))}
               {votesLoading && (
-                <div className="text-center py-4 text-black text-sm">
+                <div className="text-center py-4 text-slate-300 text-sm">
                   Loading recent activity...
                 </div>
               )}
@@ -391,29 +384,29 @@ export function UserDashboard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.05 }}
-              className="bg-white/80 rounded-lg border border-[#E8DCC4]/30 p-6"
+              className="bg-slate-900/50 rounded-lg border border-cyan-500/30 p-6"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
-                  <p className="text-sm text-black mb-1">{proposal.spaceName}</p>
-                  <h3 className="text-lg font-semibold text-black">{proposal.title}</h3>
+                  <p className="text-sm text-slate-400 mb-1">{proposal.spaceName}</p>
+                  <h3 className="text-lg font-semibold text-white">{proposal.title}</h3>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-[#4D89B0]/60" />
-                  <span className="text-sm text-black">{proposal.timeLeft} left</span>
+                  <Clock className="h-4 w-4 text-cyan-400/60" />
+                  <span className="text-sm text-slate-300">{proposal.timeLeft} left</span>
                 </div>
               </div>
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
-                    <Vote className="h-4 w-4 text-[#4D89B0]/60" />
-                    <span className="text-sm text-black">{proposal.totalVotes} votes</span>
+                    <Vote className="h-4 w-4 text-cyan-400/60" />
+                    <span className="text-sm text-slate-300">{proposal.totalVotes} votes</span>
                   </div>
                   {proposal.userVote && (
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-[#4D89B0]" />
-                      <span className="text-sm text-[#4D89B0]">Voted {proposal.userVote}</span>
+                      <CheckCircle className="h-4 w-4 text-cyan-400" />
+                      <span className="text-sm text-cyan-400">Voted {proposal.userVote}</span>
                     </div>
                   )}
                 </div>
@@ -436,7 +429,7 @@ export function UserDashboard() {
           ))}
           {proposalsLoading && activeProposals.length === 0 && (
             <div className="text-center py-8 text-black">
-              Loading active proposals...
+              Loading active reports...
             </div>
           )}
           {proposalsLoading && activeProposals.length > 0 && (
@@ -452,9 +445,9 @@ export function UserDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="bg-white/80 rounded-lg border border-[#E8DCC4]/30 p-6"
+          className="bg-slate-900/50 rounded-lg border border-cyan-500/30 p-6"
         >
-          <h2 className="text-lg font-semibold text-black mb-6">Activity Timeline</h2>
+          <h2 className="text-lg font-semibold text-white mb-6">Activity Timeline</h2>
           <div className="space-y-6">
             {recentActivity.map((activity, index) => (
               <motion.div
@@ -465,34 +458,34 @@ export function UserDashboard() {
                 className="flex items-start gap-4 group"
               >
                 <div className="flex flex-col items-center">
-                  <div className="p-3 rounded-full bg-[#4D89B0]/10 group-hover:bg-[#4D89B0]/20 transition-all duration-300 group-hover:scale-110">
-                    {activity.type === 'vote' && <Vote className="h-4 w-4 text-[#4D89B0]" />}
-                    {activity.type === 'join' && <Users className="h-4 w-4 text-[#4D89B0]" />}
-                    {activity.type === 'admin' && <Settings className="h-4 w-4 text-[#4D89B0]" />}
-                    {activity.type === 'space_created' && <Plus className="h-4 w-4 text-[#4D89B0]" />}
-                    {activity.type === 'display_name_updated' && <Edit className="h-4 w-4 text-[#4D89B0]" />}
-                    {activity.type === 'space_transferred' && <ArrowRightLeft className="h-4 w-4 text-[#4D89B0]" />}
-                    {activity.type === 'space_deactivated' && <X className="h-4 w-4 text-[#4D89B0]" />}
+                  <div className="p-3 rounded-full bg-cyan-500/10 group-hover:bg-cyan-500/20 transition-all duration-300 group-hover:scale-110">
+                    {activity.type === 'vote' && <Vote className="h-4 w-4 text-cyan-400" />}
+                    {activity.type === 'join' && <Users className="h-4 w-4 text-cyan-400" />}
+                    {activity.type === 'admin' && <Settings className="h-4 w-4 text-cyan-400" />}
+                    {activity.type === 'space_created' && <Plus className="h-4 w-4 text-cyan-400" />}
+                    {activity.type === 'display_name_updated' && <Edit className="h-4 w-4 text-cyan-400" />}
+                    {activity.type === 'space_transferred' && <ArrowRightLeft className="h-4 w-4 text-cyan-400" />}
+                    {activity.type === 'space_deactivated' && <X className="h-4 w-4 text-cyan-400" />}
                   </div>
                   {index < recentActivity.length - 1 && (
-                    <div className="w-px h-10 bg-gradient-to-b from-[#4D89B0]/40 via-[#4D89B0]/20 to-transparent mt-3 group-hover:from-[#4D89B0]/60 transition-colors duration-300"></div>
+                    <div className="w-px h-10 bg-gradient-to-b from-cyan-500/40 via-cyan-500/20 to-transparent mt-3 group-hover:from-cyan-500/60 transition-colors duration-300"></div>
                   )}
                 </div>
                 <div className="flex-1 pb-8 group-hover:translate-x-1 transition-transform duration-300">
-                  <p className="text-black font-medium leading-relaxed group-hover:text-[#4D89B0] transition-colors duration-300">{activity.description}</p>
-                  <p className="text-sm text-black/70 mt-2 group-hover:text-black/80 transition-colors duration-300">
+                  <p className="text-white font-medium leading-relaxed group-hover:text-cyan-300 transition-colors duration-300">{activity.description}</p>
+                  <p className="text-sm text-slate-400 mt-2 group-hover:text-slate-300 transition-colors duration-300">
                     {activity.spaceName} • {activity.time}
                   </p>
                 </div>
               </motion.div>
             ))}
             {activityLoading && recentActivity.length === 0 && (
-              <div className="text-center py-8 text-black">
+              <div className="text-center py-8 text-slate-300">
                 Loading activity timeline...
               </div>
             )}
             {activityLoading && recentActivity.length > 0 && (
-              <div className="text-center py-4 text-black text-sm">
+              <div className="text-center py-4 text-slate-300 text-sm">
                 Loading more activity...
               </div>
             )}

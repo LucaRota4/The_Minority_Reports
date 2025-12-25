@@ -38,19 +38,19 @@ function FeatureItem({ feature, index }) {
       className="group"
     >
       <motion.div 
-        className="relative py-6 px-4 sm:py-8 sm:px-6 border-l-2 border-cyan-200 dark:border-cyan-800 hover:border-[#4D89B0] dark:hover:border-[#4D89B0] transition-all duration-300"
+        className="py-6 px-4 sm:py-8 sm:px-6 border-l-2 border-cyan-500/50 hover:border-cyan-400 transition-all duration-300"
         whileHover={{ x: 10 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
       >
         {/* Animated background on hover */}
         <motion.div 
-          className="absolute inset-0 bg-gradient-to-r from-[#4D89B0]/10 to-transparent dark:from-[#4D89B0]/20 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         />
         
         {/* Content */}
         <div className="relative z-10">
           <motion.h3 
-            className="text-lg sm:text-xl font-bold text-foreground group-hover:text-[#4D89B0] dark:group-hover:text-[#4D89B0] transition-colors duration-300 mb-2 sm:mb-3"
+            className="text-lg sm:text-xl font-bold text-white group-hover:text-cyan-400 transition-colors duration-300 mb-2 sm:mb-3"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ delay: 0.2 + (index * 0.1) }}
@@ -59,7 +59,7 @@ function FeatureItem({ feature, index }) {
           </motion.h3>
           
           <motion.p 
-            className="text-sm sm:text-base text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300 leading-relaxed text-justify"
+            className="text-sm sm:text-base text-slate-300 group-hover:text-white transition-colors duration-300 leading-relaxed text-justify"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ delay: 0.4 + (index * 0.1) }}
@@ -70,7 +70,7 @@ function FeatureItem({ feature, index }) {
         
         {/* Hover indicator */}
         <motion.div
-          className="absolute left-0 top-0 w-1 h-full bg-[#4D89B0] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"
+          className="absolute left-0 top-0 w-1 h-full bg-cyan-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"
         />
       </motion.div>
     </motion.div>
@@ -83,24 +83,24 @@ export function Features() {
 
   const features = [
     {
-      title: 'Privacy vs. Transparency Trade-off',
+      title: 'Pure Anonymity',
       description:
-        'FHE enables computation on encrypted data, allowing vote tallying without ever decrypting individual ballots—decisions stay public, votes stay private.',
+        "Your vote is completely encrypted. No one can see how you voted, not even the game itself. Complete privacy from start to finish.",
     },
     {
-      title: 'Voter Intimidation',
+      title: 'Zero Pressure',
       description:
-        'Anonymous voting prevents coercion and ensures free expression, protecting participants from external pressures.',
+        "With full anonymity, there's no fear of judgment or pressure. Vote for the unpopular answer without social consequences. True freedom of choice.",
     },
     {
-      title: 'Sybil Attacks',
+      title: 'Sybil-Resistant',
       description:
-        'Token-based eligibility systems prevent manipulation while maintaining privacy, ensuring fair and secure governance.',
+        "Each player gets one vote regardless of resources or bots. The game is fair—no whale dominance, no fake accounts ruining the results.",
     },
     {
-      title: 'Scalability',
+      title: 'A Mind Game',
       description:
-        'Efficient encrypted computation enables large-scale governance without performance degradation, supporting growing communities.',
+        "Minority Report is a social experiment. Can you predict what others will avoid? It reveals hidden consensus, contrarian thinking, and collective psychology.",
     },
   ];
 
@@ -146,9 +146,9 @@ export function Features() {
         >
           
           <motion.h2 
-            className="section-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#4D89B0]"
+            className="section-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white"
           >
-            {"Our Vision".split('').map((char, i) => (
+            {"How to Play".split('').map((char, i) => (
               <motion.span
                 key={i}
                 className="inline-block"
@@ -162,12 +162,12 @@ export function Features() {
           </motion.h2>
           
           <motion.p 
-            className="section-description max-w-3xl mx-auto text-base sm:text-lg md:text-xl leading-relaxed text-justify"
+            className="section-description max-w-3xl mx-auto text-base sm:text-lg md:text-xl leading-relaxed text-justify text-slate-300"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.8 }}
           >
-            The core purpose of Agora is to democratize governance by solving the fundamental privacy paradox in decentralized systems: how to maintain transparency in decision-making while protecting individual voter privacy. Traditional DAOs often require sacrificing anonymity for accountability, but Agora uses Zama's Fully Homomorphic Encryption technology to provide both.
+            The Minority Report is a voting game where the least popular answer wins. Cast your anonymous vote without revealing your choice. Since you never see live results, even bots can't coordinate attacks. No way to know where votes are going. No way to game the system. Fair, anonymous, and Sybil-resistant.
           </motion.p>
         </motion.div>
         
@@ -178,9 +178,9 @@ export function Features() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 1.0 }}
         >
-          <h3 className="text-2xl sm:text-3xl font-semibold text-[#4D89B0] mb-4">
-            The Problems Agora Solves
-          </h3>          <p className="text-muted-foreground max-w-2xl mx-auto text-justify">
+          <h3 className="text-2xl sm:text-3xl font-semibold text-white mb-4">
+            The Game Rules
+          </h3>          <p className="text-slate-300 max-w-2xl mx-auto text-justify">
           </p>
         </motion.div>
         
