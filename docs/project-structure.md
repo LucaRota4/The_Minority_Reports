@@ -1,6 +1,6 @@
 # Project Structure
 
-This monorepo contains two main components that work together to power the Agora platform.
+This monorepo contains two main components that work together to power the Minority Reports platform.
 
 ## Core
 
@@ -19,7 +19,7 @@ Key features:
 
 ## Frontend
 
-The `frontend/` directory contains a Next.js web application that provides the user interface for the Agora platform. It includes:
+The `frontend/` directory contains a Next.js web application that provides the user interface for the Minority Reports platform. It includes:
 
 - **Next.js App**: A modern React-based web application with routing and API endpoints.
 - **Subgraph Integration**: TheGraph subgraph for indexing and querying blockchain data efficiently.

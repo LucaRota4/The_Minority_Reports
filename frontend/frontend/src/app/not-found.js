@@ -23,7 +23,7 @@ export default function NotFound() {
             className="bg-[#4D89B0] hover:bg-[#4D89B0]/90 text-white"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Enter the Agora
+            Enter the Report
           </Button>
         </CardContent>
       </Card>

@@ -4,7 +4,7 @@ The core component of The Minorita Report is the smart contract infrastructure, 
 
 ## Overview
 
-The Minority report enables secure, private voting on proposals within decentralized spaces. Votes are encrypted on the client-side and remain private on-chain until the proposal ends, at which point they are decrypted and tallied. The system supports multiple voting types (non-weighted, weighted single-choice, weighted fractional) and integrates with Agora Names Services (MockENS) for space management.
+The Minority report enables secure, private voting on proposals within decentralized spaces. Votes are encrypted on the client-side and remain private on-chain until the proposal ends, at which point they are decrypted and tallied. The system supports multiple voting types (non-weighted, weighted single-choice, weighted fractional) and integrates with reports Names Services (MockENS) for space management.
 
 ## Features
 
@@ -70,7 +70,7 @@ For detailed contract architecture, FHE usage, and resolution process, see [Cont
   ```bash
   npx hardhat deploy --network sepolia ##verify automatically
   npx hardhat verify --network sepolia <CONTRACT_ADDRESS>
-  npx hardhat proposal --network sepolia ## Create .agora ENS name, Space ID with this name and proposal in the space
+  npx hardhat proposal --network sepolia ## Create .reports ENS name, Space ID with this name and proposal in the space
   ```
 
   #### Deployed Contracts on Sepolia

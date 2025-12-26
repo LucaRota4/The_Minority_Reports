@@ -4,7 +4,7 @@ A decentralized proposal infrastructure that leverages **Fully Homomorphic Encry
 
 ## 📋 Overview
 
-AGORA enables secure, private voting on proposals within decentralized spaces. Votes are encrypted on the client-side and remain private on-chain until the proposal ends, at which point they are decrypted and tallied. The system supports multiple voting types (non-weighted, weighted single-choice, weighted fractional) and integrates with ENS for space management.
+The Minority Report is an on-chain voting game powered by FHE where the minority choice wins. Votes remain encrypted until the contest ends, then are decrypted and tallied. Complete anonymity ensures strategic thinking over social pressure—perfect for contrarian minds.
 
 ## ✨ Features
 
@@ -33,8 +33,8 @@ For detailed architecture, FHE usage, and resolution process, see [Contract Arch
 ### Installation
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/ElioMargiotta/agora_monorepo.git
-   cd agora_monorepo/core
+   git clone https://github.com/LucaRota4/The_Minority_Reports.git
+   cd The_Minority_Reports/core
    ```
 
 2. **Install dependencies**
@@ -70,7 +70,7 @@ For detailed architecture, FHE usage, and resolution process, see [Contract Arch
   ```bash
   npx hardhat deploy --network sepolia ##verify automatically
   npx hardhat verify --network sepolia <CONTRACT_ADDRESS>
-  npx hardhat proposal --network sepolia ## Create .agora ENS name, Space ID with this name and proposal in the space
+  npx hardhat proposal --network sepolia ## Create .report ENS name, Space ID with this name and proposal in the space
   ```
 
   #### Deployed Contracts on Sepolia
@@ -93,7 +93,7 @@ For detailed architecture, FHE usage, and resolution process, see [Contract Arch
 
 ## 📚 Documentation
 
-- [AGORA System Documentation](./documentation.md) - Detailed technical docs
+- [Reports System Documentation](./documentation.md) - Detailed technical docs
 - [Test Summary](./test-summary.md) - Summary of tests performed
 - [Deployment Details](./deploy.md) - Deployed contracts and deployment process
 - [Proposal Deployment Task](./task_deploy_proposal.md) - Details on deploying proposals
@@ -106,7 +106,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## 🆘 Support
 
-- **GitHub Issues**: [Report bugs or request features](https://github.com/ElioMargiotta/agora_monorepo/issues)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/LucaRota4/The_Minority_Reports/issues)
 - **Zama Documentation**: [FHEVM Docs](https://docs.zama.ai)
 - **Community**: [Zama Discord](https://discord.gg/zama)
 

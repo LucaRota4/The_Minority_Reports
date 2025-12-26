@@ -1,6 +1,6 @@
 # Third-Party Licenses
 
-This document lists third-party components used in Agora and their licenses.
+This document lists third-party components used in The Minority Report and their licenses.
 
 ---
 
