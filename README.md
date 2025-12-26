@@ -24,3 +24,9 @@ To import into GitBook:
   - [Frontend](docs/frontend.md)
   - [Deployment](docs/deployment.md)
   - [Development](docs/development.md)
+ 
+  ### Acknowledgement
+
+  This code is heavily inspired by Elio Margiotta’s GitHub repository and his Agora application.
+The goal was to reuse the same logic and structure while adapting them to an online game.
+Because I believed the contest deadline was December 31st, this project is not yet a fully finished or polished version.
