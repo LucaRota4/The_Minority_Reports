@@ -1,10 +1,10 @@
 # Core
 
-The core component of Agora is the smart contract infrastructure, built using Hardhat and TypeScript. It provides the decentralized backend for private proposals and secure voting.
+The core component of The Minorita Report is the smart contract infrastructure, built using Hardhat and TypeScript. It provides the decentralized backend for private proposals and secure voting.
 
 ## Overview
 
-AGORA enables secure, private voting on proposals within decentralized spaces. Votes are encrypted on the client-side and remain private on-chain until the proposal ends, at which point they are decrypted and tallied. The system supports multiple voting types (non-weighted, weighted single-choice, weighted fractional) and integrates with Agora Names Services (MockENS) for space management.
+The Minority report enables secure, private voting on proposals within decentralized spaces. Votes are encrypted on the client-side and remain private on-chain until the proposal ends, at which point they are decrypted and tallied. The system supports multiple voting types (non-weighted, weighted single-choice, weighted fractional) and integrates with Agora Names Services (MockENS) for space management.
 
 ## Features
 
