@@ -1,6 +1,6 @@
-# Agora Monorepo
+# The Minority Report
 
-Agora is the first on-chain election platform that ensures complete vote privacy while preserving freedom of speech. Built on Ethereum with Fully Homomorphic Encryption (FHE), it enables secure, anonymous voting in decentralized governance spaces. This monorepo contains two main components: the core smart contracts and the frontend application.
+The Minority Report is an on-chain voting game that flips democracy on its head—the minority wins. Powered by Fully Homomorphic Encryption (FHE) on Ethereum, every vote remains completely secret until the reveal, creating a psychological game where thinking differently pays off. Players must predict what others won't choose, making it a fascinating experiment in game theory and human behavior. Complete anonymity means no one can prove how you voted, forcing pure strategic thinking over social pressure. This monorepo contains both the smart contracts and the frontend application.
 
 ## Documentation
 
