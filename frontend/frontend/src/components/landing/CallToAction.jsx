@@ -59,7 +59,7 @@ export function CallToAction() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          Ready to Experience the Future of Privacy?
+          Ready to Experience the Future of Mind Games?
         </motion.h2>
         
         <motion.p 
@@ -68,7 +68,7 @@ export function CallToAction() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-        Discover how Zama's Fully Homomorphic Encryption brings private governance to public blockchains. Enter Agora to create your space, launch encrypted proposals, and let Chainlink automate verifiable outcomes.        
+        Discover how Fully Homomorphic Encryption brings complete anonymity to voting. Create your report, launch encrypted contests, and watch as the minority wins. No one knows how you voted—not even you can prove it.
         </motion.p>
 
         <motion.p 
@@ -77,7 +77,7 @@ export function CallToAction() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
-        Public results, hidden votes.
+        Think different. Vote against the grain.
         </motion.p>
 
         {/* Call to action */}

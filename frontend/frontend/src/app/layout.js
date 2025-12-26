@@ -29,37 +29,42 @@ const cardo = Cardo({
 });
 
 export const metadata = {
-  title: 'AGORA - Privacy-Preserving Governance Platform',
+  title: 'The Minority Report - Anonymous Voting Game',
   description:
-    'A privacy-preserving governance platform using Zama\'s Fully Homomorphic Encryption (FHE) for anonymous voting in decentralized spaces.',
+    'Vote against the grain. A privacy-preserving voting game where the least popular choice wins. Built with Fully Homomorphic Encryption (FHE) for complete anonymity.',
+  icons: {
+    icon: '/minority-report-logo.svg',
+    apple: '/minority-report-logo.svg',
+  },
   keywords: [
     'privacy',
-    'governance',
-    'FHE',
     'anonymous voting',
-    'decentralized spaces',
+    'minority game',
+    'FHE',
+    'encryption',
+    'voting game',
     'DAOs',
     'proposals',
     'Zama',
     'Fully Homomorphic Encryption',
   ],
-  authors: [{ name: 'Agora Labs' }],
-  creator: 'Agora Labs',
+  authors: [{ name: 'Luca Rota' }],
+  creator: 'Luca Rota',
   openGraph: {
     type: 'website',
     locale: 'en_UK',
-    url: 'https://agora.xyz',
-    title: 'AGORA - Privacy-Preserving Governance Platform',
+    url: 'https://minority-report.xyz',
+    title: 'The Minority Report - Anonymous Voting Game',
     description:
-      'A privacy-preserving governance platform using Zama\'s Fully Homomorphic Encryption (FHE) for anonymous voting in decentralized spaces.',
-    siteName: 'AGORA',
+      'Vote against the grain. A privacy-preserving voting game where the least popular choice wins. Built with Fully Homomorphic Encryption (FHE) for complete anonymity.',
+    siteName: 'The Minority Report',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AGORA - Privacy-Preserving Governance Platform',
+    title: 'The Minority Report - Anonymous Voting Game',
     description:
-      'A privacy-preserving governance platform using Zama\'s Fully Homomorphic Encryption (FHE) for anonymous voting in decentralized spaces.',
-    creator: '@AgoraLabs',
+      'Vote against the grain. A privacy-preserving voting game where the least popular choice wins. Built with Fully Homomorphic Encryption (FHE) for complete anonymity.',
+    creator: '@LucaRota4',
   },
   robots: {
     index: true,
@@ -82,7 +87,7 @@ export default function RootLayout({ children }) {
         className={`${inter.variable} ${jetbrainsMono.variable} ${dmSans.variable} ${cardo.variable} antialiased h-full`}
       >
         <Providers>
-          <div id="root" role="application" aria-label="Agora App">
+          <div id="root" role="application" aria-label="The Minority Report App">
             {children}
           </div>
         </Providers>
