@@ -80,11 +80,11 @@ export default function ENSRegistrationPage() {
 
     if (!ensName.trim()) {
       newErrors.ensName = 'ENS name is required';
-    } else if (!ensName.endsWith('.agora')) {
-      newErrors.ensName = 'ENS name must end with .agora';
+    } else if (!ensName.endsWith('.report')) {
+      newErrors.ensName = 'ENS name must end with .report';
     } else if (ensName.split('.').length !== 2) {
-      newErrors.ensName = 'ENS name must be in format: name.agora';
-    } else if (ensName.length < 8) { // minimum: x.agora
+      newErrors.ensName = 'ENS name must be in format: name.report';
+    } else if (ensName.length < 8) { // minimum: x.report
       newErrors.ensName = 'ENS name is too short';
     }
 
@@ -168,30 +168,30 @@ export default function ENSRegistrationPage() {
             <div className="flex items-center gap-3 mb-8">
               <Globe className="h-8 w-8 text-[#4D89B0]" />
               <div>
-                <h1 className="text-3xl font-bold text-black">Register .agora Name</h1>
+                <h1 className="text-3xl font-bold text-black">Register .reports Name</h1>
                 <p className="text-black mt-1">
-                  Register a .agora domain name for your governance spaces
+                  Register a .reports domain name for your governance spaces
                 </p>
               </div>
             </div>
 
             <Card className="bg-white/80 border-[#E8DCC4]/30">
               <CardHeader>
-                <CardTitle>.agora Registration</CardTitle>
+                <CardTitle>.reports Registration</CardTitle>
                 <CardDescription>
-                  Register a unique .agora domain that you can use to create governance spaces.
+                  Register a unique .reports domain that you can use to create governance spaces.
                   This uses a mock domain registry contract on Sepolia testnet.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="ensName">.agora Name</Label>
+                    <Label htmlFor="ensName">.reports Name</Label>
                     <div className="flex gap-2">
                       <Input
                         id="ensName"
                         type="text"
-                        placeholder="myspace.agora"
+                        placeholder="myspace.reports"
                         value={ensName}
                         onChange={(e) => {
                           setEnsName(e.target.value);
@@ -228,7 +228,7 @@ export default function ENSRegistrationPage() {
                   <div className="bg-[#E8DCC4]/20 p-4 rounded-lg border border-[#E8DCC4]/30">
                     <h4 className="font-medium text-black mb-2">What happens next?</h4>
                     <ul className="text-sm text-black space-y-1">
-                      <li>• Your .agora name will be registered to your wallet address</li>
+                      <li>• Your .report name will be registered to your wallet address</li>
                       <li>• You can use this name to create governance spaces</li>
                       <li>• Registration is free on the Sepolia testnet</li>
                       <li>• Names are unique and cannot be changed once registered</li>
@@ -269,7 +269,7 @@ export default function ENSRegistrationPage() {
                     ) : (
                       <>
                         <Globe className="h-4 w-4 mr-2" />
-                        Register .agora Name
+                        Register .report Name
                       </>
                     )}
                   </Button>

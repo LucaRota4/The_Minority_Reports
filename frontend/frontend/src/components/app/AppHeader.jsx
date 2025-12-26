@@ -30,13 +30,13 @@ export function AppHeader() {
       ]
     },
     {
-      name: 'Reports',
+      name: 'Report',
       href: '/app/reports',
       icon: Users,
       submenu: [
-        { name: 'My Reports', href: '/app/reports/my', icon: Users },
+        { name: 'My Report', href: '/app/reports/my', icon: Users },
         { name: 'Create Report', href: '/app/reports/create', icon: Plus },
-        { name: 'Explore Reports', href: '/app/reports', icon: Search },
+        { name: 'Explore Report', href: '/app/reports', icon: Search },
       ]
     }
   ];

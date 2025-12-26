@@ -20,24 +20,24 @@ task("proposal", "Deploy a proposal on Sepolia test4net", async (_taskArgs, hre)
   const privateProposalFactory = await hreEthers.getContractAt("PrivateProposalFactory", privateProposalFactoryAddress);
 
   // ============================================
-  // 1. Register ENS: test4.reports
+  // 1. Register ENS: test4.report
   // ============================================
-  console.log("Registering ENS: test4.reports");
+  console.log("Registering ENS: test4.report");
 
-  // Set deployer as owner of test4.reports node
-  const test4reportsNode = ethers.namehash("test4.reports");
-  const ensTx = await mockENS.setNodeOwner(test4reportsNode, deployer);
+  // Set deployer as owner of test4.report node
+  const test4reportNode = ethers.namehash("test4.report");
+  const ensTx = await mockENS.setNodeOwner(test4reportNode, deployer);
   await ensTx.wait();
-  console.log("✅ Registered 'test4.reports' domain");
+  console.log("✅ Registered 'test4.report' domain");
 
   // ============================================
   // 2. Register a space
   // ============================================
-  console.log("Creating space for test4.reports");
+  console.log("Creating space for test4.report");
 
   const spaceTx = await spaceRegistry.createSpace(
-    "test4.reports", // ensName
-    "test4 reports Space", // displayName
+    "test4.report", // ensName
+    "test4 report Space", // displayName
     0, // MembershipType.Public
     ethers.ZeroAddress, // criteriaContract
     0 // criteriaAmount
@@ -46,7 +46,7 @@ task("proposal", "Deploy a proposal on Sepolia test4net", async (_taskArgs, hre)
   console.log("✅ Space created");
 
   // Get spaceId
-  const spaceId = ethers.keccak256(ethers.toUtf8Bytes("test4.reports"));
+  const spaceId = ethers.keccak256(ethers.toUtf8Bytes("test4.report"));
   console.log("Space ID:", spaceId);
 
   // ============================================
@@ -102,7 +102,7 @@ task("proposal", "Deploy a proposal on Sepolia test4net", async (_taskArgs, hre)
   }
 
   console.log("\n🎉 Proposal deployment complete!");
-  console.log(`ENS: test4.reports`);
+  console.log(`ENS: test4.report`);
   console.log(`Space ID: ${spaceId}`);
   console.log(`Proposal Address: ${proposalAddress}`);
   console.log(`Proposal ID: ${proposalId}`);

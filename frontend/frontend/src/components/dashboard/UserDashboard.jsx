@@ -177,7 +177,7 @@ export function UserDashboard() {
 
   const tabs = [
     { id: 'overview', label: 'Overview' },
-    { id: 'proposals', label: 'Active Reports' },
+    { id: 'proposals', label: 'Active Report' },
     { id: 'activity', label: 'Recent Activity' }
   ];
 
@@ -220,7 +220,7 @@ export function UserDashboard() {
             </div>
             <div>
               <p className="text-2xl font-bold text-white">{userStats.joinedSpaces}</p>
-              <p className="text-sm text-slate-300">Joined Reports</p>
+              <p className="text-sm text-slate-300">Joined Report</p>
             </div>
           </div>
         </motion.div>
@@ -237,7 +237,7 @@ export function UserDashboard() {
             </div>
             <div>
               <p className="text-2xl font-bold text-white">{userStats.activeProposals}</p>
-              <p className="text-sm text-slate-300">Active Reports</p>
+              <p className="text-sm text-slate-300">Active Report</p>
             </div>
           </div>
         </motion.div>
@@ -254,7 +254,7 @@ export function UserDashboard() {
             </div>
             <div>
               <p className="text-2xl font-bold text-white">{userStats.spacesCreated}</p>
-              <p className="text-sm text-slate-300">Reports Created</p>
+              <p className="text-sm text-slate-300">Report Created</p>
             </div>
           </div>
         </motion.div>
@@ -288,7 +288,7 @@ export function UserDashboard() {
             className="bg-slate-900/50 rounded-lg border border-cyan-500/30 p-6"
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-white">My Reports</h2>
+              <h2 className="text-lg font-semibold text-white">My Report</h2>
               <Button 
                 variant="ghost" 
                 size="sm" 
@@ -429,7 +429,7 @@ export function UserDashboard() {
           ))}
           {proposalsLoading && activeProposals.length === 0 && (
             <div className="text-center py-8 text-black">
-              Loading active reports...
+              Loading active report...
             </div>
           )}
           {proposalsLoading && activeProposals.length > 0 && (

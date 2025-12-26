@@ -21,7 +21,7 @@ const bottomNavItems = [
   {
     href: '/app/reports/my',
     icon: Users,
-    label: 'My Reports',
+    label: 'My Report',
     exactMatch: false,
     comingSoon: false,
   },

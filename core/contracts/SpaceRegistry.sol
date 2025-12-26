@@ -81,7 +81,7 @@ contract SpaceRegistry is ISpaceRegistry {
         address criteriaContract,
         uint256 criteriaAmount
     ) external {
-        // Validate ENS name format (ends with .agora)
+        // Validate ENS name format (ends with .report)
         if (!isValidENSName(ensName)) revert InvalidENSName();
         
         // Validate display name length
@@ -380,7 +380,7 @@ contract SpaceRegistry is ISpaceRegistry {
     }
 
     /**
-     * @notice Check if a string is a valid ENS name (ends with .agora)
+     * @notice Check if a string is a valid ENS name (ends with .reports)
      * @param name The name to validate
      * @return True if valid ENS name
      */
@@ -388,10 +388,10 @@ contract SpaceRegistry is ISpaceRegistry {
         bytes memory nameBytes = bytes(name);
         uint256 length = nameBytes.length;
         
-         // Must be at least ".agora" length and end with ".agora"
+         // Must be at least ".reports" length and end with ".reports"
         if (length < 6) return false;
         
-        // Check last 6 characters are ".agora"
+        // Check last 6 characters are ".reports"
         return nameBytes[length - 6] == 0x2e &&
                nameBytes[length - 5] == 0x61 &&
                nameBytes[length - 4] == 0x67 &&

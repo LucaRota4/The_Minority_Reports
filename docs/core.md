@@ -70,7 +70,7 @@ For detailed contract architecture, FHE usage, and resolution process, see [Cont
   ```bash
   npx hardhat deploy --network sepolia ##verify automatically
   npx hardhat verify --network sepolia <CONTRACT_ADDRESS>
-  npx hardhat proposal --network sepolia ## Create .reports ENS name, Space ID with this name and proposal in the space
+  npx hardhat proposal --network sepolia ## Create .report ENS name, Space ID with this name and proposal in the space
   ```
 
   #### Deployed Contracts on Sepolia
