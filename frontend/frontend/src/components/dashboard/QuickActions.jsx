@@ -55,7 +55,7 @@ export function QuickActions() {
         </CardHeader>
         <CardContent className="space-y-3">
           <p style={{ color: 'black' }} className="leading-relaxed text-sm">
-            Understand how AGORA enables completely private DAO governance with fine-grained control and automatic resolution.
+            Understand how The Minority Reports enables completely private game and votes with fine-grained control and automatic resolution.
           </p>
           <div className="space-y-3">
             <Button variant="ghost" className="w-full justify-start p-0 h-auto text-left hover:bg-gray-50" asChild>

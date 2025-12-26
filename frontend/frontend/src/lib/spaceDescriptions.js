@@ -10,7 +10,7 @@ import SpaceMetadata from './models/SpaceMetadata';
  * Save a space description
  * @param {string} spaceId - The space identifier (e.g., "myspace")
  * @param {Object} data - The data to save
- * @param {string} data.ensName - Full ENS name (e.g., "myspace.agora")
+ * @param {string} data.ensName - Full ENS name (e.g., "myspace.report")
  * @param {string} data.description - Space description
  * @param {string} data.logo - Logo base64 data URI
  * @param {string} data.createdBy - Creator's address

@@ -136,5 +136,5 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 };
 
 export default func;
-func.id = "deploy_Agora_Contracts";
+func.id = "deploy_report_Contracts";
 func.tags = ["MockENS", "SpaceRegistry", "ProposalAutomation", "PrivateProposalFactory", "MockGovernanceToken", "Complete"];

@@ -1,6 +1,6 @@
-# AGORA Voting and Resolution Test Summary
+# The Minority Reports Voting and Resolution Test Summary
 
-This document summarizes the test suite for the AGORA private proposal system, focusing on voting mechanisms and resolution logic implemented in `test/voting-resolution.ts`.
+This document summarizes the test suite for the Minority Reports private proposal system, focusing on voting mechanisms and resolution logic implemented in `test/voting-resolution.ts`.
 
 ## Test Overview
 
@@ -13,7 +13,7 @@ Running `npx hardhat test` produces the following results (85 passing tests):
 ```
   MockENS
     Subdomain creation
-      ✔ should create a subdomain under .agora
+      ✔ should create a subdomain under .report
       ✔ should fail to create the same subdomain with different address from unauthorized account
       ✔ should fail to register an already owned ENS from unauthorized account
       ✔ should allow the owner to change the owner of their ENS
@@ -53,7 +53,7 @@ Running `npx hardhat test` produces the following results (85 passing tests):
       ✔ should revert if not owner
       ✔ should revert if display name too long
     namehash
-      ✔ should compute correct namehash for .agora domain (79ms)
+      ✔ should compute correct namehash for .report domain (79ms)
     joinSpace
       ✔ should allow joining public space
       ✔ should allow joining whitelist space if whitelisted

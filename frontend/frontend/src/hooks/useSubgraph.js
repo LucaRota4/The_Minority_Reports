@@ -442,7 +442,7 @@ export function useSpaceByEns(ensName, enabled = true) {
     queryKey: ['spaceByEns', ensName],
     queryFn: async () => {
       if (!ensName) return null;
-      const normalizedEns = ensName.endsWith('.agora') ? ensName : `${ensName}.agora`;
+      const normalizedEns = ensName.endsWith('.report') ? ensName : `${ensName}.report`;
       const result = await request(SUBGRAPH_URL, GET_SPACE_BY_ENS, { ensName: normalizedEns });
       // Transform spaceCreateds to spaces format
       return {

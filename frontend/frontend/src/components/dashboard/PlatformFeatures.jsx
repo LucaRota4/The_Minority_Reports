@@ -44,9 +44,9 @@ export function PlatformFeatures() {
       className="mb-6"
     >
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold mb-3" style={{ color: 'black' }}>Why Choose AGORA?</h2>
+        <h2 className="text-2xl font-bold mb-3" style={{ color: 'black' }}>Why Play The Minority Report?</h2>
         <p className="text-base max-w-2xl mx-auto" style={{ color: 'black' }}>
-          Experience the future of private DAO governance with complete privacy, fine-grained control, and automatic resolution.
+          Genre fun mind game — who will be the smartest?
         </p>
       </div>
 

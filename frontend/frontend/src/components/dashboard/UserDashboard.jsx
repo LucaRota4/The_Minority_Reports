@@ -62,9 +62,9 @@ export function UserDashboard() {
 
   // Joined spaces
   const joinedSpaces = allSpaces?.slice(0, 5).map(space => {
-    // Prioritize ENS name with .agora for navigation
+    // Prioritize ENS name with .report for navigation
     const spaceName = space.ensName ? 
-      (space.ensName.endsWith('.agora') ? space.ensName : `${space.ensName}.agora`) : 
+      (space.ensName.endsWith('.report') ? space.ensName : `${space.ensName}.report`) : 
       (space.displayName || `Space ${space.spaceId.slice(0, 8)}`);
     
     return {

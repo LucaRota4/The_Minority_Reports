@@ -15,14 +15,14 @@ export function DashboardHeader() {
       {/* Logo and Title */}
       <div className="flex items-center gap-3">
         <Image
-          src="/Agora.png"
-          alt="Agora Logo"
+          src="/minority-report-logo.svg"
+          alt="The Minority Report Logo"
           width={32}
           height={32}
           className="h-8 w-8"
         />
-        <h1 className="text-2xl font-bold" style={{ color: '#4D89B0' }}>
-          Agora
+        <h1 className="text-2xl font-bold text-[#0088ff]">
+          The Minority Report
         </h1>
       </div>
 

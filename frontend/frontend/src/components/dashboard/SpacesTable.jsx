@@ -159,7 +159,7 @@ function SpaceRow({ space, onToggleExpand, isExpanded, proposalsData, proposalsL
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
           <div className="flex items-center justify-end gap-2">
-            <Link href={`/app/${space.ensName.replace('.agora', '')}`}>
+            <Link href={`/app/${space.ensName.replace('.report', '')}`}>
               <Button variant="ghost" size="sm" className="text-[#4D89B0] hover:text-white border border-[#4D89B0] hover:bg-[#4D89B0] transition-colors">
                 <Eye className="h-4 w-4" />
               </Button>
@@ -250,7 +250,7 @@ function SpaceDetails({ space, proposalsData, proposalsLoading }) {
           </div>
 
           <div className="flex justify-center pt-4">
-            <Link href={`/app/${space.ensName ? space.ensName.replace('.agora', '') : space.displayName}`}>
+            <Link href={`/app/${space.ensName ? space.ensName.replace('.report', '') : space.displayName}`}>
               <Button variant="outline" size="sm" className="border-[#4D89B0] text-black hover:bg-[#4D89B0] hover:text-white">
                 View All Proposals
               </Button>

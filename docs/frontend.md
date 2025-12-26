@@ -1,6 +1,6 @@
 # Frontend
 
-The frontend component of Agora is a Next.js web application that provides the user interface for the Agora platform. It enables users to interact with the decentralized governance system through a modern, responsive web interface.
+The frontend component of The Minority Reports is a Next.js web application that provides the user interface for the Minority Reports platform. It enables users to interact with the decentralized governance system through a modern, responsive web interface.
 
 ## Quick Start
 
@@ -14,8 +14,8 @@ The frontend component of Agora is a Next.js web application that provides the u
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/ElioMargiotta/agora_monorepo.git
-   cd agora_monorepo/frontend
+   git clone https://github.com/LucaRota4/The_Minority_Reports.git
+   cd The_Minority_Reports/frontend
    ```
 
 2. **Install dependencies**
@@ -43,7 +43,7 @@ The frontend component of Agora is a Next.js web application that provides the u
    - Get the connection string from "Connect" → "Connect your application"
    - Add to `.env.local`:
      ```
-     MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/agora?retryWrites=true&w=majority
+     MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/report?retryWrites=true&w=majority
      ```
    
    **Option B: Local MongoDB**
@@ -51,7 +51,7 @@ The frontend component of Agora is a Next.js web application that provides the u
    - Start MongoDB service: `mongod`
    - Add to `.env.local`:
      ```
-     MONGODB_URI=mongodb://localhost:27017/agora
+     MONGODB_URI=mongodb://localhost:27017/report
      ```
 
 
@@ -123,17 +123,17 @@ frontend/
 ### Subgraphs
 
 The platform uses The Graph protocol for efficient on-chain data indexing:
-- `agora_subgraph/`: Subgraph for Agora-related events
+- `The_Minority_Report/`: Subgraph for The_Minority_Reports-related events
 
 For local development, you can run your own subgraph node instead of using the hosted service. Refer to [The Graph documentation](https://thegraph.com/docs/) for setup instructions.
 
-#### Agora Subgraph Commands
+#### The Minority Reports Subgraph Commands
 
-To work with the Agora subgraph locally:
+To work with The Minority Report subgraph locally:
 
 1. **Navigate to the subgraph directory**:
    ```bash
-   cd agora_subgraph
+   cd The_Minority_Reports_subgraph
    ```
 
 2. **Install dependencies**:

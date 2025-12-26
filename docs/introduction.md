@@ -1,12 +1,12 @@
-# Agora Documentation
+# The Minority Reports Documentation
 
 ## Overview
 
-Agora is a privacy-preserving governance platform that leverages Zama's Fully Homomorphic Encryption (FHE) technology to enable truly anonymous and secure decentralized governance. Built on Ethereum-compatible blockchains, Agora allows communities to create private DAO spaces where admins and owners can submit proposals and members vote anonymously while maintaining full verifiability of outcomes.
+The Minority Reports is a privacy-preserving governance platform that leverages Zama's Fully Homomorphic Encryption (FHE) technology to enable truly anonymous and secure decentralized governance. Built on Ethereum-compatible blockchains, The Minority Reports allows communities to create private DAO spaces where admins and owners can submit proposals and members vote anonymously while maintaining full verifiability of outcomes.
 
 ## Purpose
 
-The core purpose of Agora is to democratize governance by solving the fundamental privacy paradox in decentralized systems: how to maintain transparency in decision-making while protecting individual voter privacy. Traditional DAOs often require sacrificing anonymity for accountability, but Agora uses cutting-edge cryptography to provide both.
+The core purpose of The Minority Reports is to democratize governance by solving the fundamental privacy paradox in decentralized systems: how to maintain transparency in decision-making while protecting individual voter privacy. Traditional DAOs often require sacrificing anonymity for accountability, but The Minority Reports uses cutting-edge cryptography to provide both.
 
 ### Key Problems Solved
 - **Privacy vs. Transparency Trade-off**: FHE enables computation on encrypted data, allowing vote tallying without ever decrypting individual ballots
@@ -28,20 +28,20 @@ The core purpose of Agora is to democratize governance by solving the fundamenta
 - **Participate Securely**: Engage in governance without revealing your identity or voting preferences
 
 ### For Developers
-- **Build on FHE**: Use Agora's infrastructure to create privacy-preserving dApps
+- **Build on FHE**: Use The Minority Reports's infrastructure to create privacy-preserving dApps
 - **Integrate Governance**: Add anonymous voting capabilities to existing platforms
 - **Customize Workflows**: Extend the platform with custom proposal types and voting mechanisms
 
 ## How It Works
 
-### 1. Visit the Agora Website
-Start by visiting [https://agora-staged.vercel.app/](https://agora-staged.vercel.app/) and connect your Web3 wallet.
+### 1. Visit the The Minority Reports Website
+Start by visiting [https://report-staged.vercel.app/](https://report-staged.vercel.app/) and connect your Web3 wallet.
 
-### 2. Create an Agora Name Service
-Register a unique `.agora` domain name that will serve as your governance space identifier. This creates a decentralized naming system for your community.
+### 2. Create an report Name Service
+Register a unique `.report` domain name that will serve as your governance space identifier. This creates a decentralized naming system for your community.
 
 ### 3. Create Your Governance Space
-Use your registered `.agora` name to establish a new governance space with custom parameters:
+Use your registered `.report` name to establish a new governance space with custom parameters:
 - Set membership rules (public, token holders, NFT owners, or whitelist)
 - Configure voting models and eligibility criteria
 - Define space roles and permissions
@@ -101,7 +101,7 @@ Participate in governance with full privacy:
 - **MockGovernanceToken.sol**: Mock Ivotes token for testing voting eligibility
 
 ### Subgraphs
-- **agora-subgraph**: Comprehensive indexing of spaces, proposals, and voting activities
+- **The_Minority_Reports-subgraph**: Comprehensive indexing of spaces, proposals, and voting activities
 
 ### Application Structure
 ```
@@ -122,7 +122,7 @@ frontend/
 - Access to Ethereum Sepolia testnet
 
 ### Quick Start
-1. **Visit the Agora website**: [https://agora-staged.vercel.app/](https://agora-staged.vercel.app/)
+1. **Visit the The Minority Reports website**: [https://report-staged.vercel.app/](https://report-staged.vercel.app/)
 
 ### Local Development Setup
 For detailed setup instructions, environment configuration, and deployment guides, see [Frontend Documentation](./frontend.md).

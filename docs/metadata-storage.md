@@ -1,10 +1,10 @@
 # Metadata Storage Architecture
 
-This section describes the off-chain metadata storage system used in Agora for storing space descriptions, logos, and other non-blockchain data.
+This section describes the off-chain metadata storage system used in The Minority Reports for storing space descriptions, logos, and other non-blockchain data.
 
 ## Overview
 
-Agora uses a hybrid storage approach:
+The Minority Reports uses a hybrid storage approach:
 - **On-chain**: Core governance data (spaces, proposals, votes) stored in smart contracts
 - **Off-chain**: Metadata (descriptions, logos, images) stored in MongoDB
 
@@ -19,7 +19,7 @@ The storage layer provides a simple abstraction for persisting metadata:
 ```javascript
 // Save space metadata
 await saveSpaceDescription(spaceId, {
-  ensName: 'myspace.agora',
+  ensName: 'myspace.report',
   description: 'Space description...',
   logo: 'data:image/png;base64,...',
   createdBy: '0x123...',
@@ -46,7 +46,7 @@ await updateSpaceDescription(spaceId, {
 **Configuration**:
 Set `MONGODB_URI` in `.env.local`:
 ```
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/agora?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/report?retryWrites=true&w=majority
 ```
 
 ### API Layer (`src/app/api/space-description/route.js`)
@@ -60,7 +60,7 @@ Create new space metadata.
 ```json
 {
   "spaceId": "myspace",
-  "ensName": "myspace.agora",
+  "ensName": "myspace.report",
   "description": "This is my governance space",
   "logo": "data:image/png;base64,...",
   "createdBy": "0x123...",
@@ -73,7 +73,7 @@ Create new space metadata.
 {
   "success": true,
   "data": {
-    "ensName": "myspace.agora",
+    "ensName": "myspace.report",
     "description": "This is my governance space",
     "logo": "data:image/png;base64,...",
     "createdBy": "0x123...",
@@ -138,7 +138,7 @@ function SpaceDetails({ spaceName }) {
 ```typescript
 interface SpaceMetadata {
   spaceId: string;         // Space identifier (e.g., "myspace")
-  ensName: string;         // Full ENS name (e.g., "myspace.agora")
+  ensName: string;         // Full ENS name (e.g., "myspace.report")
   description: string;     // Space description (max 500 chars)
   logo: string;           // Base64 encoded image or empty string
   createdBy: string;      // Creator's Ethereum address
@@ -387,7 +387,7 @@ MONGODB_URI="your creditential"
 2. **Local MongoDB** (For development):
    - Install MongoDB: https://www.mongodb.com/try/download/community
    - Start MongoDB service: `mongod`
-   - Use connection string: `mongodb://localhost:27017/agora`
+   - Use connection string: `mongodb://localhost:27017/report`
 
 ## Security Considerations
 
@@ -502,5 +502,5 @@ Enable detailed logging by checking the browser console and Next.js terminal out
 
 For issues or questions:
 - Check the [Frontend Documentation](frontend.md)
-- Review [GitHub Issues](https://github.com/ElioMargiotta/agora_monorepo/issues)
+- Review [GitHub Issues](https://github.com/ElioMargiotta/The_Minority_Reports/issues)
 - Consult the [MongoDB Documentation](https://docs.mongodb.com/)

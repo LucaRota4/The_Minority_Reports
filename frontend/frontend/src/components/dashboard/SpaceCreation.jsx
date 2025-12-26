@@ -80,8 +80,8 @@ export function SpaceCreation() {
 
     if (!ensName.trim()) {
       newErrors.ensName = 'ENS name is required';
-    } else if (!ensName.endsWith('.agora')) {
-      newErrors.ensName = 'ENS name must end with .agora';
+    } else if (!ensName.endsWith('.report')) {
+      newErrors.ensName = 'ENS name must end with .report';
     }
 
     if (!displayName.trim()) {
@@ -157,7 +157,7 @@ export function SpaceCreation() {
       
       // Save description to backend if provided
       if (description.trim() || logo.trim()) {
-        const spaceName = ensName.replace('.agora', '');
+        const spaceName = ensName.replace('.report', '');
         fetch('/api/space-description', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -173,7 +173,7 @@ export function SpaceCreation() {
       }
       
       // Redirect to the newly created space page
-      const spaceName = ensName.replace('.agora', '');
+      const spaceName = ensName.replace('.report', '');
       setTimeout(() => {
         router.push(`/app/${spaceName}`);
       }, 2000); // Small delay to show success message
@@ -191,7 +191,7 @@ export function SpaceCreation() {
         <CardHeader>
           <CardTitle className="text-black">Create New Governance Space</CardTitle>
           <CardDescription className="text-black">
-            Create a decentralized governance space backed by .agora domain ownership.
+            Create a decentralized governance space backed by .report domain ownership.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -211,8 +211,8 @@ export function SpaceCreation() {
       <CardHeader>
         <CardTitle className="text-black">Create New Governance Space</CardTitle>
         <CardDescription className="text-black">
-          Create a decentralized governance space backed by .agora domain ownership.
-          You must own the .agora domain to create a space.
+          Create a decentralized governance space backed by .report domain ownership.
+          You must own the .report domain to create a space.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -243,11 +243,11 @@ export function SpaceCreation() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="ensName">.agora Domain *</Label>
+            <Label htmlFor="ensName">.report Domain *</Label>
             <Input
               id="ensName"
               type="text"
-              placeholder="e.g., myspace.agora"
+              placeholder="e.g., myspace.report"
               value={ensName}
               onChange={(e) => setEnsName(e.target.value)}
               className={`bg-white/50 border-[#E8DCC4]/30 ${errors.ensName ? 'border-red-500' : ''}`}
@@ -256,14 +256,14 @@ export function SpaceCreation() {
               <p className="text-sm text-red-600">{errors.ensName}</p>
             )}
             <p className="text-sm text-black">
-              You must own this .agora domain to create a space.{' '}
+              You must own this .report domain to create a space.{' '}
               <a
                 href="/app/spaces/ens"
                 className="text-[#4D89B0] hover:text-[#4D89B0]/80 underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Register a new .agora name →
+                Register a new .report name →
               </a>
             </p>
           </div>

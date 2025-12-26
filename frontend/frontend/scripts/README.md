@@ -49,9 +49,9 @@ The migration script:
 📖 Reading JSON file...
 Found 3 spaces to migrate
 
-✓ Migrated: myspace (myspace.agora)
-✓ Migrated: daotest (daotest.agora)
-✓ Migrated: foundation (foundation.agora)
+✓ Migrated: myspace (myspace.report)
+✓ Migrated: daotest (daotest.report)
+✓ Migrated: foundation (foundation.report)
 
 ==================================================
 Migration Summary:

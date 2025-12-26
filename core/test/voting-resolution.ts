@@ -72,7 +72,7 @@ describe("PrivateProposal Voting and Resolution", function () {
     factory = factoryInstance as unknown as PrivateProposalFactory;
 
     // Create a test space
-    const ensName = "test.agora";
+    const ensName = "test.report";
     const spaceId = ethers.keccak256(ethers.toUtf8Bytes(ensName));
     const node = await spaceRegistry.namehash(ensName);
     await mockENS.setNodeOwner(node, owner.address);

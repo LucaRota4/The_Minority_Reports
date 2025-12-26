@@ -12,7 +12,7 @@ NEXT_PUBLIC_RPC_URL=https://sepolia.infura.io/v3/your-infura-project-id
 NEXT_PUBLIC_RELAYER_SDK_URL=https://cdn.zama.org/relayer-sdk-js/0.3.0-5/relayer-sdk-js.umd.cjs
 
 # The Graph Subgraph --> to change with your own Subgraph URL if needed. 
-NEXT_PUBLIC_SUBGRAPH_URL=https://api.studio.thegraph.com/query/1715807/agora-sub/1.0.1
+NEXT_PUBLIC_SUBGRAPH_URL=https://api.studio.thegraph.com/query/1715807/report-sub/1.0.1
 
 
 # Server-side only (sensitive credentials)

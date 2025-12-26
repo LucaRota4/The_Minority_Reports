@@ -17,35 +17,35 @@ describe("MockENS", function () {
   });
 
   describe("Subdomain creation", function () {
-    it("should create a subdomain under .agora", async function () {
-      const label = ethers.keccak256(ethers.toUtf8Bytes("agora"));
-      const agoraNode = ethers.keccak256(ethers.AbiCoder.defaultAbiCoder().encode(["bytes32", "bytes32"], [ethers.ZeroHash, label]));
+    it("should create a subdomain under .report", async function () {
+      const label = ethers.keccak256(ethers.toUtf8Bytes("report"));
+      const reportNode = ethers.keccak256(ethers.AbiCoder.defaultAbiCoder().encode(["bytes32", "bytes32"], [ethers.ZeroHash, label]));
 
-      // Set owner of .agora to owner
-      await mockENS.setNodeOwner(agoraNode, owner.address);
+      // Set owner of .report to owner
+      await mockENS.setNodeOwner(reportNode, owner.address);
 
-      // Create subdomain test.agora to addr1
+      // Create subdomain test.report to addr1
       const testLabel = ethers.keccak256(ethers.toUtf8Bytes("test"));
-      await mockENS.setSubnodeOwner(agoraNode, testLabel, addr1.address);
+      await mockENS.setSubnodeOwner(reportNode, testLabel, addr1.address);
 
       // Check owner
-      const testNode = ethers.keccak256(ethers.AbiCoder.defaultAbiCoder().encode(["bytes32", "bytes32"], [agoraNode, testLabel]));
+      const testNode = ethers.keccak256(ethers.AbiCoder.defaultAbiCoder().encode(["bytes32", "bytes32"], [reportNode, testLabel]));
       expect(await mockENS.owner(testNode)).to.equal(addr1.address);
     });
 
     it("should fail to create the same subdomain with different address from unauthorized account", async function () {
-      const label = ethers.keccak256(ethers.toUtf8Bytes("agora"));
-      const agoraNode = ethers.keccak256(ethers.AbiCoder.defaultAbiCoder().encode(["bytes32", "bytes32"], [ethers.ZeroHash, label]));
+      const label = ethers.keccak256(ethers.toUtf8Bytes("report"));
+      const reportNode = ethers.keccak256(ethers.AbiCoder.defaultAbiCoder().encode(["bytes32", "bytes32"], [ethers.ZeroHash, label]));
 
-      // Set owner of .agora to owner
-      await mockENS.setNodeOwner(agoraNode, owner.address);
+      // Set owner of .report to owner
+      await mockENS.setNodeOwner(reportNode, owner.address);
 
-      // Create subdomain test.agora to addr1
+      // Create subdomain test.report to addr1
       const testLabel = ethers.keccak256(ethers.toUtf8Bytes("test"));
-      await mockENS.setSubnodeOwner(agoraNode, testLabel, addr1.address);
+      await mockENS.setSubnodeOwner(reportNode, testLabel, addr1.address);
 
       // Now, try to set the same subnode to addr2 from addr2 (not owner)
-      await expect(mockENS.connect(addr2).setSubnodeOwner(agoraNode, testLabel, addr2.address)).to.be.revertedWithCustomError(mockENS, "NotOwner");
+      await expect(mockENS.connect(addr2).setSubnodeOwner(reportNode, testLabel, addr2.address)).to.be.revertedWithCustomError(mockENS, "NotOwner");
     });
 
     it("should fail to register an already owned ENS from unauthorized account", async function () {

@@ -39,7 +39,7 @@ describe("SpaceRegistry", function () {
 
   describe("createSpace", function () {
     it("should create a new space", async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       const displayName = "Test Space";
 
       // Set ENS ownership
@@ -61,7 +61,7 @@ describe("SpaceRegistry", function () {
     });
 
     it("should revert if space already exists", async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       const displayName = "Test Space";
 
       // Set ENS ownership
@@ -80,7 +80,7 @@ describe("SpaceRegistry", function () {
     });
 
     it("should revert if display name is too long", async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       const displayName = "This display name is way too long and exceeds the 30 character limit";
 
       // Set ENS ownership
@@ -91,7 +91,7 @@ describe("SpaceRegistry", function () {
     });
 
     it("should revert if not ENS owner", async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       const displayName = "Test Space";
 
       // Don't set ownership
@@ -103,7 +103,7 @@ describe("SpaceRegistry", function () {
     let spaceId: string;
 
     beforeEach(async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       spaceId = ethers.keccak256(ethers.toUtf8Bytes(ensName));
       
       // Set ENS ownership
@@ -140,7 +140,7 @@ describe("SpaceRegistry", function () {
     let spaceId: string;
 
     beforeEach(async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       spaceId = ethers.keccak256(ethers.toUtf8Bytes(ensName));
       
       // Set ENS ownership
@@ -173,7 +173,7 @@ describe("SpaceRegistry", function () {
     let spaceId: string;
 
     beforeEach(async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       spaceId = ethers.keccak256(ethers.toUtf8Bytes(ensName));
       
       // Set ENS ownership
@@ -206,7 +206,7 @@ describe("SpaceRegistry", function () {
     let spaceId: string;
 
     beforeEach(async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       spaceId = ethers.keccak256(ethers.toUtf8Bytes(ensName));
       
       // Set ENS ownership
@@ -233,8 +233,8 @@ describe("SpaceRegistry", function () {
 
   describe("getOwnerSpaces", function () {
     it("should return spaces owned by address", async function () {
-      const ensName1 = "testspace1.agora";
-      const ensName2 = "testspace2.agora";
+      const ensName1 = "testspace1.report";
+      const ensName2 = "testspace2.report";
       const spaceId1 = ethers.keccak256(ethers.toUtf8Bytes(ensName1));
       const spaceId2 = ethers.keccak256(ethers.toUtf8Bytes(ensName2));
 
@@ -261,7 +261,7 @@ describe("SpaceRegistry", function () {
 
   describe("getSpace", function () {
     it("should return space details", async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       const displayName = "Test Space";
       const spaceId = ethers.keccak256(ethers.toUtf8Bytes(ensName));
 
@@ -282,7 +282,7 @@ describe("SpaceRegistry", function () {
 
   describe("updateSpaceDisplayName", function () {
     it("should update display name", async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       const initialDisplayName = "Test Space";
       const newDisplayName = "Updated Space";
       const spaceId = ethers.keccak256(ethers.toUtf8Bytes(ensName));
@@ -302,7 +302,7 @@ describe("SpaceRegistry", function () {
     });
 
     it("should revert if not owner", async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       const displayName = "Test Space";
       const newDisplayName = "Hacked Space";
       const spaceId = ethers.keccak256(ethers.toUtf8Bytes(ensName));
@@ -318,7 +318,7 @@ describe("SpaceRegistry", function () {
     });
 
     it("should revert if display name too long", async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       const displayName = "Test Space";
       const longDisplayName = "A".repeat(31); // 31 characters
       const spaceId = ethers.keccak256(ethers.toUtf8Bytes(ensName));
@@ -335,8 +335,8 @@ describe("SpaceRegistry", function () {
   });
 
   describe("namehash", function () {
-    it("should compute correct namehash for .agora domain", async function () {
-      const ensName = "test.agora";
+    it("should compute correct namehash for .report domain", async function () {
+      const ensName = "test.report";
       const expectedNode = ethers.namehash(ensName);
       const computedNode = await spaceRegistry.namehash(ensName);
       expect(computedNode).to.equal(expectedNode);
@@ -347,7 +347,7 @@ describe("SpaceRegistry", function () {
     let spaceId: string;
 
     beforeEach(async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       spaceId = ethers.keccak256(ethers.toUtf8Bytes(ensName));
       
       // Set ENS ownership
@@ -356,7 +356,7 @@ describe("SpaceRegistry", function () {
     });
 
     it("should allow joining public space", async function () {
-      await spaceRegistry.createSpace("testspace.agora", "Test Space", 0, ethers.ZeroAddress, 0); // Public
+      await spaceRegistry.createSpace("testspace.report", "Test Space", 0, ethers.ZeroAddress, 0); // Public
 
       await expect(spaceRegistry.connect(addr1).joinSpace(spaceId))
         .to.emit(spaceRegistry, "MemberJoined")
@@ -369,7 +369,7 @@ describe("SpaceRegistry", function () {
     });
 
     it("should allow joining whitelist space if whitelisted", async function () {
-      await spaceRegistry.createSpace("testspace.agora", "Test Space", 1, ethers.ZeroAddress, 0); // Whitelist
+      await spaceRegistry.createSpace("testspace.report", "Test Space", 1, ethers.ZeroAddress, 0); // Whitelist
       await spaceRegistry.addToWhitelist(spaceId, addr1.address);
 
       await expect(spaceRegistry.connect(addr1).joinSpace(spaceId))
@@ -380,14 +380,14 @@ describe("SpaceRegistry", function () {
     });
 
     it("should revert joining whitelist space if not whitelisted", async function () {
-      await spaceRegistry.createSpace("testspace.agora", "Test Space", 1, ethers.ZeroAddress, 0); // Whitelist
+      await spaceRegistry.createSpace("testspace.report", "Test Space", 1, ethers.ZeroAddress, 0); // Whitelist
 
       await expect(spaceRegistry.connect(addr1).joinSpace(spaceId)).to.be.revertedWithCustomError(spaceRegistry, "CannotJoin");
     });
 
     it("should allow joining token holder space if holding sufficient tokens", async function () {
       const minTokens = 100;
-      await spaceRegistry.createSpace("testspace.agora", "Test Space", 2, mockUSDC.target, minTokens); // TokenHolder
+      await spaceRegistry.createSpace("testspace.report", "Test Space", 2, mockUSDC.target, minTokens); // TokenHolder
       
       // Mint tokens to addr1
       await mockUSDC.mint(addr1.address, minTokens);
@@ -401,7 +401,7 @@ describe("SpaceRegistry", function () {
 
     it("should revert joining token holder space if holding insufficient tokens", async function () {
       const minTokens = 100;
-      await spaceRegistry.createSpace("testspace.agora", "Test Space", 2, mockUSDC.target, minTokens); // TokenHolder
+      await spaceRegistry.createSpace("testspace.report", "Test Space", 2, mockUSDC.target, minTokens); // TokenHolder
       
       // Mint fewer tokens than required
       await mockUSDC.mint(addr1.address, minTokens - 1);
@@ -411,7 +411,7 @@ describe("SpaceRegistry", function () {
 
     it("should allow joining NFT holder space if holding sufficient NFTs", async function () {
       const minNFTs = 2;
-      await spaceRegistry.createSpace("testspace.agora", "Test Space", 3, mockERC721.target, minNFTs); // NFTHolder
+      await spaceRegistry.createSpace("testspace.report", "Test Space", 3, mockERC721.target, minNFTs); // NFTHolder
       
       // Mint NFTs to addr1
       for (let i = 1; i <= minNFTs; i++) {
@@ -427,7 +427,7 @@ describe("SpaceRegistry", function () {
 
     it("should revert joining NFT holder space if holding insufficient NFTs", async function () {
       const minNFTs = 2;
-      await spaceRegistry.createSpace("testspace.agora", "Test Space", 3, mockERC721.target, minNFTs); // NFTHolder
+      await spaceRegistry.createSpace("testspace.report", "Test Space", 3, mockERC721.target, minNFTs); // NFTHolder
       
       // Mint fewer NFTs than required
       for (let i = 1; i <= minNFTs - 1; i++) {
@@ -438,7 +438,7 @@ describe("SpaceRegistry", function () {
     });
 
     it("should revert if already member", async function () {
-      await spaceRegistry.createSpace("testspace.agora", "Test Space", 0, ethers.ZeroAddress, 0); // Public
+      await spaceRegistry.createSpace("testspace.report", "Test Space", 0, ethers.ZeroAddress, 0); // Public
       await spaceRegistry.connect(addr1).joinSpace(spaceId);
 
       await expect(spaceRegistry.connect(addr1).joinSpace(spaceId)).to.be.revertedWithCustomError(spaceRegistry, "AlreadyMember");
@@ -450,7 +450,7 @@ describe("SpaceRegistry", function () {
     });
 
     it("should revert if space is inactive", async function () {
-      await spaceRegistry.createSpace("testspace.agora", "Test Space", 0, ethers.ZeroAddress, 0); // Public
+      await spaceRegistry.createSpace("testspace.report", "Test Space", 0, ethers.ZeroAddress, 0); // Public
       await spaceRegistry.deactivateSpace(spaceId);
 
       await expect(spaceRegistry.connect(addr1).joinSpace(spaceId)).to.be.revertedWithCustomError(spaceRegistry, "SpaceDoesNotExist");
@@ -461,7 +461,7 @@ describe("SpaceRegistry", function () {
     let spaceId: string;
 
     beforeEach(async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       spaceId = ethers.keccak256(ethers.toUtf8Bytes(ensName));
       
       // Set ENS ownership
@@ -498,7 +498,7 @@ describe("SpaceRegistry", function () {
     let spaceId: string;
 
     beforeEach(async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       spaceId = ethers.keccak256(ethers.toUtf8Bytes(ensName));
       
       // Set ENS ownership
@@ -529,7 +529,7 @@ describe("SpaceRegistry", function () {
     let spaceId: string;
 
     beforeEach(async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       spaceId = ethers.keccak256(ethers.toUtf8Bytes(ensName));
       
       // Set ENS ownership
@@ -566,7 +566,7 @@ describe("SpaceRegistry", function () {
     let spaceId: string;
 
     beforeEach(async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       spaceId = ethers.keccak256(ethers.toUtf8Bytes(ensName));
       
       // Set ENS ownership
@@ -607,7 +607,7 @@ describe("SpaceRegistry", function () {
     let spaceId: string;
 
     beforeEach(async function () {
-      const ensName = "testspace.agora";
+      const ensName = "testspace.report";
       spaceId = ethers.keccak256(ethers.toUtf8Bytes(ensName));
       
       // Set ENS ownership
