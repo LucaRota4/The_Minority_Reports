@@ -33,8 +33,8 @@ For detailed contract architecture, FHE usage, and resolution process, see [Cont
 ### Installation
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/ElioMargiotta/agora_monorepo.git
-   cd agora_monorepo
+   git clone https://github.com/LucaRota4/The_Minority_Reports.git
+   cd The_Minority_Reports
    ```
 
 2. **Install dependencies**
